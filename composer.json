@@ -1,0 +1,13 @@
+{
+    "name": "palmtree/csv",
+    "description": "A CSV parser and builder for PHP",
+    "type": "library",
+    "license": "GPL2",
+    "authors": [
+        {
+            "name": "andyexeter",
+            "email": "palmer.andy@gmail.com"
+        }
+    ],
+    "require": {}
+}
