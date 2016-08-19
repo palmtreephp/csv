@@ -9,5 +9,7 @@
             "email": "palmer.andy@gmail.com"
         }
     ],
-    "require": {}
+    "require": {
+        "php": ">=5.3"
+    }
 }
