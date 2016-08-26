@@ -4,7 +4,8 @@ namespace Palmtree\Csv;
 
 /**
  * Class CsvParser
- * @package Palmtree\Csv
+ * @package    Palmtree
+ * @subpackage Csv
  */
 class CsvParser implements \Iterator {
 	/**
@@ -59,7 +60,6 @@ class CsvParser implements \Iterator {
 		$this->args = array_replace_recursive( self::$defaultArgs, $args );
 
 		ini_set( 'auto_detect_line_endings', '1' );
-
 		$this->fileHandle = fopen( $this->args['file'], 'r' );
 
 		if ( ! $this->fileHandle ) {

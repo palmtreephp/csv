@@ -14,8 +14,8 @@ without hitting any memory limits because only one line is loaded at a time.
 
 ```php
 <?php
-use Palmtree\Csv;
-$csv = new Csv( 'people.csv' );
+use Palmtree\Csv\CsvBuilder;
+$csv = new CsvBuilder( 'people.csv' );
 $csv->addHeaders( [ 'name', 'age', 'gender' ] );
 
 $csv->addRow( [ 'Alice', '24', 'Female'] );
@@ -35,5 +35,3 @@ foreach( $csv as $row ) {
 	echo "{$row['name']} is a {$row['age']} year old {$row['gender']}";
 }
 ```
-
-## Public Properties

@@ -4,8 +4,9 @@ namespace Palmtree\Csv;
 /**
  * Class Csv
  * @package Palmtree
+ * @subpackage Csv
  */
-class Csv {
+class CsvBuilder {
 	public static $defaultArgs = array(
 		'filename'  => '',
 		'delimiter' => ',',
@@ -131,7 +132,7 @@ class Csv {
 	/**
 	 * @param mixed $filename
 	 *
-	 * @return Csv
+	 * @return CsvBuilder
 	 */
 	public function setFilename( $filename ) {
 		$this->filename = $filename;
