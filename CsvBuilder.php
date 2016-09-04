@@ -1,20 +1,25 @@
 <?php
 namespace Palmtree\Csv;
 
+use Palmtree\ArgParser\ArgParser;
+
 /**
  * Class Csv
- * @package Palmtree
+ * @package    Palmtree
  * @subpackage Csv
  */
 class CsvBuilder {
-	public static $defaultArgs = array(
+	public static $defaultArgs = [
 		'filename'  => '',
 		'delimiter' => ',',
 		'enclosure' => '"',
 		'newLine'   => "\r\n",
-	);
+		'escape'    => [
+			'"' => '""',
+		],
+	];
 
-	protected $args = array();
+	protected $args = [];
 
 	/**
 	 * @var string
@@ -29,14 +34,16 @@ class CsvBuilder {
 
 	protected $filename;
 
-	public function __construct( $args = array() ) {
-		if ( is_string( $args ) ) {
-			$args = array( 'filename' => $args );
+	public function __construct( $args = [] ) {
+		$this->args = $this->parseArgs( $args );
+	}
+
+	public function setData( $data, $headers = true ) {
+		if ( $headers ) {
+			$this->addHeaders( array_keys( reset( $data ) ) );
 		}
 
-		$this->args = array_replace_recursive( self::$defaultArgs, $args );
-
-		$this->setFilename( $this->args['filename'] );
+		$this->addRows( $data );
 	}
 
 	/**
@@ -77,15 +84,27 @@ class CsvBuilder {
 		                  $this->args['delimiter'];
 	}
 
+	public function getHeaders() {
+		if ( empty( $this->headers ) ) {
+			return '';
+		}
+
+		$headers = rtrim( $this->headers, $this->args['delimiter'] );
+		$headers .= $this->args['newLine'];
+
+		return $headers;
+	}
+
+	public function getRows() {
+		$rows = rtrim( $this->rows );
+		$rows .= $this->args['newLine'];
+
+		return $rows;
+	}
+
 	public function getOutput() {
 		if ( $this->output === null ) {
-			$this->output = '';
-
-			if ( ! empty( $this->headers ) ) {
-				$this->output .= rtrim( $this->headers, $this->args['delimiter'] ) . $this->args['newLine'];
-			}
-
-			$this->output .= rtrim( $this->rows ) . $this->args['newLine'];
+			$this->output = $this->getHeaders() . $this->getRows();
 		}
 
 		return $this->output;
@@ -95,38 +114,52 @@ class CsvBuilder {
 	 * @throws \Exception
 	 */
 	public function download() {
-		$filename = ( empty( $this->filename ) ) ? time() . '.csv' : $this->filename;
-
-		$output = $this->getOutput();
-
 		if ( headers_sent() ) {
 			throw new \Exception( 'Unable to start file download. Response headers already sent.' );
 		}
 
 		header( 'Content-Type: application/octet-stream' );
 		header( 'Content-Description: File Transfer' );
-
 		header( 'Content-Transfer-Encoding: Binary' );
-		header( 'Content-Disposition: attachment; filename="' . $filename . '"' );
+		header( 'Content-Disposition: attachment; filename="' . $this->getFilename() . '"' );
+
 		header( 'Expires: 0' );
 		header( 'Cache-Control: must-revalidate, post-check=0, pre-check=0' );
 		header( 'Pragma: public' );
+
+		$output = $this->getOutput();
+
 		header( 'Content-Length: ' . mb_strlen( $output ) );
 
 		print $output;
 		exit;
 	}
 
+	public function write() {
+		return file_put_contents( $this->getFilename(), $this->getOutput() );
+	}
+
 	/**
-	 * @param string $data
+	 * @param mixed $data
 	 *
-	 * @return string
+	 * @return mixed
 	 */
 	protected function escape( $data ) {
-		$find    = array( '"' );
-		$replace = array( '""' );
+		if ( is_array( $data ) ) {
+			foreach ( $data as $key => $value ) {
+				$data[ $key ] = $this->escape( $value );
+			}
+		} else {
+			$data = strtr( $data, $this->args['escape'] );
+		}
 
-		return str_replace( $find, $replace, $data );
+		return $data;
+	}
+
+	public function getFilename() {
+		$filename = ( empty( $this->filename ) ) ? time() . '.csv' : $this->filename;
+
+		return $filename;
 	}
 
 	/**
@@ -138,6 +171,13 @@ class CsvBuilder {
 		$this->filename = $filename;
 
 		return $this;
+	}
+
+	protected function parseArgs( $args = [] ) {
+		$parser = new ArgParser( $args, 'filename' );
+		$parser->parseSetters( $this );
+
+		return $parser->resolveOptions( self::$defaultArgs );
 	}
 }
 

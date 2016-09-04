@@ -1,20 +1,21 @@
 {
-    "name": "palmtree/csv",
-    "description": "A CSV parser and builder for PHP",
-    "type": "library",
-    "license": "GPL2",
-    "authors": [
-        {
-            "name": "andyexeter",
-            "email": "palmer.andy@gmail.com"
-        }
-    ],
-    "require": {
-        "php": ">=5.3"
-    },
-    "autoload": {
-      "psr-4": {
-        "Palmtree\\Csv\\": "src/Palmtree/Csv"
-      }
+  "name": "palmtree/csv",
+  "description": "CSV Parser and Builder components for Palmtree PHP",
+  "type": "library",
+  "license": "GPL2",
+  "authors": [
+    {
+      "name": "andyexeter",
+      "email": "palmer.andy@gmail.com"
     }
+  ],
+  "require": {
+    "php": ">=5.3",
+    "palmtree/argparser": "dev-master"
+  },
+  "autoload": {
+    "psr-4": {
+      "Palmtree\\Csv\\": ""
+    }
+  }
 }
