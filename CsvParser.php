@@ -11,16 +11,16 @@ class CsvParser implements \Iterator {
 	/**
 	 * @var array
 	 */
-	public static $defaultArgs = array(
+	public static $defaultArgs = [
 		'file'         => '',
 		'hasHeaders'   => true,
 		'delimiter'    => ',',
 		'enclosure'    => '"',
 		'escape'       => '\\',
 		'normalize'    => false,
-		'falseyValues' => array( 'false', 'off', 'no', '0', 'disabled' ),
-		'truthyValues' => array( 'true', 'on', 'yes', '1', 'enabled' ),
-	);
+		'falseyValues' => [ 'false', 'off', 'no', '0', 'disabled' ],
+		'truthyValues' => [ 'true', 'on', 'yes', '1', 'enabled' ],
+	];
 
 	/**
 	 * @var resource
@@ -29,7 +29,7 @@ class CsvParser implements \Iterator {
 	/**
 	 * @var array
 	 */
-	protected $headers = array();
+	protected $headers = [];
 	/**
 	 * @var int
 	 */
@@ -42,19 +42,19 @@ class CsvParser implements \Iterator {
 	/**
 	 * @var array
 	 */
-	protected $args = array();
+	protected $args = [];
 
 	/**
 	 * @var array
 	 */
-	protected $newLines = array( "\r\n", "\r", "\n" );
+	protected $newLines = [ "\r\n", "\r", "\n" ];
 
 	/**
 	 * CSV constructor.
 	 */
-	public function __construct( $args = array() ) {
+	public function __construct( $args = [] ) {
 		if ( is_string( $args ) ) {
-			$args = array( 'file' => $args );
+			$args = [ 'file' => $args ];
 		}
 
 		$this->args = array_replace_recursive( self::$defaultArgs, $args );
@@ -88,7 +88,7 @@ class CsvParser implements \Iterator {
 	 */
 	public function current() {
 		$line       = $this->line;
-		$this->line = array();
+		$this->line = [];
 
 		foreach ( $line as $key => $cell ) {
 			if ( $this->args['hasHeaders'] && isset( $this->headers[ $key ] ) ) {
