@@ -2,7 +2,7 @@
   "name": "palmtree/csv",
   "description": "CSV Parser and Builder components for Palmtree PHP",
   "type": "library",
-  "license": "GPL2",
+  "license": "MIT",
   "authors": [
     {
       "name": "andyexeter",
