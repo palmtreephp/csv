@@ -2,6 +2,8 @@
 
 namespace Palmtree\Csv;
 
+use Palmtree\ArgParser\ArgParser;
+
 /**
  * Class CsvParser
  * @package    Palmtree
@@ -59,14 +61,10 @@ class CsvParser implements \Iterator
             $args = ['file' => $args];
         }
 
-        $this->args = array_replace_recursive(self::$defaultArgs, $args);
+        $this->args = $this->parseArgs($args);
 
         ini_set('auto_detect_line_endings', '1');
         $this->fileHandle = fopen($this->args['file'], 'r');
-
-        if (! $this->fileHandle) {
-            throw new \Exception("Could not open file '{$this->args['file']}' for reading.");
-        }
     }
 
     /**
@@ -80,21 +78,44 @@ class CsvParser implements \Iterator
     }
 
     /**
+     * Returns all lines in the file.
+     *
+     * @return array
+     */
+    public function getLines()
+    {
+        $result = [];
+
+        foreach ($this as $line) {
+            $result[] = $line;
+        }
+
+        return $result;
+    }
+
+    /**
+     * Maps each line using a callback function and returns the result.
+     *
+     * @param callable $callback
+     *
+     * @return array
+     */
+    public function map(callable $callback)
+    {
+        $result = [];
+        foreach ($this as $line) {
+            $result[] = $callback($line);
+        }
+
+        return $result;
+    }
+
+    /**
      * @return array
      */
     protected function getNextLine()
     {
         return fgetcsv($this->fileHandle, null, $this->args['delimiter']);
-    }
-
-    public function map(callable $callback)
-    {
-        $result = [];
-        foreach ($this as $item) {
-            $result[] = $callback($item);
-        }
-
-        return $result;
     }
 
     /**
@@ -199,5 +220,13 @@ class CsvParser implements \Iterator
         }
 
         return $value;
+    }
+
+    protected function parseArgs($args = [])
+    {
+        $parser = new ArgParser($args, 'filename');
+        $parser->parseSetters($this);
+
+        return $parser->resolveOptions(self::$defaultArgs);
     }
 }
