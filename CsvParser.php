@@ -57,10 +57,6 @@ class CsvParser implements \Iterator
      */
     public function __construct($args = [])
     {
-        if (is_string($args)) {
-            $args = ['file' => $args];
-        }
-
         $this->args = $this->parseArgs($args);
 
         ini_set('auto_detect_line_endings', '1');
@@ -84,13 +80,7 @@ class CsvParser implements \Iterator
      */
     public function getLines()
     {
-        $result = [];
-
-        foreach ($this as $line) {
-            $result[] = $line;
-        }
-
-        return $result;
+        return iterator_to_array($this);
     }
 
     /**
