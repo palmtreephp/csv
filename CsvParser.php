@@ -9,7 +9,7 @@ use Palmtree\ArgParser\ArgParser;
  * @package    Palmtree
  * @subpackage Csv
  */
-class CsvParser implements \Iterator
+class CsvParser implements \Iterator, \Countable
 {
     /**
      * @var array
@@ -218,5 +218,13 @@ class CsvParser implements \Iterator
         $parser->parseSetters($this);
 
         return $parser->resolveOptions(self::$defaultArgs);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function count()
+    {
+        return count($this->getLines());
     }
 }
