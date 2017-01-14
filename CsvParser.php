@@ -39,7 +39,7 @@ class CsvParser implements \Iterator, \Countable
      */
     protected $index = 0;
     /**
-     * @var
+     * @var array
      */
     protected $row;
 
@@ -102,6 +102,8 @@ class CsvParser implements \Iterator, \Countable
     }
 
     /**
+     * Returns an array of cells for next row.
+     *
      * @return array
      */
     protected function getNextRow()
@@ -117,12 +119,13 @@ class CsvParser implements \Iterator, \Countable
         $row       = $this->row;
         $this->row = [];
 
-        foreach ($row as $key => $cell) {
-            if ($this->args['hasHeaders'] && isset($this->headers[$key])) {
-                $key = $this->headers[$key];
+        // Iterate through the row and replace each key with the relevant header
+        foreach ($row as $index => $cell) {
+            if ($this->args['hasHeaders'] && isset($this->headers[$index])) {
+                $index = $this->headers[$index];
             }
 
-            $this->row[$key] = $this->formatCell($cell);
+            $this->row[$index] = $this->formatCell($cell);
         }
 
         return $this->row;
