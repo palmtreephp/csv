@@ -108,7 +108,13 @@ class CsvParser implements \Iterator, \Countable
      */
     protected function getNextRow()
     {
-        return fgetcsv($this->fileHandle, null, $this->args['delimiter']);
+        return fgetcsv(
+            $this->fileHandle,
+            null,
+            $this->args['delimiter'],
+            $this->args['enclosure'],
+            $this->args['escape']
+        );
     }
 
     /**
