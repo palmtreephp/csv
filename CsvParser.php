@@ -173,7 +173,6 @@ class CsvParser implements \Iterator, \Countable
      */
     protected function formatCell($cell, $toLower = false)
     {
-        $cell = trim($cell);
         $cell = str_replace($this->newLines, PHP_EOL, mb_convert_encoding($cell, 'UTF-8', mb_detect_encoding($cell)));
 
         if ($toLower) {
