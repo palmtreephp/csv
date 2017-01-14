@@ -51,7 +51,7 @@ class CsvParser implements \Iterator, \Countable
     /**
      * @var array
      */
-    protected $newLines = ["\r\n", "\r", "\n"];
+    protected static $newLines = ["\r\n", "\r", "\n"];
 
     /**
      * CSV constructor.
@@ -167,12 +167,11 @@ class CsvParser implements \Iterator, \Countable
     }
 
     /**
-     * @param      $cell
-     * @param bool $toLower
+     * @param $cell
      *
      * @return mixed
      */
-    protected function formatCell($cell, $toLower = false)
+    protected function formatCell($cell)
     {
         if ($this->args['charset']) {
             $charset = mb_detect_encoding($cell);
@@ -182,11 +181,7 @@ class CsvParser implements \Iterator, \Countable
             }
         }
 
-        $cell = str_replace($this->newLines, PHP_EOL, $cell);
-
-        if ($toLower) {
-            $cell = mb_strtolower($cell);
-        }
+        $cell = str_replace(static::$newLines, PHP_EOL, $cell);
 
         if ($this->args['normalize']) {
             $cell = $this->normalizeValue($cell);
@@ -202,13 +197,15 @@ class CsvParser implements \Iterator, \Countable
      */
     protected function normalizeValue($value)
     {
+        $trimmedValue = trim($value);
+
         // Number
-        if (is_numeric($value)) {
-            return $value + 0;
+        if (is_numeric($trimmedValue)) {
+            return $trimmedValue + 0;
         }
 
         // Boolean
-        $valueLowered = mb_strtolower($value);
+        $valueLowered = mb_strtolower($trimmedValue);
         if (in_array($valueLowered, $this->args['truthyValues'])) {
             return true;
         }
