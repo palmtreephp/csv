@@ -16,11 +16,11 @@ class CsvParser implements \Iterator, \Countable
      */
     public static $defaultArgs = [
         'charset'      => 'utf-8',
-        'file'         => '',
         'hasHeaders'   => true,
         'delimiter'    => ',',
         'enclosure'    => '"',
         'escape'       => '\\',
+        'file'         => '',
         'normalize'    => false,
         'falseyValues' => ['false', 'off', 'no', '0', 'disabled'],
         'truthyValues' => ['true', 'on', 'yes', '1', 'enabled'],
@@ -61,7 +61,11 @@ class CsvParser implements \Iterator, \Countable
         $this->args = $this->parseArgs($args);
 
         ini_set('auto_detect_line_endings', '1');
-        $this->fileHandle = fopen($this->args['file'], 'r');
+        $this->fileHandle = @fopen($this->args['file'], 'r');
+
+        if (! $this->fileHandle) {
+            throw new \InvalidArgumentException(sprintf('File %s does not exist', $this->args['file']));
+        }
     }
 
     /**
@@ -176,6 +180,14 @@ class CsvParser implements \Iterator, \Countable
     }
 
     /**
+     * @inheritDoc
+     */
+    public function count()
+    {
+        return count($this->getRows());
+    }
+
+    /**
      * @param $cell
      *
      * @return mixed
@@ -226,14 +238,6 @@ class CsvParser implements \Iterator, \Countable
         return $value;
     }
 
-    /**
-     * @return mixed
-     */
-    public function count()
-    {
-        return count($this->getRows());
-    }
-
     protected function parseArgs($args = [])
     {
         $parser = new ArgParser($args, 'file');
@@ -241,5 +245,4 @@ class CsvParser implements \Iterator, \Countable
 
         return $parser->resolveOptions(self::$defaultArgs);
     }
-
 }
