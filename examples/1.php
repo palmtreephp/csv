@@ -12,11 +12,11 @@ foreach ( $csv as $key => $row ) {
 	var_dump( $row );
 }
 
-$csv = new CsvBuilder( 'test2.csv' );
+/*$csv = new CsvBuilder( 'test2.csv' );
 
 $csv->addHeaders( [ 'name', 'age', 'gender' ] );
 
 $csv->addRow( [ 'Alice', '24', 'Female' ] );
 $csv->addRow( [ 'Bob', '28', 'Male' ] );
 
-$csv->download();
+$csv->download();*/

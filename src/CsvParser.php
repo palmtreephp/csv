@@ -236,7 +236,7 @@ class CsvParser implements \Iterator, \Countable
 
     protected function parseArgs($args = [])
     {
-        $parser = new ArgParser($args, 'filename');
+        $parser = new ArgParser($args, 'file');
         $parser->parseSetters($this);
 
         return $parser->resolveOptions(self::$defaultArgs);
