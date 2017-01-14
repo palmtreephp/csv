@@ -15,6 +15,7 @@ class CsvParser implements \Iterator, \Countable
      * @var array
      */
     public static $defaultArgs = [
+        'charset'      => 'utf-8',
         'file'         => '',
         'hasHeaders'   => true,
         'delimiter'    => ',',
@@ -113,7 +114,7 @@ class CsvParser implements \Iterator, \Countable
      */
     public function current()
     {
-        $row      = $this->row;
+        $row       = $this->row;
         $this->row = [];
 
         foreach ($row as $key => $cell) {
@@ -173,7 +174,15 @@ class CsvParser implements \Iterator, \Countable
      */
     protected function formatCell($cell, $toLower = false)
     {
-        $cell = str_replace($this->newLines, PHP_EOL, mb_convert_encoding($cell, 'UTF-8', mb_detect_encoding($cell)));
+        if ($this->args['charset']) {
+            $charset = mb_detect_encoding($cell);
+
+            if ($charset !== $this->args['charset']) {
+                $cell = mb_convert_encoding($cell, $this->args['charset']);
+            }
+        }
+
+        $cell = str_replace($this->newLines, PHP_EOL, $cell);
 
         if ($toLower) {
             $cell = mb_strtolower($cell);
@@ -211,6 +220,14 @@ class CsvParser implements \Iterator, \Countable
         return $value;
     }
 
+    /**
+     * @return mixed
+     */
+    public function count()
+    {
+        return count($this->getRows());
+    }
+
     protected function parseArgs($args = [])
     {
         $parser = new ArgParser($args, 'filename');
@@ -219,11 +236,4 @@ class CsvParser implements \Iterator, \Countable
         return $parser->resolveOptions(self::$defaultArgs);
     }
 
-    /**
-     * @return mixed
-     */
-    public function count()
-    {
-        return count($this->getRows());
-    }
 }
