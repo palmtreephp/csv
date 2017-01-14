@@ -40,7 +40,7 @@ class CsvParser implements \Iterator, \Countable
     /**
      * @var
      */
-    protected $line;
+    protected $row;
 
     /**
      * @var array
@@ -74,17 +74,17 @@ class CsvParser implements \Iterator, \Countable
     }
 
     /**
-     * Returns all lines in the file.
+     * Returns all rows in the file.
      *
      * @return array
      */
-    public function getLines()
+    public function getRows()
     {
         return iterator_to_array($this);
     }
 
     /**
-     * Maps each line using a callback function and returns the result.
+     * Maps each row using a callback function and returns the result.
      *
      * @param callable $callback
      *
@@ -93,8 +93,8 @@ class CsvParser implements \Iterator, \Countable
     public function map(callable $callback)
     {
         $result = [];
-        foreach ($this as $line) {
-            $result[] = $callback($line);
+        foreach ($this as $row) {
+            $result[] = $callback($row);
         }
 
         return $result;
@@ -103,7 +103,7 @@ class CsvParser implements \Iterator, \Countable
     /**
      * @return array
      */
-    protected function getNextLine()
+    protected function getNextRow()
     {
         return fgetcsv($this->fileHandle, null, $this->args['delimiter']);
     }
@@ -113,18 +113,18 @@ class CsvParser implements \Iterator, \Countable
      */
     public function current()
     {
-        $line       = $this->line;
-        $this->line = [];
+        $row      = $this->row;
+        $this->row = [];
 
-        foreach ($line as $key => $cell) {
+        foreach ($row as $key => $cell) {
             if ($this->args['hasHeaders'] && isset($this->headers[$key])) {
                 $key = $this->headers[$key];
             }
 
-            $this->line[$key] = $this->formatCell($cell);
+            $this->row[$key] = $this->formatCell($cell);
         }
 
-        return $this->line;
+        return $this->row;
     }
 
     /**
@@ -148,9 +148,9 @@ class CsvParser implements \Iterator, \Countable
      */
     public function valid()
     {
-        $this->line = $this->getNextLine();
+        $this->row = $this->getNextRow();
 
-        return $this->line !== false && $this->line !== null;
+        return $this->row !== false && $this->row !== null;
     }
 
     /**
@@ -161,7 +161,7 @@ class CsvParser implements \Iterator, \Countable
         rewind($this->fileHandle);
 
         if ($this->args['hasHeaders']) {
-            $this->headers = $this->getNextLine();
+            $this->headers = $this->getNextRow();
         }
     }
 
@@ -225,6 +225,6 @@ class CsvParser implements \Iterator, \Countable
      */
     public function count()
     {
-        return count($this->getLines());
+        return count($this->getRows());
     }
 }
