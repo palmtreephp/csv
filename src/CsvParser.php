@@ -12,7 +12,19 @@ use Palmtree\ArgParser\ArgParser;
 class CsvParser implements \Iterator, \Countable
 {
     /**
-     * @var array
+     * @var array   $defaultArgs  {
+     * @type string $charset
+     * @type bool   $hasHeaders   Whether the CSV file contains headers. Default true
+     * @type string $delimiter    Cell delimiter, default ',' (comma)
+     * @type string $enclosure    Cell enclosure, default '"' (double quote)
+     * @type string $escape       Escape character. Default '\' (backslash)
+     * @type string $file         File to parse.
+     * @type bool   $normalize    Whether to normalize cell value data types. Default false
+     * @type array  $falseyValues Array of falsey values to convert to boolean false.
+     *                            Default ['false', 'off', 'no', '0', 'disabled']
+     * @type array  $truthyValues Array of truthy values to convert to boolean true.
+     *                            Default ['true', 'on', 'yes', '1', 'enabled']
+     * }
      */
     public static $defaultArgs = [
         'charset'      => 'utf-8',
@@ -212,7 +224,12 @@ class CsvParser implements \Iterator, \Countable
     }
 
     /**
-     * @param $value
+     * Attempts to convert a string value to it's normalized data type.
+     *
+     * Numeric looking values get converted to ints or floats, truthy
+     * and falsey looking values get converted to booleans.
+     *
+     * @param string $value
      *
      * @return mixed
      */
@@ -222,6 +239,10 @@ class CsvParser implements \Iterator, \Countable
 
         // Number
         if (is_numeric($trimmedValue)) {
+            /*
+             * We don't typecast to an integer here in case the
+             * value is a float.
+             */
             return $trimmedValue + 0;
         }
 
