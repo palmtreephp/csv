@@ -8,7 +8,7 @@ use Palmtree\ArgParser\ArgParser;
  * @package    Palmtree
  * @subpackage Csv
  */
-class CsvBuilder
+class Writer
 {
     public static $defaultArgs = [
         'filename'  => '',
@@ -144,7 +144,6 @@ class CsvBuilder
         header('Content-Length: ' . mb_strlen($output));
 
         print $output;
-        exit;
     }
 
     public function write()
@@ -180,7 +179,7 @@ class CsvBuilder
     /**
      * @param mixed $filename
      *
-     * @return CsvBuilder
+     * @return Writer
      */
     public function setFilename($filename)
     {

@@ -2,10 +2,10 @@
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 
-use Palmtree\Csv\CsvBuilder;
-use Palmtree\Csv\CsvParser;
+use Palmtree\Csv\Writer;
+use Palmtree\Csv\Reader;
 
-$csv = new CsvParser('test.csv');
+$csv = new Reader('test.csv');
 
 var_dump(count($csv));
 

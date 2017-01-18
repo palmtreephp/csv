@@ -9,7 +9,7 @@ use Palmtree\ArgParser\ArgParser;
  * @package    Palmtree
  * @subpackage Csv
  */
-class CsvParser implements \Iterator, \Countable
+class Reader implements \Iterator, \Countable
 {
     /**
      * @var array   $defaultArgs  {
