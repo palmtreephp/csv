@@ -15,10 +15,10 @@ class CsvParser implements \Iterator, \Countable
      * @var array   $defaultArgs  {
      * @type string $charset
      * @type bool   $hasHeaders   Whether the CSV file contains headers. Default true
-     * @type string $delimiter    Cell delimiter, default ',' (comma)
-     * @type string $enclosure    Cell enclosure, default '"' (double quote)
+     * @type string $delimiter    Cell delimiter. Default ',' (comma)
+     * @type string $enclosure    Cell enclosure. Default '"' (double quote)
      * @type string $escape       Escape character. Default '\' (backslash)
-     * @type string $file         File to parse.
+     * @type string $file         Path to CSV file to parse.
      * @type bool   $normalize    Whether to normalize cell value data types. Default false
      * @type array  $falseyValues Array of falsey values to convert to boolean false.
      *                            Default ['false', 'off', 'no', '0', 'disabled']
