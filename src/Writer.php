@@ -11,7 +11,6 @@ use Palmtree\ArgParser\ArgParser;
 class Writer
 {
     public static $defaultArgs = [
-        'filename'  => '',
         'delimiter' => ',',
         'enclosure' => '"',
         'newLine'   => "\r\n",
@@ -32,8 +31,6 @@ class Writer
     protected $headers = '';
 
     protected $output;
-
-    protected $filename;
 
     public function __construct($args = [])
     {
@@ -64,7 +61,7 @@ class Writer
      */
     public function addRows($rows)
     {
-        foreach ($rows as $key => $row) {
+        foreach ($rows as $row) {
             $this->addRow($row);
         }
     }
@@ -74,11 +71,13 @@ class Writer
      */
     public function addRow($row)
     {
-        $this->rows .= $this->args['enclosure'] .
-                       implode($this->args['enclosure'] . $this->args['delimiter'] . $this->args['enclosure'],
-                           $this->escape($row)) .
-                       $this->args['enclosure'] .
-                       $this->args['newLine'];
+        $row = implode(
+            $this->args['enclosure'] . $this->args['delimiter'] . $this->args['enclosure'],
+            $this->escape($row)
+        );
+
+        $this->rows .= $this->args['enclosure'] . $row . $this->args['enclosure'];
+        $this->rows .= $this->args['newLine'];
     }
 
     /**
@@ -122,18 +121,26 @@ class Writer
     }
 
     /**
+     * Attempts to send the file as download to the client.
+     *
+     * @param string $filename
+     *
      * @throws \Exception
      */
-    public function download()
+    public function download($filename = '')
     {
         if (headers_sent()) {
             throw new \Exception('Unable to start file download. Response headers already sent.');
         }
 
+        if (! $filename) {
+            $filename = time() . '.csv';
+        }
+
         header('Content-Type: application/octet-stream');
         header('Content-Description: File Transfer');
         header('Content-Transfer-Encoding: Binary');
-        header('Content-Disposition: attachment; filename="' . $this->getFilename() . '"');
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
 
         header('Expires: 0');
         header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
@@ -146,9 +153,20 @@ class Writer
         print $output;
     }
 
-    public function write()
+    /**
+     * Writes the CSV file to the specified path.
+     *
+     * @param string $filepath
+     *
+     * @return int
+     */
+    public function write($filepath = '')
     {
-        return file_put_contents($this->getFilename(), $this->getOutput());
+        if (! $filepath) {
+            $filepath = time() . '.csv';
+        }
+
+        return file_put_contents($filepath, $this->getOutput());
     }
 
     /**
@@ -169,28 +187,9 @@ class Writer
         return $data;
     }
 
-    public function getFilename()
-    {
-        $filename = (empty($this->filename)) ? time() . '.csv' : $this->filename;
-
-        return $filename;
-    }
-
-    /**
-     * @param mixed $filename
-     *
-     * @return Writer
-     */
-    public function setFilename($filename)
-    {
-        $this->filename = $filename;
-
-        return $this;
-    }
-
     protected function parseArgs($args = [])
     {
-        $parser = new ArgParser($args, 'filename');
+        $parser = new ArgParser($args, 'data');
         $parser->parseSetters($this);
 
         return $parser->resolveOptions(self::$defaultArgs);

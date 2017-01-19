@@ -1,6 +1,6 @@
 {
   "name": "palmtree/csv",
-  "description": "CSV Parser and Builder components for Palmtree PHP",
+  "description": "CSV Reader and Writer",
   "type": "library",
   "license": "MIT",
   "authors": [
