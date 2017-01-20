@@ -123,13 +123,23 @@ class Reader implements \Iterator, \Countable
      */
     protected function getNextRow()
     {
-        return fgetcsv(
+        $row = fgetcsv(
             $this->fileHandle,
             null,
             $this->args['delimiter'],
             $this->args['enclosure'],
             $this->args['escape']
         );
+
+        if ($this->args['charset']) {
+            $charset = mb_detect_encoding($row);
+
+            if ($charset !== $this->args['charset']) {
+                $row = mb_convert_encoding($row, $this->args['charset']);
+            }
+        }
+
+        return $row;
     }
 
     /**
@@ -205,14 +215,6 @@ class Reader implements \Iterator, \Countable
      */
     protected function formatCell($cell)
     {
-        if ($this->args['charset']) {
-            $charset = mb_detect_encoding($cell);
-
-            if ($charset !== $this->args['charset']) {
-                $cell = mb_convert_encoding($cell, $this->args['charset']);
-            }
-        }
-
         $cell = str_replace(static::$newLines, PHP_EOL, $cell);
 
         if ($this->args['normalize']) {
