@@ -45,7 +45,7 @@ class Reader implements \Iterator, \Countable
     /**
      * @var array
      */
-    protected $headers = [];
+    protected $headers;
     /**
      * @var int
      */
@@ -58,7 +58,7 @@ class Reader implements \Iterator, \Countable
     /**
      * @var array
      */
-    protected $args = [];
+    protected $args;
 
     /**
      * @var array
@@ -72,7 +72,6 @@ class Reader implements \Iterator, \Countable
     {
         $this->args = $this->parseArgs($args);
 
-        ini_set('auto_detect_line_endings', '1');
         $this->fileHandle = @fopen($this->args['file'], 'r');
 
         if (! $this->fileHandle) {
