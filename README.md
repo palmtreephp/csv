@@ -1,8 +1,8 @@
 # Palmtree CSV
 
-A CSV parser and builder for PHP.
+A CSV reader and writer for PHP.
 
-The `CsvParser` class implements the `Iterator` interface meaning large files can be parsed
+The `Reader` class implements the `Iterator` interface meaning large files can be parsed
 without hitting any memory limits because only one line is loaded at a time.
 
 ## Requirements
@@ -14,24 +14,37 @@ without hitting any memory limits because only one line is loaded at a time.
 
 ```php
 <?php
-use Palmtree\Csv\CsvBuilder;
-$csv = new CsvBuilder( 'people.csv' );
-$csv->addHeaders( [ 'name', 'age', 'gender' ] );
+use Palmtree\Csv\Writer;
 
-$csv->addRow( [ 'Alice', '24', 'Female'] );
-$csv->addRow( [ 'Bob', '28', 'Male' ] );
+$people   = [];
+$people[] = [
+    'name'  => 'Alice',
+    'age'   => '24',
+    'gender' => 'Female',
+];
+$people[] = [
+    'name'  => 'Bob',
+    'age'   => '28',
+    'gender' => 'Male',
+];
 
-$csv->download();
+$csv = new Writer( $people );
+
+$csv->download('people.csv');
+// OR
+$csv->write('/path/to/save/people.csv');
 ```
 
-#### Parsing a CSV file into an array
+#### Reading a CSV file
 ```php
 <?php
-use Palmtree\Csv\CsvParser;
-$csv = new CsvParser( 'people.csv' );
+use Palmtree\Csv\Reader;
+
+$csv = new Reader( 'people.csv' );
 
 foreach( $csv as $row ) {
-	// Alice is a 24 year old female.
 	echo "{$row['name']} is a {$row['age']} year old {$row['gender']}";
 }
 ```
+
+See the [examples](examples) directory for more usage examples.
