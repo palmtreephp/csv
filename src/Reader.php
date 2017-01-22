@@ -80,7 +80,9 @@ class Reader implements \Iterator, \Countable
         $this->fileHandle = @fopen($this->args['file'], 'r');
 
         if (! $this->fileHandle) {
-            throw new \InvalidArgumentException(sprintf('File %s does not exist', $this->args['file']));
+            throw new \InvalidArgumentException(
+                sprintf('File %s could not be opened for reading', $this->args['file'])
+            );
         }
     }
 
