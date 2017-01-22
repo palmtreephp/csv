@@ -191,6 +191,7 @@ class Reader implements \Iterator, \Countable
     public function rewind()
     {
         rewind($this->fileHandle);
+        $this->index = 0;
 
         if ($this->args['hasHeaders']) {
             $this->headers = $this->getNextRow();
