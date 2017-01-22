@@ -5,15 +5,14 @@ namespace Palmtree\Csv;
 use Palmtree\ArgParser\ArgParser;
 
 /**
- * Class CsvParser
- * @package    Palmtree
- * @subpackage Csv
+ * Reads a CSV file by loading each line into memory
+ * one at a time.
  */
 class Reader implements \Iterator, \Countable
 {
     /**
      * @var array   $defaultArgs  {
-     * @type string $charset
+     * @type string $charset      Convert text to the given character set. Default false (no conversion)
      * @type bool   $hasHeaders   Whether the CSV file contains headers. Default true
      * @type string $delimiter    Cell delimiter. Default ',' (comma)
      * @type string $enclosure    Cell enclosure. Default '"' (double quote)
@@ -27,7 +26,7 @@ class Reader implements \Iterator, \Countable
      * }
      */
     public static $defaultArgs = [
-        'charset'      => 'utf-8',
+        'charset'      => false,
         'hasHeaders'   => true,
         'delimiter'    => ',',
         'enclosure'    => '"',
@@ -39,17 +38,25 @@ class Reader implements \Iterator, \Countable
     ];
 
     /**
+     * @var array
+     */
+    protected $args;
+
+    /**
      * @var resource
      */
     protected $fileHandle;
-    /**
-     * @var array
-     */
-    protected $headers;
+
     /**
      * @var int
      */
     protected $index = 0;
+
+    /**
+     * @var array
+     */
+    protected $headers;
+
     /**
      * @var array
      */
@@ -58,15 +65,13 @@ class Reader implements \Iterator, \Countable
     /**
      * @var array
      */
-    protected $args;
-
-    /**
-     * @var array
-     */
     protected static $newLines = ["\r\n", "\r", "\n"];
 
     /**
-     * CSV constructor.
+     * Reader constructor.
+     *
+     * @param array|string $args Array of args to override $defaultArgs or
+     *                           a file path to the CSV file to parse.
      */
     public function __construct($args = [])
     {
@@ -80,7 +85,7 @@ class Reader implements \Iterator, \Countable
     }
 
     /**
-     *
+     * Reader destructor.
      */
     public function __destruct()
     {
@@ -117,7 +122,7 @@ class Reader implements \Iterator, \Countable
     }
 
     /**
-     * Returns an array of cells for next row.
+     * Returns an array of cells for the next row.
      *
      * @return array
      */
@@ -131,19 +136,11 @@ class Reader implements \Iterator, \Countable
             $this->args['escape']
         );
 
-        if ($this->args['charset']) {
-            $charset = mb_detect_encoding($row);
-
-            if ($charset !== $this->args['charset']) {
-                $row = mb_convert_encoding($row, $this->args['charset']);
-            }
-        }
-
         return $row;
     }
 
     /**
-     * @return array
+     * @inheritDoc
      */
     public function current()
     {
@@ -163,7 +160,7 @@ class Reader implements \Iterator, \Countable
     }
 
     /**
-     *
+     * @inheritDoc
      */
     public function next()
     {
@@ -171,7 +168,7 @@ class Reader implements \Iterator, \Countable
     }
 
     /**
-     * @return int
+     * @inheritDoc
      */
     public function key()
     {
@@ -179,7 +176,7 @@ class Reader implements \Iterator, \Countable
     }
 
     /**
-     * @return bool
+     * @inheritDoc
      */
     public function valid()
     {
@@ -189,7 +186,7 @@ class Reader implements \Iterator, \Countable
     }
 
     /**
-     *
+     * @inheritDoc
      */
     public function rewind()
     {
@@ -215,6 +212,14 @@ class Reader implements \Iterator, \Countable
      */
     protected function formatCell($cell)
     {
+        if ($this->args['charset']) {
+            $charset = mb_detect_encoding($cell);
+
+            if (strcasecmp($charset, $this->args['charset']) !== 0) {
+                $cell = mb_convert_encoding($cell, $this->args['charset']);
+            }
+        }
+
         $cell = str_replace(static::$newLines, PHP_EOL, $cell);
 
         if ($this->args['normalize']) {
@@ -240,10 +245,8 @@ class Reader implements \Iterator, \Countable
 
         // Number
         if (is_numeric($trimmedValue)) {
-            /*
-             * We don't typecast to an integer here in case the
-             * value is a float.
-             */
+            // We don't typecast to an integer here in case the
+            // value is a float.
             return $trimmedValue + 0;
         }
 
