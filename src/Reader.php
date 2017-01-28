@@ -11,30 +11,30 @@ use Palmtree\ArgParser\ArgParser;
 class Reader implements \Iterator, \Countable
 {
     /**
-     * @var array   $defaultArgs  {
-     * @type string $charset      Convert text to the given character set. Default false (no conversion)
-     * @type bool   $hasHeaders   Whether the CSV file contains headers. Default true
-     * @type string $delimiter    Cell delimiter. Default ',' (comma)
-     * @type string $enclosure    Cell enclosure. Default '"' (double quote)
-     * @type string $escape       Escape character. Default '\' (backslash)
-     * @type string $file         Path to CSV file to parse.
-     * @type bool   $normalize    Whether to normalize cell value data types. Default false
-     * @type array  $falseyValues Array of falsey values to convert to boolean false.
+     * @var array   $defaultArgs {
+     * @type string $charset     Convert text to the given character set. Default false (no conversion)
+     * @type bool   $headers     Whether the CSV file contains headers. Default true
+     * @type string $delimiter   Cell delimiter. Default ',' (comma)
+     * @type string $enclosure   Cell enclosure. Default '"' (double quote)
+     * @type string $escape      Escape character. Default '\' (backslash)
+     * @type string $file        Path to CSV file to parse.
+     * @type bool   $normalize   Whether to normalize cell value data types. Default false
+     * @type array  $falsey      Array of falsey values to convert to boolean false.
      *                            Default ['false', 'off', 'no', '0', 'disabled']
-     * @type array  $truthyValues Array of truthy values to convert to boolean true.
+     * @type array  $truthy      Array of truthy values to convert to boolean true.
      *                            Default ['true', 'on', 'yes', '1', 'enabled']
      * }
      */
     public static $defaultArgs = [
-        'charset'      => false,
-        'hasHeaders'   => true,
-        'delimiter'    => ',',
-        'enclosure'    => '"',
-        'escape'       => '\\',
-        'file'         => '',
-        'normalize'    => false,
-        'falseyValues' => ['false', 'off', 'no', '0', 'disabled'],
-        'truthyValues' => ['true', 'on', 'yes', '1', 'enabled'],
+        'file'      => '',
+        'delimiter' => ',',
+        'enclosure' => '"',
+        'escape'    => '\\',
+        'charset'   => false,
+        'headers'   => true,
+        'normalize' => false,
+        'falsey'    => ['false', 'off', 'no', '0', 'disabled'],
+        'truthy'    => ['true', 'on', 'yes', '1', 'enabled'],
     ];
 
     /**
@@ -151,7 +151,7 @@ class Reader implements \Iterator, \Countable
 
         // Iterate through the row and replace each key with the relevant header
         foreach ($row as $index => $cell) {
-            if ($this->args['hasHeaders'] && isset($this->headers[$index])) {
+            if ($this->args['headers'] && isset($this->headers[$index])) {
                 $index = $this->headers[$index];
             }
 
@@ -195,7 +195,7 @@ class Reader implements \Iterator, \Countable
         rewind($this->fileHandle);
         $this->index = 0;
 
-        if ($this->args['hasHeaders']) {
+        if ($this->args['headers']) {
             $this->headers = $this->getNextRow();
         }
     }
@@ -248,18 +248,18 @@ class Reader implements \Iterator, \Countable
 
         // Number
         if (is_numeric($trimmedValue)) {
-            // We don't typecast to an integer here in case the
-            // value is a float.
+            // We add zero instead of typecasting to account
+            // for both integers floats.
             return $trimmedValue + 0;
         }
 
         // Boolean
         $valueLowered = mb_strtolower($trimmedValue);
-        if (in_array($valueLowered, $this->args['truthyValues'])) {
+        if (in_array($valueLowered, $this->args['truthy'])) {
             return true;
         }
 
-        if (in_array($valueLowered, $this->args['falseyValues'])) {
+        if (in_array($valueLowered, $this->args['falsey'])) {
             return false;
         }
 
