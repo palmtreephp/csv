@@ -1,3 +1,4 @@
-"name","age","gender"
-"Alice","24","Female"
-"Bob","28","Male"
+"name","age","gender","product_ids","price","enabled","specials"
+"Alice","24","Female","7,9,11,123,","13.99","yes","{""special_1"": {""price"": ""99.99"", ""name"": ""prod_1""}}"
+"Bob","28","Male","0,123,999999999,-123","12.47820","no","{""special_1"": {""price"": ""99.99"", ""name"": ""prod_1""}}"
+"Paul","34","Male",",4,,-123","8","1","{""special_1"": {""price"": ""99.99"", ""name"": ""prod_1""}}"

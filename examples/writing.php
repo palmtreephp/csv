@@ -18,4 +18,6 @@ $people[] = [
 
 $csv = new Writer($people);
 
-$csv->write('people.csv');
+//$csv->write('people.csv');
+
+$csv->write('php://output');
