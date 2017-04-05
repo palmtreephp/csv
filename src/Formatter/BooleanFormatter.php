@@ -4,6 +4,9 @@ namespace Palmtree\Csv\Formatter;
 
 use Palmtree\ArgParser\ArgParser;
 
+/**
+ * BooleanFormatter formats a CSV cell as a boolean
+ */
 class BooleanFormatter extends AbstractFormatter
 {
     public static $defaultArgs = [

@@ -33,6 +33,12 @@ class Cell
 
     public function __toString()
     {
-        return (string)$this->getValue();
+        try {
+            $value = (string)$this->getValue();
+        } catch (\Exception $exception) {
+            $value = '';
+        }
+
+        return $value;
     }
 }

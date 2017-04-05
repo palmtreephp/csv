@@ -120,6 +120,12 @@ class ArrayCell extends Cell implements \ArrayAccess, \Iterator, \Countable, \Se
 
     public function __toString()
     {
-        return implode(',', $this->getValue());
+        try {
+            $value = implode(',', $this->getValue());
+        } catch (\Exception $exception) {
+            $value = '';
+        }
+
+        return $value;
     }
 }

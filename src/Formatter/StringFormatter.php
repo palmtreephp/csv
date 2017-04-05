@@ -2,6 +2,10 @@
 
 namespace Palmtree\Csv\Formatter;
 
+/**
+ * StringFormatter formats a CSV cell as a string.
+ * Will trim the string by default.
+ */
 class StringFormatter extends AbstractFormatter
 {
     protected $trim = true;

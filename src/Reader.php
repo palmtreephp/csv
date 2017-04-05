@@ -163,7 +163,7 @@ class Reader implements \Iterator, \Countable
      */
     public function next()
     {
-        $this->index++;
+        ++$this->index;
     }
 
     /**
