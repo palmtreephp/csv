@@ -21,7 +21,6 @@ class BooleanFormatter extends AbstractFormatter
         $this->args = (new ArgParser($args))->resolveOptions(static::$defaultArgs);
 
         parent::__construct($formatter);
-
     }
 
     protected function getFormattedValue($value)

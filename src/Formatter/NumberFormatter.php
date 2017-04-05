@@ -15,7 +15,6 @@ class NumberFormatter extends AbstractFormatter
         $this->decimals = $decimals;
 
         parent::__construct($formatter);
-
     }
 
     /**
@@ -40,5 +39,4 @@ class NumberFormatter extends AbstractFormatter
 
         return $numberValue;
     }
-
 }

@@ -21,5 +21,4 @@ class FilterFormatter extends AbstractFormatter
 
         return $value;
     }
-
 }

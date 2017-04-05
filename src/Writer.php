@@ -1,4 +1,5 @@
 <?php
+
 namespace Palmtree\Csv;
 
 use Palmtree\ArgParser\ArgParser;
@@ -195,4 +196,3 @@ class Writer
         return $parser->resolveOptions(self::$defaultArgs);
     }
 }
-

@@ -29,5 +29,4 @@ class MoneyFormatter extends AbstractFormatter
     {
         return money_format($this->moneyFormat, $value);
     }
-
 }
