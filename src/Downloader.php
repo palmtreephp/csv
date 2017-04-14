@@ -9,7 +9,7 @@ class Downloader extends Writer
      * a downloadable, non-cacheable file.
      * @var array
      */
-    public static $defaultResponseHeaders = [
+    protected $responseHeaders = [
         'Content-Type'              => 'application/octet-stream',
         'Content-Description'       => 'File Transfer',
         'Content-Transfer-Encoding' => 'Binary',
@@ -21,7 +21,6 @@ class Downloader extends Writer
     ];
 
     protected $filename;
-    protected $responseHeaders;
 
     public function __construct($filename = '', $responseHeaders = [])
     {
@@ -30,27 +29,33 @@ class Downloader extends Writer
         }
 
         $this->setFilename($filename);
-        $this->setResponseHeaders($responseHeaders);
+        $this->addResponseHeaders($responseHeaders);
 
         parent::__construct('php://temp');
     }
 
     public function getResponseHeaders()
     {
-        if (!$this->responseHeaders) {
-            $this->setResponseHeaders();
-        }
-
         return $this->responseHeaders;
     }
 
-    public function setResponseHeaders($userHeaders = [])
+    public function addResponseHeaders($userHeaders = [])
     {
-        $headers = static::$defaultResponseHeaders;
+        foreach ($userHeaders as $key => $value) {
+            $this->addResponseHeader($key, $value);
+        }
 
-        $headers = array_replace($headers, $userHeaders);
+        return $this;
+    }
 
-        $this->responseHeaders = $headers;
+    public function addResponseHeader($key, $value)
+    {
+        $this->responseHeaders[$key] = $value;
+    }
+
+    public function removeResponseHeader($key)
+    {
+        unset($this->responseHeaders[$key]);
     }
 
     /**
@@ -74,29 +79,26 @@ class Downloader extends Writer
     }
 
     /**
-     * Attempts to send the file as download to the client.
+     * Attempts to send the file as a download to the client.
      *
      * @throws \Exception
      */
     public function download()
     {
-        if (headers_sent()) {
-            throw new \Exception('Unable to start file download. Response headers already sent.');
-        }
+        $body = $this->getResponseBody();
 
-        $headers = $this->getResponseHeaders();
-        $body    = $this->getResponseBody();
+        if (!headers_sent()) {
+            $headers = $this->getResponseHeaders();
 
-        if (!empty($headers['Content-Length'])) {
-            $headers['Content-Length'] = sprintf($headers['Content-Length'], mb_strlen($body));
-        }
+            foreach ($headers as $key => $value) {
+                if ($key === 'Content-Length') {
+                    $value = sprintf($value, mb_strlen($body));
+                } elseif ($key === 'Content-Disposition') {
+                    $value = sprintf($value, $this->getFilename());
+                }
 
-        if (isset($headers['Content-Disposition'])) {
-            $headers['Content-Disposition'] = sprintf($headers['Content-Disposition'], $this->getFilename());
-        }
-
-        foreach ($headers as $key => $value) {
-            header(sprintf('%s: %s', $key, $value));
+                header(sprintf('%s: %s', $key, $value));
+            }
         }
 
         print $body;
