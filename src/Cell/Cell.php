@@ -10,22 +10,37 @@ class Cell
     protected $formatter;
     protected $value;
 
+    /**
+     * Cell constructor.
+     *
+     * @param                         $value
+     * @param FormatterInterface|null $formatter
+     */
     public function __construct($value, FormatterInterface $formatter = null)
     {
         $this->value = $value;
         $this->setFormatter($formatter);
     }
 
+    /**
+     * @return string
+     */
     public function getRawValue()
     {
         return $this->value;
     }
 
+    /**
+     * @return mixed
+     */
     public function getValue()
     {
         return $this->getFormatter()->format($this->getRawValue());
     }
 
+    /**
+     * @return FormatterInterface
+     */
     public function getFormatter()
     {
         return $this->formatter;

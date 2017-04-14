@@ -42,7 +42,7 @@ abstract class AbstractCsv
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getFile()
     {

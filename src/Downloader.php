@@ -18,7 +18,7 @@ class Downloader extends Writer
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getFilename()
     {
@@ -26,7 +26,7 @@ class Downloader extends Writer
     }
 
     /**
-     * @param mixed $filename
+     * @param string $filename
      *
      * @return Downloader
      */
