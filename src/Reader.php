@@ -74,7 +74,7 @@ class Reader extends AbstractCsv implements \Iterator, \Countable
     /**
      * @param mixed $key
      *
-     * @return null|FormatterInterface
+     * @return FormatterInterface
      */
     public function getFormatter($key)
     {
@@ -124,7 +124,7 @@ class Reader extends AbstractCsv implements \Iterator, \Countable
             $this->getEscapeCharacter()
         );
 
-        if ($row === null || $row === false) {
+        if (!is_array($row)) {
             return null;
         }
 
