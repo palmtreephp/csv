@@ -22,7 +22,28 @@ composer require palmtree/csv
 
 ## Usage
 
-#### Building a CSV file for download
+#### Build and Download a CSV file
+```php
+<?php
+use Palmtree\Csv\Downloader;
+
+$people   = [];
+$people[] = [
+    'name'  => 'Alice',
+    'age'   => '24',
+    'gender' => 'Female',
+];
+$people[] = [
+    'name'  => 'Bob',
+    'age'   => '28',
+    'gender' => 'Male',
+];
+
+$downloader = new Downloader('people.csv');
+$downloader->download();
+```
+
+#### Write a CSV file
 
 ```php
 <?php
@@ -44,7 +65,7 @@ $people[] = [
 Writer::write('people.csv', $people);
 ```
 
-#### Reading a CSV file
+#### Read a CSV file
 ```php
 <?php
 use Palmtree\Csv\Reader;
