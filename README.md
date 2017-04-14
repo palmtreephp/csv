@@ -13,6 +13,13 @@ without hitting any memory limits because only one line is loaded at a time.
 ## Requirements
 * PHP >= 5.3
 
+## Installation
+
+Use composer to add the package to your dependencies:
+```bash
+composer require palmtree/csv
+```
+
 ## Usage
 
 #### Building a CSV file for download
@@ -33,11 +40,8 @@ $people[] = [
     'gender' => 'Male',
 ];
 
-$csv = new Writer( $people );
 
-$csv->download('people.csv');
-// OR
-$csv->write('/path/to/save/people.csv');
+Writer::write('people.csv', $people);
 ```
 
 #### Reading a CSV file
@@ -45,9 +49,9 @@ $csv->write('/path/to/save/people.csv');
 <?php
 use Palmtree\Csv\Reader;
 
-$csv = new Reader( 'people.csv' );
+$csv = new Reader('people.csv');
 
-foreach( $csv as $row ) {
+foreach($csv as $row) {
 	echo "{$row['name']} is a {$row['age']} year old {$row['gender']}";
 }
 ```

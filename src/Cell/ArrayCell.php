@@ -8,7 +8,7 @@ class ArrayCell extends Cell implements \ArrayAccess, \IteratorAggregate, \Count
 {
     protected $value;
     protected $index = 0;
-    /** @var array */
+    /** @var mixed */
     protected $formattedValue;
 
     public function __construct($value, FormatterInterface $formatter = null)
