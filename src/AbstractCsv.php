@@ -107,7 +107,7 @@ abstract class AbstractCsv
     public function closeFileHandle()
     {
         if ($this->getFileHandle()) {
-            @fclose($this->getFileHandle());
+            fclose($this->getFileHandle());
         }
 
         $this->setFileHandle(null);
