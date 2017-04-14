@@ -92,7 +92,12 @@ abstract class AbstractCsv
             $mode = $this->fopenMode;
         }
 
-        $handle = fopen($this->getFile(), $mode);
+        $handle = @fopen($this->getFile(), $mode);
+
+        if (!$handle) {
+            throw new \InvalidArgumentException(sprintf('Could not open "%s" in mode "%s"', $this->getFile(), $mode));
+        }
+
         $this->setFileHandle($handle);
     }
 

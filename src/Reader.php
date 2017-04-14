@@ -29,7 +29,7 @@ class Reader extends AbstractCsv implements \Iterator, \Countable
      *
      * @return array
      */
-    public static function parseFile($file)
+    public static function read($file)
     {
         $csv = new static($file);
 
