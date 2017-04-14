@@ -14,9 +14,9 @@ class Cell
      * Cell constructor.
      *
      * @param                         $value
-     * @param FormatterInterface|null $formatter
+     * @param FormatterInterface $formatter
      */
-    public function __construct($value, FormatterInterface $formatter = null)
+    public function __construct($value, FormatterInterface $formatter)
     {
         $this->value = $value;
         $this->setFormatter($formatter);

@@ -110,7 +110,7 @@ class Reader extends AbstractCsv implements \Iterator, \Countable
      *
      * @param bool $raw
      *
-     * @return Row
+     * @return Row|array
      */
     protected function getNextRow($raw = false)
     {
