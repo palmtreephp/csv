@@ -78,3 +78,7 @@ foreach($csv as $row) {
 ```
 
 See the [examples](examples) directory for more usage examples.
+
+## License
+
+Released under the [MIT license](LICENSE)
