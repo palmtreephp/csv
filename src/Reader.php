@@ -17,7 +17,7 @@ class Reader extends AbstractCsv implements \Iterator, \Countable
     protected $formatters = [];
     /** @var int */
     protected $index = 0;
-    /** @var array */
+    /** @var Row */
     protected $headers;
     /** @var Row */
     protected $row;
@@ -37,7 +37,7 @@ class Reader extends AbstractCsv implements \Iterator, \Countable
     }
 
     /**
-     * @return array
+     * @return Row
      */
     public function getHeaders()
     {
@@ -124,7 +124,7 @@ class Reader extends AbstractCsv implements \Iterator, \Countable
             $this->getEscapeCharacter()
         );
 
-        if (!$row) {
+        if ($row === null || $row === false) {
             return null;
         }
 
