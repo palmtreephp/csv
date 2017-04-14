@@ -12,8 +12,8 @@ class Cell
 
     public function __construct($value, FormatterInterface $formatter = null)
     {
-        $this->value     = $value;
-        $this->formatter = $formatter;
+        $this->value = $value;
+        $this->setFormatter($formatter);
     }
 
     public function getRawValue()
@@ -23,12 +23,24 @@ class Cell
 
     public function getValue()
     {
-        return $this->formatter->format($this->value);
+        return $this->getFormatter()->format($this->getRawValue());
     }
 
     public function getFormatter()
     {
         return $this->formatter;
+    }
+
+    /**
+     * @param FormatterInterface $formatter
+     *
+     * @return Cell
+     */
+    public function setFormatter(FormatterInterface $formatter)
+    {
+        $this->formatter = $formatter;
+
+        return $this;
     }
 
     public function __toString()

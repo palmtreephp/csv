@@ -4,21 +4,21 @@ namespace Palmtree\Csv\Formatter;
 
 /**
  * StringFormatter formats a CSV cell as a string.
- * Will trim the string by default.
+ * It will trim the string by default.
  */
 class StringFormatter extends AbstractFormatter
 {
     protected $trim = true;
-    public $trimCharMask = " \t\n\r\0\x0B";
+    protected $trimCharMask = " \t\n\r\0\x0B";
 
     public function __construct($formatter = null, $trim = true, $trimCharMask = null)
     {
         parent::__construct($formatter);
 
-        $this->trim = $trim;
+        $this->setTrim($trim);
 
         if ($trimCharMask) {
-            $this->trimCharMask = $trimCharMask;
+            $this->setTrimCharMask($trimCharMask);
         }
     }
 
@@ -34,10 +34,38 @@ class StringFormatter extends AbstractFormatter
         return $this;
     }
 
+    /**
+     * @param null|string $trimCharMask
+     *
+     * @return StringFormatter
+     */
+    public function setTrimCharMask($trimCharMask)
+    {
+        $this->trimCharMask = $trimCharMask;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTrimCharMask()
+    {
+        return $this->trimCharMask;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isTrim()
+    {
+        return $this->trim;
+    }
+
     protected function getFormattedValue($value)
     {
-        if ($this->trim) {
-            $value = trim($value, $this->trimCharMask);
+        if ($this->isTrim()) {
+            $value = trim($value, $this->getTrimCharMask());
         }
 
         return $value;

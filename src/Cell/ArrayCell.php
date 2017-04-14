@@ -4,10 +4,11 @@ namespace Palmtree\Csv\Cell;
 
 use Palmtree\Csv\Formatter\FormatterInterface;
 
-class ArrayCell extends Cell implements \ArrayAccess, \Iterator, \Countable, \Serializable
+class ArrayCell extends Cell implements \ArrayAccess, \IteratorAggregate, \Countable, \Serializable
 {
     protected $value;
     protected $index = 0;
+    /** @var array */
     protected $formattedValue;
 
     public function __construct($value, FormatterInterface $formatter = null)
@@ -15,11 +16,6 @@ class ArrayCell extends Cell implements \ArrayAccess, \Iterator, \Countable, \Se
         parent::__construct($value, $formatter);
 
         $this->formattedValue = $this->formatter->format($value);
-    }
-
-    public function getValue()
-    {
-        return $this->formattedValue;
     }
 
     /**
@@ -57,46 +53,6 @@ class ArrayCell extends Cell implements \ArrayAccess, \Iterator, \Countable, \Se
     /**
      * @inheritDoc
      */
-    public function current()
-    {
-        return $this->formattedValue[$this->index];
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function next()
-    {
-        ++$this->index;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function key()
-    {
-        return $this->index;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function valid()
-    {
-        return isset($this->formattedValue[$this->index]);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function rewind()
-    {
-        $this->index = 0;
-    }
-
-    /**
-     * @inheritDoc
-     */
     public function serialize()
     {
         return serialize($this->formattedValue);
@@ -127,5 +83,10 @@ class ArrayCell extends Cell implements \ArrayAccess, \Iterator, \Countable, \Se
         }
 
         return $value;
+    }
+
+    public function getIterator()
+    {
+        return new \ArrayIterator($this->formattedValue);
     }
 }

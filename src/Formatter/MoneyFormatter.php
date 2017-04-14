@@ -6,11 +6,17 @@ class MoneyFormatter extends AbstractFormatter
 {
     protected $moneyFormat;
 
+    /**
+     * MoneyFormatter constructor.
+     *
+     * @param null|FormatterInterface $formatter
+     * @param string                  $format
+     */
     public function __construct($formatter = null, $format = '%.2n')
     {
         parent::__construct($formatter);
 
-        $this->moneyFormat = $format;
+        $this->setMoneyFormat($format);
     }
 
     /**
@@ -25,8 +31,16 @@ class MoneyFormatter extends AbstractFormatter
         return $this;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getMoneyFormat()
+    {
+        return $this->moneyFormat;
+    }
+
     protected function getFormattedValue($value)
     {
-        return money_format($this->moneyFormat, $value);
+        return money_format($this->getMoneyFormat(), $value);
     }
 }

@@ -2,23 +2,28 @@
 
 namespace Palmtree\Csv\Formatter;
 
+/**
+ * NumberFormatter converts numeric strings to ints and floats.
+ */
 class NumberFormatter extends AbstractFormatter
 {
     protected $decimals;
 
+    /**
+     * NumberFormatter constructor.
+     *
+     * @param null|FormatterInterface $formatter
+     * @param null|int                $decimals
+     */
     public function __construct($formatter = null, $decimals = null)
     {
-        if (! $formatter instanceof FormatterInterface) {
-            $decimals = $formatter;
-        }
-
-        $this->decimals = $decimals;
+        $this->setDecimals($decimals);
 
         parent::__construct($formatter);
     }
 
     /**
-     * @param int $decimals
+     * @param null|int $decimals
      *
      * @return NumberFormatter
      */
@@ -29,12 +34,20 @@ class NumberFormatter extends AbstractFormatter
         return $this;
     }
 
+    /**
+     * @return null|int
+     */
+    public function getDecimals()
+    {
+        return $this->decimals;
+    }
+
     protected function getFormattedValue($value)
     {
-        $numberValue = trim($value) + 0;
+        $numberValue = is_numeric($value) ? trim($value) + 0 : 0;
 
-        if ($this->decimals !== null) {
-            $numberValue = round($numberValue, $this->decimals);
+        if ($this->getDecimals() !== null) {
+            $numberValue = round($numberValue, $this->getDecimals());
         }
 
         return $numberValue;

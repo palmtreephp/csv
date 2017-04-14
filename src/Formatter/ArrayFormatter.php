@@ -4,37 +4,42 @@ namespace Palmtree\Csv\Formatter;
 
 use Palmtree\Csv\Cell\ArrayCell;
 
-class ArrayFormatter extends StringFormatter
+class ArrayFormatter extends AbstractFormatter
 {
     protected $delimiter;
 
-    public static $cellClass = ArrayCell::class;
+    protected $stringFormatter;
 
+    const CELL_CLASS = ArrayCell::class;
+
+    /**
+     * ArrayFormatter constructor.
+     *
+     * @param null|FormatterInterface $formatter
+     * @param string                  $delimiter
+     */
     public function __construct($formatter = null, $delimiter = ',')
     {
-        parent::__construct($formatter);
+        $this->setDelimiter($delimiter);
 
-        $this->delimiter = $delimiter;
-        $this->trimCharMask .= $this->delimiter;
+        $this->stringFormatter = new StringFormatter();
+        $this->stringFormatter->setTrimCharMask($this->stringFormatter->getTrimCharMask() . $this->getDelimiter());
+
+        parent::__construct($formatter);
     }
 
     public function format($value)
     {
-        $value = parent::getFormattedValue($value);
-
-        $value = $this->getFormattedValue($value);
-
-        return $value;
+        return $this->getFormattedValue($value);
     }
 
     public function getFormattedValue($value)
     {
-        $formattedValue = explode($this->delimiter, $value);
+        $value          = $this->stringFormatter->format($value);
+        $formattedValue = explode($this->getDelimiter(), $value);
 
-        if ($this->formatter instanceof FormatterInterface) {
-            foreach ($formattedValue as &$part) {
-                $part = $this->formatter->format($part);
-            }
+        foreach ($formattedValue as &$part) {
+            $part = $this->getFormatter()->format($part);
         }
 
         return $formattedValue;
@@ -50,5 +55,13 @@ class ArrayFormatter extends StringFormatter
         $this->delimiter = $delimiter;
 
         return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDelimiter()
+    {
+        return $this->delimiter;
     }
 }

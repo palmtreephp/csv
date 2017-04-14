@@ -2,46 +2,35 @@
 
 namespace Palmtree\Csv;
 
-use Palmtree\ArgParser\ArgParser;
-
 /**
- * Class Csv
- * @package    Palmtree
- * @subpackage Csv
+ * Writes an array to a CSV file.
  */
-class Writer
+class Writer extends AbstractCsv
 {
-    public static $defaultArgs = [
-        'delimiter' => ',',
-        'enclosure' => '"',
-        'newLine'   => "\r\n",
-        'escape'    => [
-            '"' => '""',
-        ],
-    ];
+    /** @var string */
+    protected $fopenMode = 'w+';
+    /** @var string */
+    protected $lineEnding = "\r\n";
+    /** @var int */
+    protected $bytesWritten = 0;
 
-    protected $args = [];
-
-    /**
-     * @var string
-     */
-    protected $rows = '';
-    /**
-     * @var string
-     */
-    protected $headers = '';
-
-    protected $output;
-
-    public function __construct($args = [])
+    public static function write($file, $data)
     {
-        $this->args = $this->parseArgs($args);
+        $writer = new static($file);
+        $writer->setData($data);
+        $writer->closeFileHandle();
     }
 
-    public function setData($data, $headers = true)
+    /**
+     * Sets headers and all rows on the CSV file and
+     * then closes the file handle.
+     *
+     * @param $data
+     */
+    public function setData($data)
     {
-        if ($headers) {
-            $this->addHeaders(array_keys(reset($data)));
+        if ($this->hasHeaders()) {
+            $this->setHeaders(array_keys(reset($data)));
         }
 
         $this->addRows($data);
@@ -50,14 +39,17 @@ class Writer
     /**
      * @param array $headers
      */
-    public function addHeaders($headers)
+    public function setHeaders(array $headers)
     {
-        foreach ($headers as $header) {
-            $this->addHeader($header);
-        }
+        // We're setting headers so start again with a new file handle.
+        $this->createFileHandle();
+
+        $this->addRow($headers);
     }
 
     /**
+     * Adds multiple rows of data to the CSV file.
+     *
      * @param array $rows
      */
     public function addRows($rows)
@@ -68,106 +60,82 @@ class Writer
     }
 
     /**
-     * @param string $row
+     * Adds a row of data to the CSV file.
+     *
+     * @param $row
+     *
+     * @return bool
      */
     public function addRow($row)
     {
-        $row = implode(
-            $this->args['enclosure'] . $this->args['delimiter'] . $this->args['enclosure'],
-            $this->escape($row)
-        );
+        if (!$this->getFileHandle()) {
+            $this->createFileHandle();
+        }
 
-        $this->rows .= $this->args['enclosure'] . $row . $this->args['enclosure'];
-        $this->rows .= $this->args['newLine'];
+        $result = fwrite($this->getFileHandle(), $this->getCsvString($row));
+
+        if ($result === false) {
+            // @todo: handle error
+            return false;
+        }
+
+        $this->bytesWritten += $result;
+
+        return true;
     }
 
     /**
-     * @param string $header
+     * Truncates the last line ending from the file
+     * before closing the handle.
      */
-    public function addHeader($header)
+    public function closeFileHandle()
     {
-        $this->headers .= $this->args['enclosure'] .
-                          $this->escape($header) .
-                          $this->args['enclosure'] .
-                          $this->args['delimiter'];
-    }
-
-    public function getHeaders()
-    {
-        if (empty($this->headers)) {
-            return '';
+        if ($this->bytesWritten > 0 && $this->getFileHandle()) {
+            ftruncate($this->getFileHandle(), $this->bytesWritten - 1);
         }
 
-        $headers = rtrim($this->headers, $this->args['delimiter']);
-        $headers .= $this->args['newLine'];
-
-        return $headers;
-    }
-
-    public function getRows()
-    {
-        $rows = rtrim($this->rows);
-        $rows .= $this->args['newLine'];
-
-        return $rows;
-    }
-
-    public function getOutput()
-    {
-        if ($this->output === null) {
-            $this->output = $this->getHeaders() . $this->getRows();
-        }
-
-        return $this->output;
+        parent::closeFileHandle();
     }
 
     /**
-     * Attempts to send the file as download to the client.
+     * Returns the new line delimiter used to separate rows
+     * in the CSV file.
      *
-     * @param string $filename
-     *
-     * @throws \Exception
+     * @return string
      */
-    public function download($filename = '')
+    public function getLineEnding()
     {
-        if (headers_sent()) {
-            throw new \Exception('Unable to start file download. Response headers already sent.');
-        }
-
-        if (! $filename) {
-            $filename = time() . '.csv';
-        }
-
-        header('Content-Type: application/octet-stream');
-        header('Content-Description: File Transfer');
-        header('Content-Transfer-Encoding: Binary');
-        header('Content-Disposition: attachment; filename="' . $filename . '"');
-
-        header('Expires: 0');
-        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-        header('Pragma: public');
-
-        $output = $this->getOutput();
-
-        header('Content-Length: ' . mb_strlen($output));
-
-        print $output;
+        return $this->lineEnding;
     }
 
     /**
-     * Writes the CSV file to the specified path.
+     * Sets the new line delimiter used to separate rows
+     * in the CSV file.
      *
-     * @param string $filepath
+     * @param string $lineEnding
      *
-     * @return int
+     * @return Writer
      */
-    public function write($filepath = '')
+    public function setLineEnding($lineEnding)
     {
-        if (! $filepath) {
-            $filepath = time() . '.csv';
-        }
+        $this->lineEnding = $lineEnding;
 
-        return file_put_contents($filepath, $this->getOutput());
+        return $this;
+    }
+
+    /**
+     * @param array $row
+     *
+     * @return string
+     */
+    protected function getCsvString($row)
+    {
+        $result = $this->getEnclosure();
+        $result .= implode($this->getEnclosure() . $this->getDelimiter() . $this->getEnclosure(), $this->escape($row));
+        $result .= $this->getEnclosure();
+        $result .= $this->getLineEnding();
+
+        return $result;
     }
 
     /**
@@ -182,17 +150,9 @@ class Writer
                 $data[$key] = $this->escape($value);
             }
         } else {
-            $data = strtr($data, $this->args['escape']);
+            $data = str_replace($this->getEnclosure(), str_repeat($this->getEnclosure(), 2), $data);
         }
 
         return $data;
-    }
-
-    protected function parseArgs($args = [])
-    {
-        $parser = new ArgParser($args, 'data');
-        $parser->parseSetters($this);
-
-        return $parser->resolveOptions(self::$defaultArgs);
     }
 }
