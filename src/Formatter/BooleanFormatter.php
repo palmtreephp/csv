@@ -22,7 +22,7 @@ class BooleanFormatter extends AbstractFormatter
      *
      * @param null|FormatterInterface $formatter
      * @param bool                    $nullable
-     * @param null                    $binaries
+     * @param array|null              $binaries
      */
     public function __construct($formatter = null, $nullable = false, $binaries = null)
     {
