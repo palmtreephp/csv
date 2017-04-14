@@ -77,6 +77,27 @@ foreach($csv as $row) {
 }
 ```
 
+#### Formatting
+```php
+<?php
+use Palmtree\Csv\Reader;
+use Palmtree\Csv\Formatter as Formatter;
+
+$csv = new Reader(__DIR__ . '/../products.csv');
+
+$csv->addFormatters([
+    'product_id'          => new Formatter\NumberFormatter(),
+    'name'                => new Formatter\StringFormatter(),
+    'price'               => (new Formatter\NumberFormatter())->setDecimals(4),
+    'quantity'            => new Formatter\NumberFormatter(),
+    'enabled'             => new Formatter\BooleanFormatter(),
+    'related_product_ids' => new Formatter\ArrayFormatter(new Formatter\NumberFormatter()),
+    'specials'            => new Formatter\CallableFormatter(function ($value) {
+        return json_decode($value, true);
+    }),
+]);
+```
+
 See the [examples](examples) directory for more usage examples.
 
 ## License
