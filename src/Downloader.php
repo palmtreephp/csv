@@ -6,7 +6,7 @@ class Downloader extends Writer
 {
     protected $filename;
 
-    public function __construct($filename = '', $delimiter = ',', $enclosure = '"', $hasHeaders = true)
+    public function __construct($filename = '')
     {
         if (! $filename) {
             $filename = time() . '.csv';
@@ -14,7 +14,7 @@ class Downloader extends Writer
 
         $this->setFilename($filename);
 
-        parent::__construct('php://temp', $delimiter, $enclosure, $hasHeaders);
+        parent::__construct('php://temp');
     }
 
     /**

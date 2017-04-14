@@ -70,7 +70,7 @@ abstract class AbstractCsv
     }
 
     /**
-     * @param resource $fileHandle
+     * @param resource|null $fileHandle
      *
      * @return $this
      */

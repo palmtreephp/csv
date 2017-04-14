@@ -19,7 +19,7 @@ class Reader extends AbstractCsv implements \Iterator, \Countable
     protected $index = 0;
     /** @var array */
     protected $headers;
-    /** @var array */
+    /** @var array|Row */
     protected $row;
     /** @var string */
     protected $escapeCharacter = "\0";
