@@ -22,6 +22,16 @@ class Writer extends AbstractCsv
     }
 
     /**
+     * @inheritDoc
+     */
+    public function closeFileHandle()
+    {
+        $this->trimTrailingLineEnding();
+
+        parent::closeFileHandle();
+    }
+
+    /**
      * Sets headers and all rows on the CSV file and
      * then closes the file handle.
      *
@@ -62,9 +72,9 @@ class Writer extends AbstractCsv
     /**
      * Adds a row of data to the CSV file.
      *
-     * @param $row
+     * @param array $row Row of data to add to the file.
      *
-     * @return bool
+     * @return bool Whether the row was written to the file.
      */
     public function addRow($row)
     {
@@ -85,20 +95,7 @@ class Writer extends AbstractCsv
     }
 
     /**
-     * Truncates the last line ending from the file
-     * before closing the handle.
-     */
-    public function closeFileHandle()
-    {
-        if ($this->bytesWritten > 0 && $this->getFileHandle()) {
-            ftruncate($this->getFileHandle(), $this->bytesWritten - 1);
-        }
-
-        parent::closeFileHandle();
-    }
-
-    /**
-     * Returns the new line delimiter used to separate rows
+     * Returns the line ending delimiter used to separate rows
      * in the CSV file.
      *
      * @return string
@@ -109,7 +106,7 @@ class Writer extends AbstractCsv
     }
 
     /**
-     * Sets the new line delimiter used to separate rows
+     * Sets the line ending delimiter used to separate rows
      * in the CSV file.
      *
      * @param string $lineEnding
@@ -124,6 +121,9 @@ class Writer extends AbstractCsv
     }
 
     /**
+     * Returns a string representation of a row to be written
+     * as a line in a CSV file.
+     *
      * @param array $row
      *
      * @return string
@@ -131,7 +131,10 @@ class Writer extends AbstractCsv
     protected function getCsvString($row)
     {
         $result = $this->getEnclosure();
-        $result .= implode($this->getEnclosure() . $this->getDelimiter() . $this->getEnclosure(), $this->escape($row));
+
+        $glue   = $this->getEnclosure() . $this->getDelimiter() . $this->getEnclosure();
+        $result .= implode($glue, $this->escapeQuotes($row));
+
         $result .= $this->getEnclosure();
         $result .= $this->getLineEnding();
 
@@ -139,15 +142,37 @@ class Writer extends AbstractCsv
     }
 
     /**
-     * @param mixed $data
-     *
-     * @return mixed
+     * Trims the line ending delimiter from the end of the CSV file.
+     * RFC-4180 states CSV files should not contain a trailing new line.
      */
-    protected function escape($data)
+    protected function trimTrailingLineEnding()
+    {
+        if ($this->bytesWritten > 0 && $this->getFileHandle()) {
+            // Only trim the file if it ends with the line ending delimiter.
+            $length = mb_strlen($this->getLineEnding());
+
+            fseek($this->getFileHandle(), -$length, SEEK_END);
+            $chunk = fread($this->getFileHandle(), $length);
+
+            if ($chunk === $this->getLineEnding()) {
+                ftruncate($this->getFileHandle(), $this->bytesWritten - $length);
+            }
+        }
+    }
+
+    /**
+     * Escapes double quotes recursively.
+     * RFC-4180 states double quotes should be escaped with another double quote.
+     *
+     * @param mixed $data Array or string of data to escape.
+     *
+     * @return mixed Escaped data
+     */
+    protected function escapeQuotes($data)
     {
         if (is_array($data)) {
             foreach ($data as $key => $value) {
-                $data[$key] = $this->escape($value);
+                $data[$key] = $this->escapeQuotes($value);
             }
         } else {
             $data = str_replace($this->getEnclosure(), str_repeat($this->getEnclosure(), 2), $data);
