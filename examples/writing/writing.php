@@ -8,7 +8,7 @@ use Palmtree\Csv\Writer;
 
 $people   = [];
 $people[] = [
-    'name'   => "Alice\nDJ",
+    'name'   => "Alice DJ",
     'age'    => '24 \\\\\", words',
     'gender' => 'Female',
 ];
@@ -25,7 +25,6 @@ Writer::write('../people.csv', $people);
 
 $reader = new Reader('../people.csv');
 
-/** @var Cell[] $row */
 foreach ($reader as $row) {
-    var_dump($row['age']->getValue());
+    var_dump($row['age']);
 }

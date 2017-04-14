@@ -12,7 +12,6 @@ use Palmtree\Csv\Reader;
 
 $csv = new Reader(__DIR__ . '/../products.csv');
 
-//setlocale(LC_MONETARY, '');
 $csv->addFormatters([
     'product_id'          => new NumberFormatter(),
     'name'                => new StringFormatter(),
