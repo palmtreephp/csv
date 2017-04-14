@@ -11,7 +11,7 @@ class ArrayCell extends Cell implements \ArrayAccess, \IteratorAggregate, \Count
     /** @var mixed */
     protected $formattedValue;
 
-    public function __construct($value, FormatterInterface $formatter = null)
+    public function __construct($value, FormatterInterface $formatter)
     {
         parent::__construct($value, $formatter);
 

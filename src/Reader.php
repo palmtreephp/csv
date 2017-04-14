@@ -19,7 +19,7 @@ class Reader extends AbstractCsv implements \Iterator, \Countable
     protected $index = 0;
     /** @var array */
     protected $headers;
-    /** @var array|Row */
+    /** @var Row */
     protected $row;
     /** @var string */
     protected $escapeCharacter = "\0";
@@ -108,11 +108,9 @@ class Reader extends AbstractCsv implements \Iterator, \Countable
     /**
      * Returns an array of cells for the next row.
      *
-     * @param bool $raw
-     *
-     * @return Row|array
+     * @return Row
      */
-    protected function getNextRow($raw = false)
+    protected function getNextRow()
     {
         if (!$this->getFileHandle()) {
             $this->createFileHandle();
@@ -126,8 +124,8 @@ class Reader extends AbstractCsv implements \Iterator, \Countable
             $this->getEscapeCharacter()
         );
 
-        if ($raw || !$row) {
-            return $row;
+        if (!$row) {
+            return null;
         }
 
         $row = new Row($row, $this);
@@ -166,7 +164,7 @@ class Reader extends AbstractCsv implements \Iterator, \Countable
     {
         $this->row = $this->getNextRow();
 
-        return $this->row !== false && $this->row !== null;
+        return $this->row instanceof Row;
     }
 
     /**
@@ -181,7 +179,7 @@ class Reader extends AbstractCsv implements \Iterator, \Countable
         $this->index = 0;
 
         if ($this->hasHeaders()) {
-            $this->headers = $this->getNextRow(true);
+            $this->headers = $this->getNextRow();
         }
     }
 

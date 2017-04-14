@@ -79,7 +79,7 @@ class Row implements \ArrayAccess, \Countable, \Serializable, \IteratorAggregate
      */
     public function offsetGet($offset)
     {
-        return $this->getCells()[$offset];
+        return $this->getCells()[$offset]->getValue();
     }
 
     /**
