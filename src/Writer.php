@@ -133,7 +133,7 @@ class Writer extends AbstractCsv
         $result = $this->getEnclosure();
 
         $glue   = $this->getEnclosure() . $this->getDelimiter() . $this->getEnclosure();
-        $result .= implode($glue, $this->escapeQuotes($row));
+        $result .= implode($glue, $this->escapeEnclosure($row));
 
         $result .= $this->getEnclosure();
         $result .= $this->getLineEnding();
@@ -161,18 +161,19 @@ class Writer extends AbstractCsv
     }
 
     /**
-     * Escapes double quotes recursively.
-     * RFC-4180 states double quotes should be escaped with another double quote.
+     * Escapes the enclosure character recursively.
+     * RFC-4180 states the enclosure character (usually double quotes) should be
+     * escaped by itself, so " becomes "".
      *
      * @param mixed $data Array or string of data to escape.
      *
      * @return mixed Escaped data
      */
-    protected function escapeQuotes($data)
+    protected function escapeEnclosure($data)
     {
         if (is_array($data)) {
             foreach ($data as $key => $value) {
-                $data[$key] = $this->escapeQuotes($value);
+                $data[$key] = $this->escapeEnclosure($value);
             }
         } else {
             $data = str_replace($this->getEnclosure(), str_repeat($this->getEnclosure(), 2), $data);
