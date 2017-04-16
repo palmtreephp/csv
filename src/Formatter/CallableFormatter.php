@@ -46,7 +46,7 @@ class CallableFormatter extends AbstractFormatter
      */
     protected function getFormattedValue($value)
     {
-        $value = call_user_func($this->getCallback(), $value);
+        $value = call_user_func($this->getCallback(), $value, $this);
 
         return $value;
     }
