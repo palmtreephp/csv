@@ -10,7 +10,7 @@ class WriterTest extends TestCase
     /** @expectedException \Exception */
     public function testInvalidFile()
     {
-        $reader = new Writer(null);
-        $reader->createFileHandle();
+        $writer = new Writer(null);
+        $writer->createFileHandle();
     }
 }
