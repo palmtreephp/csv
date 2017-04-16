@@ -2,7 +2,6 @@
 
 require_once dirname(__DIR__) . '/../vendor/autoload.php';
 
-use Palmtree\Csv\Cell\Cell;
 use Palmtree\Csv\Reader;
 use Palmtree\Csv\Writer;
 

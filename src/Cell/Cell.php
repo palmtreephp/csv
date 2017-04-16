@@ -14,7 +14,7 @@ class Cell
      * Cell constructor.
      *
      * @param                         $value
-     * @param FormatterInterface $formatter
+     * @param FormatterInterface      $formatter
      */
     public function __construct($value, FormatterInterface $formatter)
     {

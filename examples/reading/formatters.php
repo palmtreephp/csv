@@ -2,9 +2,9 @@
 
 require_once dirname(__DIR__) . '/../vendor/autoload.php';
 
-use Palmtree\Csv\Reader;
 use Palmtree\Csv\Cell\Cell;
 use Palmtree\Csv\Formatter as Formatter;
+use Palmtree\Csv\Reader;
 
 $csv = new Reader(__DIR__ . '/../products.csv');
 
@@ -15,7 +15,9 @@ $csv->addFormatters([
     'quantity'            => new Formatter\NumberFormatter(),
     'enabled'             => new Formatter\BooleanFormatter(),
     'related_product_ids' => new Formatter\ArrayFormatter(new Formatter\NumberFormatter()),
-    'specials'            => new Formatter\CallableFormatter(function ($value) {
+    'description'         => new Formatter\HtmlFormatter(),
+    'specials'            => new Formatter\CallableFormatter(function ($value, $formatter) {
+        // $formatter is the CallableFormatter instance.
         return json_decode($value, true);
     }),
 ]);
