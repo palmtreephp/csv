@@ -39,8 +39,7 @@ $people[] = [
     'gender' => 'Male',
 ];
 
-$downloader = new Downloader('people.csv');
-$downloader->download();
+Downloader::download('people.csv', $people);
 ```
 
 #### Write a CSV file

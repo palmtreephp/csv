@@ -34,6 +34,13 @@ class Downloader extends Writer
         parent::__construct('php://temp');
     }
 
+    public static function download($file, $data)
+    {
+        $downloader = new static($file);
+        $downloader->setData($data);
+        $downloader->sendResponse();
+    }
+
     public function getResponseHeaders()
     {
         return $this->responseHeaders;
@@ -83,7 +90,7 @@ class Downloader extends Writer
      *
      * @throws \Exception
      */
-    public function download()
+    public function sendResponse()
     {
         $body = $this->getResponseBody();
 
