@@ -2,15 +2,11 @@
 
 namespace Palmtree\Csv\Formatter;
 
-use Palmtree\Csv\Cell\ArrayCell;
-
 class ArrayFormatter extends AbstractFormatter
 {
     protected $delimiter;
 
     protected $stringFormatter;
-
-    const CELL_CLASS = ArrayCell::class;
 
     /**
      * ArrayFormatter constructor.

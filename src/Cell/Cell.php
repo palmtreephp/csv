@@ -18,7 +18,7 @@ class Cell
      */
     public function __construct($value, FormatterInterface $formatter)
     {
-        $this->value = $value;
+        $this->setRawValue($value);
         $this->setFormatter($formatter);
     }
 
@@ -67,5 +67,17 @@ class Cell
         }
 
         return $value;
+    }
+
+    /**
+     * @param mixed $value
+     *
+     * @return Cell
+     */
+    public function setRawValue($value)
+    {
+        $this->value = $value;
+
+        return $this;
     }
 }

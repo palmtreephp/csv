@@ -5,7 +5,7 @@ namespace Palmtree\Csv\Row;
 use Palmtree\Csv\Cell\Cell;
 use Palmtree\Csv\Reader;
 
-class Row implements \ArrayAccess, \Countable, \Serializable, \IteratorAggregate
+class Row implements \ArrayAccess, \Countable, \IteratorAggregate
 {
     /** @var Cell[] $cells */
     protected $cells = [];
@@ -60,8 +60,7 @@ class Row implements \ArrayAccess, \Countable, \Serializable, \IteratorAggregate
     {
         $formatter = $this->getReader()->getFormatter($key);
 
-        $class = $formatter::CELL_CLASS;
-        $cell  = new $class($value, $formatter);
+        $cell = new Cell($value, $formatter);
 
         $this->cells[$key] = $cell;
     }
@@ -104,22 +103,6 @@ class Row implements \ArrayAccess, \Countable, \Serializable, \IteratorAggregate
     public function count()
     {
         return count($this->getCells());
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function serialize()
-    {
-        return serialize($this->getCells());
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function unserialize($serialized)
-    {
-        return unserialize($this->getCells());
     }
 
     /**
