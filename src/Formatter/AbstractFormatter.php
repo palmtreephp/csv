@@ -2,7 +2,7 @@
 
 namespace Palmtree\Csv\Formatter;
 
-use Palmtree\Csv\Cell\Cell;
+use Palmtree\Csv\Reader;
 
 abstract class AbstractFormatter implements FormatterInterface
 {
@@ -16,7 +16,7 @@ abstract class AbstractFormatter implements FormatterInterface
      */
     public function __construct($formatter = null)
     {
-        if (! $formatter instanceof FormatterInterface) {
+        if (!$formatter instanceof FormatterInterface) {
             $formatter = new NullFormatter();
         }
 
