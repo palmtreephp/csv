@@ -12,6 +12,8 @@ use Palmtree\Csv\Row\Row;
  */
 class Reader extends AbstractCsv implements \Iterator, \Countable
 {
+    public static $defaultFormatter = StringFormatter::class;
+
     protected $fopenMode = 'r';
     /** @var FormatterInterface[] */
     protected $formatters = [];
@@ -46,7 +48,7 @@ class Reader extends AbstractCsv implements \Iterator, \Countable
 
     /**
      * @param mixed              $key
-     * @param FormatterInterface $formatter
+     * @param FormatterInterface $formatter Formatter instance.
      *
      * @return $this
      */
@@ -79,7 +81,9 @@ class Reader extends AbstractCsv implements \Iterator, \Countable
     public function getFormatter($key)
     {
         if (!isset($this->formatters[$key])) {
-            $this->formatters[$key] = new StringFormatter();
+            $class = static::$defaultFormatter;
+
+            $this->formatters[$key] = new $class();
         }
 
         return $this->formatters[$key];
@@ -112,11 +116,7 @@ class Reader extends AbstractCsv implements \Iterator, \Countable
      */
     protected function getNextRow()
     {
-        if (!$this->getFileHandle()) {
-            $this->createFileHandle();
-        }
-
-        $row = fgetcsv(
+        $cells = fgetcsv(
             $this->getFileHandle(),
             null,
             $this->getDelimiter(),
@@ -124,11 +124,11 @@ class Reader extends AbstractCsv implements \Iterator, \Countable
             $this->getEscapeCharacter()
         );
 
-        if (!is_array($row)) {
+        if (!is_array($cells)) {
             return null;
         }
 
-        $row = new Row($row, $this);
+        $row = new Row($cells, $this);
 
         return $row;
     }
@@ -174,6 +174,8 @@ class Reader extends AbstractCsv implements \Iterator, \Countable
     {
         if ($this->getFileHandle()) {
             rewind($this->getFileHandle());
+        } else {
+            $this->createFileHandle();
         }
 
         $this->index = 0;
