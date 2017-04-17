@@ -18,17 +18,17 @@ class Writer extends AbstractCsv
     {
         $writer = new static($file);
         $writer->setData($data);
-        $writer->closeFileHandle();
+        $writer->closeDocument();
     }
 
     /**
      * @inheritDoc
      */
-    public function closeFileHandle()
+    public function closeDocument()
     {
         $this->trimTrailingLineEnding();
 
-        parent::closeFileHandle();
+        parent::closeDocument();
     }
 
     /**
@@ -51,8 +51,7 @@ class Writer extends AbstractCsv
      */
     public function setHeaders(array $headers)
     {
-        // We're setting headers so start again with a new file handle.
-        $this->createFileHandle();
+        $this->createDocument();
 
         $this->addRow($headers);
     }
@@ -78,13 +77,13 @@ class Writer extends AbstractCsv
      */
     public function addRow($row)
     {
-        if (!$this->getFileHandle()) {
-            $this->createFileHandle();
+        if (!$this->getDocument()) {
+            $this->createDocument();
         }
 
-        $result = fwrite($this->getFileHandle(), $this->getCsvString($row));
+        $result = $this->getDocument()->fwrite($this->getCsvString($row));
 
-        if ($result === false) {
+        if ($result === null) {
             // @todo: handle error
             return false;
         }
@@ -147,15 +146,15 @@ class Writer extends AbstractCsv
      */
     protected function trimTrailingLineEnding()
     {
-        if ($this->bytesWritten > 0 && $this->getFileHandle()) {
+        if ($this->bytesWritten > 0 && $this->getDocument()) {
             // Only trim the file if it ends with the line ending delimiter.
             $length = mb_strlen($this->getLineEnding());
 
-            fseek($this->getFileHandle(), -$length, SEEK_END);
-            $chunk = fread($this->getFileHandle(), $length);
+            $this->getDocument()->fseek(-$length, SEEK_END);
+            $chunk = $this->getDocument()->fread($length);
 
             if ($chunk === $this->getLineEnding()) {
-                ftruncate($this->getFileHandle(), $this->bytesWritten - $length);
+                $this->getDocument()->ftruncate($this->bytesWritten - $length);
             }
         }
     }

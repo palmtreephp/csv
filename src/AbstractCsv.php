@@ -6,8 +6,6 @@ abstract class AbstractCsv
 {
     /** @var string */
     protected $fopenMode;
-    /** @var resource */
-    protected $fileHandle;
     /** @var string */
     protected $file;
     /** @var bool */
@@ -16,11 +14,13 @@ abstract class AbstractCsv
     protected $delimiter;
     /** @var string */
     protected $enclosure;
+    /** @var \SplFileObject */
+    protected $document;
 
     /**
      * AbstractCsv constructor.
      *
-     * @param string $file       Path to CSV file to parse.
+     * @param string $file       Path to CSV file.
      * @param bool   $hasHeaders Whether the CSV file contains headers.
      * @param string $delimiter  Cell delimiter. Default ',' (comma).
      * @param string $enclosure  Cell enclosure. Default '"' (double quote)
@@ -38,7 +38,7 @@ abstract class AbstractCsv
      */
     public function __destruct()
     {
-        $this->closeFileHandle();
+        $this->closeDocument();
     }
 
     /**
@@ -62,55 +62,34 @@ abstract class AbstractCsv
     }
 
     /**
-     * @return resource|null
+     * @param string $openMode
      */
-    public function getFileHandle()
+    public function createDocument($openMode = '')
     {
-        return $this->fileHandle;
-    }
-
-    /**
-     * @param resource|null $fileHandle
-     *
-     * @return $this
-     */
-    public function setFileHandle($fileHandle)
-    {
-        $this->fileHandle = $fileHandle;
-
-        return $this;
-    }
-
-    /**
-     * @param string $mode
-     */
-    public function createFileHandle($mode = '')
-    {
-        $this->closeFileHandle();
-
-        if (!$mode) {
-            $mode = $this->fopenMode;
+        if (!$openMode) {
+            $openMode = $this->fopenMode;
         }
 
-        $handle = @fopen($this->getFile(), $mode);
+        $document = new \SplFileObject($this->getFile(), $openMode);
 
-        if (!$handle) {
-            throw new \InvalidArgumentException(sprintf('Could not open "%s" in mode "%s"', $this->getFile(), $mode));
-        }
+        $document->setFlags(
+            \SplFileObject::READ_CSV |
+            \SplFileObject::READ_AHEAD |
+            \SplFileObject::SKIP_EMPTY |
+            \SplFileObject::DROP_NEW_LINE
+        );
 
-        $this->setFileHandle($handle);
+        $document->setCsvControl($this->getDelimiter(), $this->getEnclosure());
+
+        $this->setDocument($document);
     }
 
     /**
      *
      */
-    public function closeFileHandle()
+    public function closeDocument()
     {
-        if ($this->getFileHandle()) {
-            fclose($this->getFileHandle());
-        }
-
-        $this->setFileHandle(null);
+        $this->setDocument(null);
     }
 
     /**
@@ -171,5 +150,27 @@ abstract class AbstractCsv
         $this->enclosure = $enclosure;
 
         return $this;
+    }
+
+    /**
+     * @param \SplFileObject|null $document
+     *
+     * @return AbstractCsv
+     */
+    public function setDocument($document)
+    {
+        $this->document = null;
+
+        $this->document = $document;
+
+        return $this;
+    }
+
+    /**
+     * @return \SplFileObject
+     */
+    public function getDocument()
+    {
+        return $this->document;
     }
 }

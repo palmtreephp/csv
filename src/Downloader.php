@@ -110,7 +110,7 @@ class Downloader extends Writer
 
         print $body;
 
-        $this->closeFileHandle();
+        $this->closeDocument();
     }
 
     protected function getResponseBody()

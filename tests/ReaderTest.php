@@ -11,6 +11,6 @@ class ReaderTest extends TestCase
     public function testInvalidFile()
     {
         $reader = new Reader('foo.bar');
-        $reader->createFileHandle();
+        $reader->createDocument();
     }
 }

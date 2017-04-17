@@ -11,6 +11,6 @@ class WriterTest extends TestCase
     public function testInvalidFile()
     {
         $writer = new Writer(null);
-        $writer->createFileHandle();
+        $writer->createDocument();
     }
 }

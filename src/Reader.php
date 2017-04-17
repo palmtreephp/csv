@@ -126,13 +126,7 @@ class Reader extends AbstractCsv implements \Iterator, \Countable
      */
     protected function getNextRow()
     {
-        $cells = fgetcsv(
-            $this->getFileHandle(),
-            null,
-            $this->getDelimiter(),
-            $this->getEnclosure(),
-            $this->getEscapeCharacter()
-        );
+        $cells = $this->getDocument()->fgetcsv();
 
         if (!is_array($cells)) {
             return null;
@@ -182,10 +176,10 @@ class Reader extends AbstractCsv implements \Iterator, \Countable
      */
     public function rewind()
     {
-        if ($this->getFileHandle()) {
-            rewind($this->getFileHandle());
+        if ($this->getDocument()) {
+            $this->getDocument()->rewind();
         } else {
-            $this->createFileHandle();
+            $this->createDocument();
         }
 
         $this->index = 0;
