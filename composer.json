@@ -22,6 +22,11 @@
       "Palmtree\\Csv\\": "src"
     }
   },
+  "scripts": {
+    "test": "./vendor/bin/phpunit -v",
+    "lint": "find -L .  -path ./vendor -prune -o -name '*.php' -print0 | xargs -0 -n 1 -P 4 php -l",
+    "sniff": "find -L .  -path ./vendor -prune -o -name '*.php' -print0 | xargs -0 -n 1 -P 4 ./vendor/bin/phpcs --standard=\"PSR2\" -v"
+  },
   "minimum-stability": "dev",
   "prefer-stable": true
 }
