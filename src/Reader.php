@@ -29,13 +29,13 @@ class Reader extends AbstractCsv implements \Iterator, \Countable
     /**
      * @param $file
      *
-     * @return array
+     * @return Reader
      */
     public static function read($file)
     {
         $csv = new static($file);
 
-        return iterator_to_array($csv);
+        return $csv;
     }
 
     /**
@@ -44,6 +44,15 @@ class Reader extends AbstractCsv implements \Iterator, \Countable
     public function getHeaders()
     {
         return $this->headers;
+    }
+
+    public function getHeader($key)
+    {
+        if (!isset($this->headers[$key])) {
+            return $key;
+        }
+
+        return $this->headers[$key];
     }
 
     /**
@@ -110,7 +119,8 @@ class Reader extends AbstractCsv implements \Iterator, \Countable
     }
 
     /**
-     * Returns an array of cells for the next row.
+     * Reads the next line in the CSV file
+     * and returns a Row object from it.
      *
      * @return Row
      */

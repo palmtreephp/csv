@@ -7,10 +7,10 @@ use Palmtree\Csv\Reader;
 
 class Row implements \ArrayAccess, \Countable, \IteratorAggregate
 {
-    /** @var Cell[] $cells */
-    protected $cells = [];
     /** @var Reader $reader */
     protected $reader;
+    /** @var Cell[] $cells */
+    protected $cells = [];
 
     public function __construct($cells, Reader $reader)
     {
@@ -38,20 +38,21 @@ class Row implements \ArrayAccess, \Countable, \IteratorAggregate
         return $this;
     }
 
+    /**
+     * @return Cell[]
+     */
     public function getCells()
     {
         return $this->cells;
     }
 
+    /**
+     * @param array $cells
+     */
     public function addCells(array $cells)
     {
-        $headers = $this->getReader()->getHeaders();
-
         foreach ($cells as $key => $value) {
-            if (isset($headers[$key])) {
-                $key = $headers[$key];
-            }
-
+            $key = $this->getReader()->getHeader($key);
             $this->addCell($key, $value);
         }
     }
