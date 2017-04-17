@@ -32,6 +32,6 @@ class RowTest extends TestCase
 
         $row = new Row(['foo', 'bar'], $reader);
 
-        $this->assertTrue(is_iterable($row));
+        $this->assertInstanceOf(\Traversable::class, $row);
     }
 }
