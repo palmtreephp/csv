@@ -1,7 +1,14 @@
 {
   "name": "palmtree/csv",
-  "description": "CSV Reader and Writer",
   "type": "library",
+  "description": "CSV Reader and Writer",
+  "keywords": [
+    "csv",
+    "import",
+    "export",
+    "read",
+    "write"
+  ],
   "license": "MIT",
   "authors": [
     {
