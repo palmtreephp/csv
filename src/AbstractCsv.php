@@ -159,6 +159,7 @@ abstract class AbstractCsv
      */
     public function setDocument($document)
     {
+        // Ensure any previous instance is destroyed.
         $this->document = null;
 
         $this->document = $document;
