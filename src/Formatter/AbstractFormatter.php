@@ -2,8 +2,6 @@
 
 namespace Palmtree\Csv\Formatter;
 
-
-
 abstract class AbstractFormatter implements FormatterInterface
 {
     /** @var FormatterInterface */
