@@ -25,5 +25,6 @@ Writer::write('../people.csv', $people);
 $reader = new Reader('../people.csv');
 
 foreach ($reader as $row) {
-    var_dump($row['age']);
+    //var_dump($row['age']);
+    var_export($row['name']);
 }

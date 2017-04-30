@@ -14,7 +14,7 @@ class Reader extends AbstractCsv implements \Iterator, \Countable
 {
     public static $defaultFormatter = StringFormatter::class;
 
-    protected $fopenMode = 'r';
+    protected $openMode = 'r';
     /** @var FormatterInterface[] */
     protected $formatters = [];
     /** @var int */
@@ -36,6 +36,13 @@ class Reader extends AbstractCsv implements \Iterator, \Countable
         $csv = new static($file);
 
         return $csv;
+    }
+
+    public function createDocument()
+    {
+        parent::createDocument();
+
+        $this->getDocument()->setCsvControl($this->getDelimiter(), $this->getEnclosure(), $this->getEscapeCharacter());
     }
 
     /**
@@ -126,7 +133,7 @@ class Reader extends AbstractCsv implements \Iterator, \Countable
      */
     protected function getNextRow()
     {
-        $cells = $this->getDocument()->fgetcsv();
+        $cells = $this->getDocument()->current();
 
         if (!is_array($cells)) {
             return null;
@@ -150,6 +157,8 @@ class Reader extends AbstractCsv implements \Iterator, \Countable
      */
     public function next()
     {
+        $this->getDocument()->next();
+
         ++$this->index;
     }
 
@@ -176,11 +185,7 @@ class Reader extends AbstractCsv implements \Iterator, \Countable
      */
     public function rewind()
     {
-        if ($this->getDocument()) {
-            $this->getDocument()->rewind();
-        } else {
-            $this->createDocument();
-        }
+        $this->getDocument()->rewind();
 
         $this->index = 0;
 

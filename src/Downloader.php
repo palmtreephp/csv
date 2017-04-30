@@ -10,25 +10,21 @@ class Downloader extends Writer
      * @var array
      */
     protected $responseHeaders = [
-        'Content-Type'              => 'application/octet-stream',
+        'Content-Type'              => 'text/csv',
         'Content-Description'       => 'File Transfer',
         'Content-Transfer-Encoding' => 'Binary',
-        'Content-Disposition'       => 'attachment; filename="%s"',
         'Expires'                   => '0',
         'Cache-Control'             => 'must-revalidate, post-check=0, pre-check=0',
         'Pragma'                    => 'public',
-        'Content-Length'            => '%s',
     ];
 
     protected $filename;
 
-    public function __construct($filename = '', $responseHeaders = [])
+    public function __construct($filename, $responseHeaders = [])
     {
-        if (!$filename) {
-            $filename = time() . '.csv';
-        }
-
         $this->setFilename($filename);
+
+        $this->addResponseHeader('Content-Disposition', sprintf('attachment; filename="%s"', $this->getFilename()));
         $this->addResponseHeaders($responseHeaders);
 
         parent::__construct('php://temp');
@@ -41,14 +37,35 @@ class Downloader extends Writer
         $downloader->sendResponse();
     }
 
+    /**
+     * Attempts to send the file as a download to the client.
+     *
+     * @throws \Exception
+     */
+    public function sendResponse()
+    {
+        if (!headers_sent()) {
+            $headers = $this->getResponseHeaders();
+
+            foreach ($headers as $key => $value) {
+                header(sprintf('%s: %s', $key, $value));
+            }
+        }
+
+        $this->getDocument()->trimFinalLineEnding();
+
+        $this->getDocument()->fseek(0);
+        $this->getDocument()->fpassthru();
+    }
+
     public function getResponseHeaders()
     {
         return $this->responseHeaders;
     }
 
-    public function addResponseHeaders($userHeaders = [])
+    public function addResponseHeaders($headers = [])
     {
-        foreach ($userHeaders as $key => $value) {
+        foreach ($headers as $key => $value) {
             $this->addResponseHeader($key, $value);
         }
 
@@ -83,44 +100,5 @@ class Downloader extends Writer
         $this->filename = $filename;
 
         return $this;
-    }
-
-    /**
-     * Attempts to send the file as a download to the client.
-     *
-     * @throws \Exception
-     */
-    public function sendResponse()
-    {
-        $body = $this->getResponseBody();
-
-        if (!headers_sent()) {
-            $headers = $this->getResponseHeaders();
-
-            foreach ($headers as $key => $value) {
-                if ($key === 'Content-Length') {
-                    $value = sprintf($value, mb_strlen($body));
-                } elseif ($key === 'Content-Disposition') {
-                    $value = sprintf($value, $this->getFilename());
-                }
-
-                header(sprintf('%s: %s', $key, $value));
-            }
-        }
-
-        print $body;
-
-        $this->closeDocument();
-    }
-
-    protected function getResponseBody()
-    {
-        $this->trimTrailingLineEnding();
-
-        rewind($this->getFileHandle());
-
-        $body = stream_get_contents($this->getFileHandle());
-
-        return $body;
     }
 }

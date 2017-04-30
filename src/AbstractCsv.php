@@ -5,7 +5,7 @@ namespace Palmtree\Csv;
 abstract class AbstractCsv
 {
     /** @var string */
-    protected $fopenMode;
+    protected $openMode;
     /** @var string */
     protected $file;
     /** @var bool */
@@ -14,7 +14,7 @@ abstract class AbstractCsv
     protected $delimiter;
     /** @var string */
     protected $enclosure;
-    /** @var \SplFileObject */
+    /** @var CsvFileObject */
     protected $document;
 
     /**
@@ -34,11 +34,67 @@ abstract class AbstractCsv
     }
 
     /**
-     * Reader destructor.
+     * AbstractCsv destructor.
      */
     public function __destruct()
     {
         $this->closeDocument();
+    }
+
+    /**
+     * Creates a new SplFileObject instance.
+     */
+    public function createDocument()
+    {
+        $this->closeDocument();
+
+        $document = new CsvFileObject($this->getFile(), $this->getOpenMode());
+
+        $document->setFlags(
+            CsvFileObject::READ_CSV |
+            CsvFileObject::READ_AHEAD |
+            CsvFileObject::SKIP_EMPTY |
+            CsvFileObject::DROP_NEW_LINE
+        );
+
+        $document->setCsvControl($this->getDelimiter(), $this->getEnclosure());
+
+        $this->setDocument($document);
+    }
+
+    /**
+     * Closes the document by setting our reference to null
+     * to ensure its destructor is called.
+     */
+    public function closeDocument()
+    {
+        $this->document = null;
+    }
+
+    /**
+     * @param CsvFileObject|null $document
+     *
+     * @return AbstractCsv
+     */
+    public function setDocument($document)
+    {
+        $this->closeDocument();
+
+        $this->document = $document;
+
+        return $this;
+    }
+
+    /**
+     * @return CsvFileObject
+     */
+    public function getDocument()
+    {
+        if (!$this->document) {
+            $this->createDocument();
+        }
+
+        return $this->document;
     }
 
     /**
@@ -59,37 +115,6 @@ abstract class AbstractCsv
         $this->file = $file;
 
         return $this;
-    }
-
-    /**
-     * @param string $openMode
-     */
-    public function createDocument($openMode = '')
-    {
-        if (!$openMode) {
-            $openMode = $this->fopenMode;
-        }
-
-        $document = new \SplFileObject($this->getFile(), $openMode);
-
-        $document->setFlags(
-            \SplFileObject::READ_CSV |
-            \SplFileObject::READ_AHEAD |
-            \SplFileObject::SKIP_EMPTY |
-            \SplFileObject::DROP_NEW_LINE
-        );
-
-        $document->setCsvControl($this->getDelimiter(), $this->getEnclosure());
-
-        $this->setDocument($document);
-    }
-
-    /**
-     *
-     */
-    public function closeDocument()
-    {
-        $this->setDocument(null);
     }
 
     /**
@@ -153,24 +178,10 @@ abstract class AbstractCsv
     }
 
     /**
-     * @param \SplFileObject|null $document
-     *
-     * @return AbstractCsv
+     * @return string
      */
-    public function setDocument($document)
+    public function getOpenMode()
     {
-        $this->document = null;
-
-        $this->document = $document;
-
-        return $this;
-    }
-
-    /**
-     * @return \SplFileObject
-     */
-    public function getDocument()
-    {
-        return $this->document;
+        return $this->openMode;
     }
 }
