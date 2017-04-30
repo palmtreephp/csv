@@ -12,10 +12,12 @@ class CsvFileObject extends \SplFileObject
         $bytes = parent::fwrite($this->getCsvString($fields, $delimiter, $enclosure));
 
         if ($bytes === false) {
-            // @todo: handle error
+            return false;
         }
 
         $this->bytesWritten += $bytes;
+
+        return $bytes;
     }
 
     public function __destruct()

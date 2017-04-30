@@ -73,7 +73,7 @@ class Writer extends AbstractCsv
     {
         $result = $this->getDocument()->fputcsv($row);
 
-        if ($result === null) {
+        if ($result === false) {
             // @todo: handle error
             return false;
         }
