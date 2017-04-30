@@ -7,7 +7,7 @@ class CsvFileObject extends \SplFileObject
     protected $bytesWritten = 0;
     protected $lineEnding = "\r\n";
 
-    public function fputcsv($fields, $delimiter = null, $enclosure = null, $escape = null)
+    public function fwriteCsv($fields, $delimiter = null, $enclosure = null)
     {
         $bytes = $this->fwrite($this->getCsvString($fields, $delimiter, $enclosure));
 
@@ -105,6 +105,8 @@ class CsvFileObject extends \SplFileObject
      * escaped by itself, so " becomes "".
      *
      * @param mixed $data Array or string of data to escape.
+     *
+     * @param       $enclosure
      *
      * @return mixed Escaped data
      */

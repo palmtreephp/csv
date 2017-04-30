@@ -3,7 +3,7 @@
 namespace Palmtree\Csv;
 
 use Palmtree\Csv\Formatter\FormatterInterface;
-use Palmtree\Csv\Formatter\StringFormatter;
+use Palmtree\Csv\Formatter\NullFormatter;
 use Palmtree\Csv\Row\Row;
 
 /**
@@ -12,7 +12,7 @@ use Palmtree\Csv\Row\Row;
  */
 class Reader extends AbstractCsv implements \Iterator, \Countable
 {
-    public static $defaultFormatter = StringFormatter::class;
+    protected static $defaultFormatter = NullFormatter::class;
 
     protected $openMode = 'r';
     /** @var FormatterInterface[] */
@@ -194,5 +194,10 @@ class Reader extends AbstractCsv implements \Iterator, \Countable
     public function count()
     {
         return count(iterator_to_array($this));
+    }
+
+    public static function setDefaultFormatter($formatter)
+    {
+        static::$defaultFormatter = $formatter;
     }
 }

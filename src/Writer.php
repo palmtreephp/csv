@@ -71,7 +71,7 @@ class Writer extends AbstractCsv
      */
     public function addRow($row)
     {
-        $result = $this->getDocument()->fputcsv($row);
+        $result = $this->getDocument()->fwriteCsv($row);
 
         if ($result === false) {
             // @todo: handle error

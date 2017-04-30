@@ -2,7 +2,7 @@
 
 namespace Palmtree\Csv\Formatter;
 
-use Palmtree\Csv\Reader;
+
 
 abstract class AbstractFormatter implements FormatterInterface
 {

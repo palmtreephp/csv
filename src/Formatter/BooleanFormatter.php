@@ -92,6 +92,11 @@ class BooleanFormatter extends AbstractFormatter
         return $this->binaries;
     }
 
+    /**
+     * @param $value
+     *
+     * @return bool|null
+     */
     protected function getFormattedValue($value)
     {
         $value = trim($value);

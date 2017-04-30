@@ -9,6 +9,8 @@ class BooleanFormatterTest extends TestCase
 {
     /**
      * @dataProvider configProvider
+     *
+     * @param $binaries
      */
     public function testTruthyValues($binaries)
     {
@@ -24,6 +26,8 @@ class BooleanFormatterTest extends TestCase
 
     /**
      * @dataProvider configProvider
+     *
+     * @param $binaries
      */
     public function testFalseyValues($binaries)
     {
