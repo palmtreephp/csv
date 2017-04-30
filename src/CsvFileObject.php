@@ -9,7 +9,7 @@ class CsvFileObject extends \SplFileObject
 
     public function fputcsv($fields, $delimiter = null, $enclosure = null, $escape = null)
     {
-        $bytes = parent::fwrite($this->getCsvString($fields, $delimiter, $enclosure));
+        $bytes = $this->fwrite($this->getCsvString($fields, $delimiter, $enclosure));
 
         if ($bytes === false) {
             return false;
