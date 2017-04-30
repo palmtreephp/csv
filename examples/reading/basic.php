@@ -13,6 +13,7 @@ $csv = new Reader(__DIR__ . '/../people.csv');
  * @var Cell[] $row
  */
 foreach ($csv as $key => $row) {
+    var_dump($key);
     foreach ($row as $cellKey => $cell) {
         echo "$cellKey: ";
         var_export($cell->getValue());

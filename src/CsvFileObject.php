@@ -69,6 +69,18 @@ class CsvFileObject extends \SplFileObject
     }
 
     /**
+     * @param string $lineEnding
+     *
+     * @return CsvFileObject
+     */
+    public function setLineEnding($lineEnding)
+    {
+        $this->lineEnding = $lineEnding;
+
+        return $this;
+    }
+
+    /**
      * Trims the line ending delimiter from the end of the CSV file.
      * RFC-4180 states CSV files should not contain a trailing new line.
      */

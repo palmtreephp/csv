@@ -17,8 +17,6 @@ class Reader extends AbstractCsv implements \Iterator, \Countable
     protected $openMode = 'r';
     /** @var FormatterInterface[] */
     protected $formatters = [];
-    /** @var int */
-    protected $index = 0;
     /** @var Row */
     protected $headers;
     /** @var Row */
@@ -131,7 +129,7 @@ class Reader extends AbstractCsv implements \Iterator, \Countable
      *
      * @return Row
      */
-    protected function getNextRow()
+    protected function getCurrentRow()
     {
         $cells = $this->getDocument()->current();
 
@@ -158,8 +156,6 @@ class Reader extends AbstractCsv implements \Iterator, \Countable
     public function next()
     {
         $this->getDocument()->next();
-
-        ++$this->index;
     }
 
     /**
@@ -167,7 +163,7 @@ class Reader extends AbstractCsv implements \Iterator, \Countable
      */
     public function key()
     {
-        return $this->index;
+        return $this->getDocument()->key();
     }
 
     /**
@@ -175,7 +171,7 @@ class Reader extends AbstractCsv implements \Iterator, \Countable
      */
     public function valid()
     {
-        $this->row = $this->getNextRow();
+        $this->row = $this->getCurrentRow();
 
         return $this->row instanceof Row;
     }
@@ -187,10 +183,8 @@ class Reader extends AbstractCsv implements \Iterator, \Countable
     {
         $this->getDocument()->rewind();
 
-        $this->index = 0;
-
         if ($this->hasHeaders()) {
-            $this->headers = $this->getNextRow();
+            $this->headers = $this->getCurrentRow();
         }
     }
 
