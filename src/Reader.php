@@ -10,10 +10,11 @@ use Palmtree\Csv\Row\Row;
  * Reads a CSV file by loading each line into memory
  * one at a time.
  */
-class Reader extends AbstractCsv implements \Iterator, \Countable
+class Reader extends AbstractCsv implements \Iterator
 {
-    protected static $defaultFormatter = NullFormatter::class;
-
+    /** @var string */
+    protected $defaultFormatter = NullFormatter::class;
+    /** @var string */
     protected $openMode = 'r';
     /** @var FormatterInterface[] */
     protected $formatters = [];
@@ -21,11 +22,9 @@ class Reader extends AbstractCsv implements \Iterator, \Countable
     protected $headers;
     /** @var Row */
     protected $row;
-    /** @var string */
-    protected $escapeCharacter = "\0";
 
     /**
-     * @param $file
+     * @param string $file
      *
      * @return Reader
      */
@@ -36,13 +35,6 @@ class Reader extends AbstractCsv implements \Iterator, \Countable
         return $csv;
     }
 
-    public function createDocument()
-    {
-        parent::createDocument();
-
-        $this->getDocument()->setCsvControl($this->getDelimiter(), $this->getEnclosure(), $this->getEscapeCharacter());
-    }
-
     /**
      * @return Row
      */
@@ -51,6 +43,11 @@ class Reader extends AbstractCsv implements \Iterator, \Countable
         return $this->headers;
     }
 
+    /**
+     * @param $key
+     *
+     * @return mixed
+     */
     public function getHeader($key)
     {
         if (!isset($this->headers[$key])) {
@@ -95,7 +92,7 @@ class Reader extends AbstractCsv implements \Iterator, \Countable
     public function getFormatter($key)
     {
         if (!isset($this->formatters[$key])) {
-            $class = static::$defaultFormatter;
+            $class = $this->getDefaultFormatter();
 
             $this->formatters[$key] = new $class();
         }
@@ -104,30 +101,10 @@ class Reader extends AbstractCsv implements \Iterator, \Countable
     }
 
     /**
-     * @return string
-     */
-    public function getEscapeCharacter()
-    {
-        return $this->escapeCharacter;
-    }
-
-    /**
-     * @param string $escapeCharacter
-     *
-     * @return AbstractCsv
-     */
-    public function setEscapeCharacter($escapeCharacter)
-    {
-        $this->escapeCharacter = $escapeCharacter;
-
-        return $this;
-    }
-
-    /**
      * Reads the next line in the CSV file
      * and returns a Row object from it.
      *
-     * @return Row
+     * @return Row|null
      */
     protected function getCurrentRow()
     {
@@ -189,15 +166,22 @@ class Reader extends AbstractCsv implements \Iterator, \Countable
     }
 
     /**
-     * @inheritDoc
+     * @param string $defaultFormatter
+     *
+     * @return Reader
      */
-    public function count()
+    public function setDefaultFormatter($defaultFormatter)
     {
-        return count(iterator_to_array($this));
+        $this->defaultFormatter = $defaultFormatter;
+
+        return $this;
     }
 
-    public static function setDefaultFormatter($formatter)
+    /**
+     * @return string
+     */
+    public function getDefaultFormatter()
     {
-        static::$defaultFormatter = $formatter;
+        return $this->defaultFormatter;
     }
 }

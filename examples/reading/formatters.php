@@ -6,23 +6,21 @@ use Palmtree\Csv\Cell\Cell;
 use Palmtree\Csv\Formatter as Formatter;
 use Palmtree\Csv\Reader;
 
-Reader::setDefaultFormatter(Formatter\StringFormatter::class);
-
 $csv = new Reader(__DIR__ . '/../products.csv');
 
 $csv->addFormatters([
-    'product_id'          => new Formatter\NumberFormatter(),
-    'name'                => new Formatter\StringFormatter(),
-    'price'               => (new Formatter\NumberFormatter())->setDecimals(4),
-    'quantity'            => new Formatter\NumberFormatter(),
-    'enabled'             => (new Formatter\BooleanFormatter())->setBinaries(['yes' => 'no']),
-    'related_product_ids' => new Formatter\ArrayFormatter(new Formatter\NumberFormatter()),
-    'description'         => new Formatter\HtmlFormatter(),
-    'specials'            => new Formatter\CallableFormatter(function ($value, $formatter) {
-        // $formatter is the CallableFormatter instance.
-        return json_decode($value, true);
-    }),
-]);
+        'product_id'          => new Formatter\NumberFormatter(),
+        'name'                => new Formatter\StringFormatter(),
+        'price'               => (new Formatter\NumberFormatter())->setDecimals(4),
+        'quantity'            => new Formatter\NumberFormatter(),
+        'enabled'             => (new Formatter\BooleanFormatter())->setBinaries(['yes' => 'no']),
+        'related_product_ids' => new Formatter\ArrayFormatter(new Formatter\NumberFormatter()),
+        'description'         => new Formatter\HtmlFormatter(),
+        'specials'            => new Formatter\CallableFormatter(function ($value, $formatter) {
+            // $formatter is the CallableFormatter instance.
+            return json_decode($value, true);
+        }),
+    ]);
 
 // Iterate over the object directly:
 /**

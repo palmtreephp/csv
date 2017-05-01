@@ -14,6 +14,8 @@ abstract class AbstractCsv
     protected $delimiter;
     /** @var string */
     protected $enclosure;
+    /** @var string */
+    protected $escapeCharacter;
     /** @var CsvFileObject */
     protected $document;
 
@@ -24,13 +26,15 @@ abstract class AbstractCsv
      * @param bool   $hasHeaders Whether the CSV file contains headers.
      * @param string $delimiter  Cell delimiter. Default ',' (comma).
      * @param string $enclosure  Cell enclosure. Default '"' (double quote)
+     * @param string $escape     Cell escape character. Default null byte.
      */
-    public function __construct($file, $hasHeaders = true, $delimiter = ',', $enclosure = '"')
+    public function __construct($file, $hasHeaders = true, $delimiter = ',', $enclosure = '"', $escape = "\0")
     {
         $this->setFile($file)
              ->setHasHeaders($hasHeaders)
              ->setDelimiter($delimiter)
-             ->setEnclosure($enclosure);
+             ->setEnclosure($enclosure)
+             ->setEscapeCharacter($escape);
     }
 
     /**
@@ -57,7 +61,7 @@ abstract class AbstractCsv
             CsvFileObject::DROP_NEW_LINE
         );
 
-        $document->setCsvControl($this->getDelimiter(), $this->getEnclosure());
+        $document->setCsvControl($this->getDelimiter(), $this->getEnclosure(), $this->getEscapeCharacter());
 
         $this->setDocument($document);
     }
@@ -183,5 +187,25 @@ abstract class AbstractCsv
     public function getOpenMode()
     {
         return $this->openMode;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEscapeCharacter()
+    {
+        return $this->escapeCharacter;
+    }
+
+    /**
+     * @param string $escapeCharacter
+     *
+     * @return AbstractCsv
+     */
+    public function setEscapeCharacter($escapeCharacter)
+    {
+        $this->escapeCharacter = $escapeCharacter;
+
+        return $this;
     }
 }

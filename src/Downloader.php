@@ -5,8 +5,9 @@ namespace Palmtree\Csv;
 class Downloader extends Writer
 {
     /**
-     * Default headers used to tell client the response is
-     * a downloadable, non-cacheable file.
+     * Default headers used to tell client the response is a downloadable,
+     * non-cacheable file.
+     *
      * @var array
      */
     protected $responseHeaders = [
@@ -18,6 +19,7 @@ class Downloader extends Writer
         'Pragma'                    => 'public',
     ];
 
+    /** @var string */
     protected $filename;
 
     public function __construct($filename, $responseHeaders = [])
@@ -44,15 +46,15 @@ class Downloader extends Writer
      */
     public function sendResponse()
     {
-        if (!headers_sent()) {
-            $headers = $this->getResponseHeaders();
+        $this->getDocument()->trimFinalLineEnding();
 
-            foreach ($headers as $key => $value) {
+        if (!headers_sent()) {
+            header(sprintf('Content-Length: %s', $this->getDocument()->getSize()));
+
+            foreach ($this->getResponseHeaders() as $key => $value) {
                 header(sprintf('%s: %s', $key, $value));
             }
         }
-
-        $this->getDocument()->trimFinalLineEnding();
 
         $this->getDocument()->fseek(0);
         $this->getDocument()->fpassthru();

@@ -21,11 +21,13 @@ class Writer extends AbstractCsv
      * Sets headers and all rows on the CSV file and
      * then closes the file handle.
      *
+     * Uses the first row's keys as headers.
+     *
      * @param $data
      *
      * @return $this
      */
-    public function setData($data)
+    public function setData(array $data)
     {
         if ($this->hasHeaders()) {
             $this->setHeaders(array_keys(reset($data)));
@@ -55,7 +57,7 @@ class Writer extends AbstractCsv
      *
      * @param array $rows
      */
-    public function addRows($rows)
+    public function addRows(array $rows)
     {
         foreach ($rows as $row) {
             $this->addRow($row);
@@ -69,7 +71,7 @@ class Writer extends AbstractCsv
      *
      * @return bool Whether the row was written to the file.
      */
-    public function addRow($row)
+    public function addRow(array $row)
     {
         $result = $this->getDocument()->fwriteCsv($row);
 

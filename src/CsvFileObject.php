@@ -7,9 +7,9 @@ class CsvFileObject extends \SplFileObject
     protected $bytesWritten = 0;
     protected $lineEnding = "\r\n";
 
-    public function fwriteCsv($fields, $delimiter = null, $enclosure = null)
+    public function fwriteCsv(array $row, $delimiter = null, $enclosure = null)
     {
-        $bytes = $this->fwrite($this->getCsvString($fields, $delimiter, $enclosure));
+        $bytes = $this->fwrite($this->getCsvString($row, $delimiter, $enclosure));
 
         if ($bytes === false) {
             return false;
@@ -36,7 +36,7 @@ class CsvFileObject extends \SplFileObject
      *
      * @return string
      */
-    protected function getCsvString($row, $delimiter, $enclosure)
+    protected function getCsvString(array $row, $delimiter, $enclosure)
     {
         $csvControl = $this->getCsvControl();
 
@@ -80,6 +80,17 @@ class CsvFileObject extends \SplFileObject
         return $this;
     }
 
+    public function getSize()
+    {
+        try {
+            $size = parent::getSize();
+        } catch (\RuntimeException $exception) {
+            $size = parent::fstat()['size'];
+        }
+
+        return $size;
+    }
+
     /**
      * Trims the line ending delimiter from the end of the CSV file.
      * RFC-4180 states CSV files should not contain a trailing new line.
@@ -91,9 +102,8 @@ class CsvFileObject extends \SplFileObject
             $length = mb_strlen($this->getLineEnding());
 
             $this->fseek(-$length, SEEK_END);
-            $chunk = $this->fread($length);
 
-            if ($chunk === $this->getLineEnding()) {
+            if ($this->fread($length) === $this->getLineEnding()) {
                 $this->ftruncate($this->getBytesWritten() - $length);
             }
         }
