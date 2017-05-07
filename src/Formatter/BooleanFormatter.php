@@ -7,40 +7,122 @@ namespace Palmtree\Csv\Formatter;
  */
 class BooleanFormatter extends AbstractFormatter
 {
-    protected $nullable = false;
-
-    protected $binaries = [
-        '1'       => '0',
+    /**
+     * @var array $defaultPairs Default truthy/falsey pairs.
+     */
+    public static $defaultPairs = [
         'true'    => 'false',
+        '1'       => '0',
         'on'      => 'off',
         'yes'     => 'no',
         'enabled' => 'disabled',
     ];
+
+    /** @var array */
+    protected $values = [];
+    /** @var bool */
+    protected $nullable;
+    /** @var bool */
+    protected $caseSensitive;
 
     /**
      * BooleanFormatter constructor.
      *
      * @param null|FormatterInterface $formatter
      * @param bool                    $nullable
-     * @param array|null              $binaries
+     * @param bool                    $caseSensitive
+     * @param array|null              $pairs
      */
-    public function __construct($formatter = null, $nullable = false, $binaries = null)
+    public function __construct($formatter = null, $nullable = false, $caseSensitive = false, $pairs = null)
     {
-        $this->setNullable($nullable);
-
-        if (is_array($binaries)) {
-            $this->setBinaries($binaries);
+        if (!is_array($pairs)) {
+            $pairs = static::$defaultPairs;
         }
+
+        $this->setNullable($nullable)
+             ->setCaseSensitive($caseSensitive)
+             ->setPairs($pairs);
 
         parent::__construct($formatter);
     }
 
     /**
+     * @param array $pairs
+     *
+     * @return BooleanFormatter
+     */
+    public function setPairs(array $pairs)
+    {
+        $this->values = [];
+
+        foreach ($pairs as $truthy => $falsey) {
+            $this->addPair($truthy, $falsey);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param string $truthy
+     * @param string $falsey
+     */
+    public function addPair($truthy, $falsey)
+    {
+        if (!$this->isCaseSensitive()) {
+            $truthy = mb_strtolower($truthy);
+            $falsey = mb_strtolower($falsey);
+        }
+
+        $this->values[$truthy] = true;
+        $this->values[$falsey] = false;
+    }
+
+    /**
+     * @return array
+     */
+    public function getValues()
+    {
+        return $this->values;
+    }
+
+    /**
+     * @param $value
+     *
+     * @return bool|null
+     */
+    protected function getFormattedValue($value)
+    {
+        $value = trim($value);
+
+        if (!$this->isCaseSensitive()) {
+            $value = mb_strtolower($value);
+        }
+
+        if (isset($this->values[$value])) {
+            return $this->values[$value];
+        }
+
+        return $this->isNullable() ? null : false;
+    }
+
+    /**
+     * @param bool $caseSensitive
+     *
+     * @return BooleanFormatter
+     */
+    public function setCaseSensitive($caseSensitive)
+    {
+        $this->caseSensitive = $caseSensitive;
+
+        return $this;
+    }
+
+    /**
      * @return bool
      */
-    public function isNullable()
+    public function isCaseSensitive()
     {
-        return $this->nullable;
+        return $this->caseSensitive;
     }
 
     /**
@@ -56,61 +138,10 @@ class BooleanFormatter extends AbstractFormatter
     }
 
     /**
-     * @param array $binaries
-     *
-     * @return BooleanFormatter
+     * @return bool
      */
-    public function setBinaries(array $binaries)
+    public function isNullable()
     {
-        $this->binaries = $binaries;
-
-        return $this;
-    }
-
-    /**
-     * @param string $truthy
-     * @param string $falsey
-     */
-    public function addBinary($truthy, $falsey)
-    {
-        $this->binaries[$truthy] = $falsey;
-    }
-
-    /**
-     * @param $key
-     */
-    public function removeBinary($key)
-    {
-        unset($this->binaries[$key]);
-    }
-
-    /**
-     * @return array
-     */
-    public function getBinaries()
-    {
-        return $this->binaries;
-    }
-
-    /**
-     * @param $value
-     *
-     * @return bool|null
-     */
-    protected function getFormattedValue($value)
-    {
-        $value = trim($value);
-
-        foreach ($this->getBinaries() as $truthy => $falsey) {
-            if (strcasecmp(trim($truthy), $value) === 0) {
-                return true;
-            }
-
-            if (strcasecmp(trim($falsey), $value) === 0) {
-                return false;
-            }
-        }
-
-        return $this->isNullable() ? null : false;
+        return $this->nullable;
     }
 }

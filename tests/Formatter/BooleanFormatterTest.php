@@ -15,7 +15,7 @@ class BooleanFormatterTest extends TestCase
     public function testTruthyValues($binaries)
     {
         $formatter = new BooleanFormatter();
-        $formatter->setBinaries($binaries);
+        $formatter->setValues($binaries);
 
         $this->assertTrue($formatter->format('true'));
         $this->assertTrue($formatter->format('enabled'));
@@ -33,7 +33,7 @@ class BooleanFormatterTest extends TestCase
     {
         $formatter = new BooleanFormatter();
         $formatter->setNullable(true);
-        $formatter->setBinaries($binaries);
+        $formatter->setValues($binaries);
 
         $this->assertFalse($formatter->format('false'));
         $this->assertFalse($formatter->format('disabled'));

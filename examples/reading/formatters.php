@@ -13,7 +13,7 @@ $csv->addFormatters([
         'name'                => new Formatter\StringFormatter(),
         'price'               => (new Formatter\NumberFormatter())->setDecimals(4),
         'quantity'            => new Formatter\NumberFormatter(),
-        'enabled'             => (new Formatter\BooleanFormatter())->setBinaries(['yes' => 'no']),
+        'enabled'             => (new Formatter\BooleanFormatter())->setPairs(['yes' => 'no'])->setNullable(true),
         'related_product_ids' => new Formatter\ArrayFormatter(new Formatter\NumberFormatter()),
         'description'         => new Formatter\HtmlFormatter(),
         'specials'            => new Formatter\CallableFormatter(function ($value, $formatter) {
