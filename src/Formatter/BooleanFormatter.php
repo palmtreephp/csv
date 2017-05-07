@@ -69,8 +69,8 @@ class BooleanFormatter extends AbstractFormatter
     public function addPair($truthy, $falsey)
     {
         if (!$this->isCaseSensitive()) {
-            $truthy = mb_strtolower($truthy);
-            $falsey = mb_strtolower($falsey);
+            $truthy = strtolower($truthy);
+            $falsey = strtolower($falsey);
         }
 
         $this->values[$truthy] = true;
@@ -95,7 +95,7 @@ class BooleanFormatter extends AbstractFormatter
         $value = trim($value);
 
         if (!$this->isCaseSensitive()) {
-            $value = mb_strtolower($value);
+            $value = strtolower($value);
         }
 
         if (isset($this->values[$value])) {

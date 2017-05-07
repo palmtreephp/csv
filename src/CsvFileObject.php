@@ -99,7 +99,7 @@ class CsvFileObject extends \SplFileObject
     {
         if ($this->getBytesWritten() > 0) {
             // Only trim the file if it ends with the line ending delimiter.
-            $length = mb_strlen($this->getLineEnding());
+            $length = strlen($this->getLineEnding());
 
             $this->fseek(-$length, SEEK_END);
 
