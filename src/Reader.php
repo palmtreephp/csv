@@ -2,8 +2,8 @@
 
 namespace Palmtree\Csv;
 
-use Palmtree\Csv\Formatter\FormatterInterface;
-use Palmtree\Csv\Formatter\NullFormatter;
+use Palmtree\Csv\Normalizer\NormalizerInterface;
+use Palmtree\Csv\Normalizer\NullNormalizer;
 use Palmtree\Csv\Row\Row;
 
 /**
@@ -13,11 +13,11 @@ use Palmtree\Csv\Row\Row;
 class Reader extends AbstractCsv implements \Iterator
 {
     /** @var string */
-    protected $defaultFormatter = NullFormatter::class;
+    protected $defaultNormalizer = NullNormalizer::class;
     /** @var string */
     protected $openMode = 'r';
-    /** @var FormatterInterface[] */
-    protected $formatters = [];
+    /** @var NormalizerInterface[] */
+    protected $normalizers = [];
     /** @var Row */
     protected $headers;
     /** @var Row */
@@ -58,27 +58,27 @@ class Reader extends AbstractCsv implements \Iterator
     }
 
     /**
-     * @param mixed              $key
-     * @param FormatterInterface $formatter Formatter instance.
+     * @param mixed               $key
+     * @param NormalizerInterface $normalizer Normalizer instance.
      *
      * @return $this
      */
-    public function addFormatter($key, FormatterInterface $formatter)
+    public function addNormalizer($key, NormalizerInterface $normalizer)
     {
-        $this->formatters[$key] = $formatter;
+        $this->normalizers[$key] = $normalizer;
 
         return $this;
     }
 
     /**
-     * @param array|\Traversable $formatters
+     * @param array|\Traversable $normalizers
      *
      * @return $this
      */
-    public function addFormatters($formatters)
+    public function addNormalizers($normalizers)
     {
-        foreach ($formatters as $key => $formatter) {
-            $this->addFormatter($key, $formatter);
+        foreach ($normalizers as $key => $normalizer) {
+            $this->addNormalizer($key, $normalizer);
         }
 
         return $this;
@@ -87,17 +87,17 @@ class Reader extends AbstractCsv implements \Iterator
     /**
      * @param mixed $key
      *
-     * @return FormatterInterface
+     * @return NormalizerInterface
      */
-    public function getFormatter($key)
+    public function getNormalizer($key)
     {
-        if (!isset($this->formatters[$key])) {
-            $class = $this->getDefaultFormatter();
+        if (!isset($this->normalizers[$key])) {
+            $class = $this->getDefaultNormalizer();
 
-            $this->formatters[$key] = new $class();
+            $this->normalizers[$key] = new $class();
         }
 
-        return $this->formatters[$key];
+        return $this->normalizers[$key];
     }
 
     /**
@@ -166,13 +166,13 @@ class Reader extends AbstractCsv implements \Iterator
     }
 
     /**
-     * @param string $defaultFormatter
+     * @param string $defaultNormalizer
      *
      * @return Reader
      */
-    public function setDefaultFormatter($defaultFormatter)
+    public function setDefaultNormalizer($defaultNormalizer)
     {
-        $this->defaultFormatter = $defaultFormatter;
+        $this->defaultNormalizer = $defaultNormalizer;
 
         return $this;
     }
@@ -180,8 +180,8 @@ class Reader extends AbstractCsv implements \Iterator
     /**
      * @return string
      */
-    public function getDefaultFormatter()
+    public function getDefaultNormalizer()
     {
-        return $this->defaultFormatter;
+        return $this->defaultNormalizer;
     }
 }

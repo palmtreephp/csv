@@ -1,28 +1,28 @@
 <?php
 
-namespace Palmtree\Csv\Formatter;
+namespace Palmtree\Csv\Normalizer;
 
-class CallableFormatter extends AbstractFormatter
+class CallableNormalizer extends AbstractNormalizer
 {
     protected $callback;
 
     /**
-     * CallableFormatter constructor.
+     * CallableNormalizer constructor.
      *
-     * @param callable                $callback
-     * @param null|FormatterInterface $formatter
+     * @param callable                 $callback
+     * @param null|NormalizerInterface $normalizer
      */
-    public function __construct(callable $callback, $formatter = null)
+    public function __construct(callable $callback, $normalizer = null)
     {
         $this->setCallback($callback);
 
-        parent::__construct($formatter);
+        parent::__construct($normalizer);
     }
 
     /**
      * @param callable $callback
      *
-     * @return CallableFormatter
+     * @return CallableNormalizer
      */
     public function setCallback(callable $callback)
     {
@@ -44,7 +44,7 @@ class CallableFormatter extends AbstractFormatter
      *
      * @return mixed
      */
-    protected function getFormattedValue($value)
+    protected function getNormalizedValue($value)
     {
         $value = call_user_func($this->getCallback(), $value, $this);
 

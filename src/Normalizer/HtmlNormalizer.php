@@ -1,10 +1,10 @@
 <?php
 
-namespace Palmtree\Csv\Formatter;
+namespace Palmtree\Csv\Normalizer;
 
 /**
  */
-class HtmlFormatter extends AbstractFormatter
+class HtmlNormalizer extends AbstractNormalizer
 {
     protected $encode = true;
     protected $flags = ENT_QUOTES;
@@ -12,7 +12,7 @@ class HtmlFormatter extends AbstractFormatter
     /**
      * @return bool
      */
-    public function isEncode()
+    public function shouldEncode()
     {
         return $this->encode;
     }
@@ -49,9 +49,9 @@ class HtmlFormatter extends AbstractFormatter
         return $this->flags;
     }
 
-    protected function getFormattedValue($value)
+    protected function getNormalizedValue($value)
     {
-        if ($this->isEncode()) {
+        if ($this->shouldEncode()) {
             $value = htmlentities($value, $this->getFlags());
         } else {
             $value = html_entity_decode($value, $this->getFlags());

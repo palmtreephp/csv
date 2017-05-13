@@ -2,24 +2,24 @@
 
 namespace Palmtree\Csv\Cell;
 
-use Palmtree\Csv\Formatter\FormatterInterface;
+use Palmtree\Csv\Normalizer\NormalizerInterface;
 
 class Cell
 {
-    /** @var FormatterInterface $formatter */
-    protected $formatter;
+    /** @var NormalizerInterface $normalizer */
+    protected $normalizer;
     protected $value;
 
     /**
      * Cell constructor.
      *
      * @param                         $value
-     * @param FormatterInterface      $formatter
+     * @param NormalizerInterface     $normalizer
      */
-    public function __construct($value, FormatterInterface $formatter)
+    public function __construct($value, NormalizerInterface $normalizer)
     {
         $this->setRawValue($value);
-        $this->setFormatter($formatter);
+        $this->setNormalizer($normalizer);
     }
 
     /**
@@ -35,25 +35,25 @@ class Cell
      */
     public function getValue()
     {
-        return $this->getFormatter()->format($this->getRawValue());
+        return $this->getNormalizer()->normalize($this->getRawValue());
     }
 
     /**
-     * @return FormatterInterface
+     * @return NormalizerInterface
      */
-    public function getFormatter()
+    public function getNormalizer()
     {
-        return $this->formatter;
+        return $this->normalizer;
     }
 
     /**
-     * @param FormatterInterface $formatter
+     * @param NormalizerInterface $normalizer
      *
      * @return Cell
      */
-    public function setFormatter(FormatterInterface $formatter)
+    public function setNormalizer(NormalizerInterface $normalizer)
     {
-        $this->formatter = $formatter;
+        $this->normalizer = $normalizer;
 
         return $this;
     }

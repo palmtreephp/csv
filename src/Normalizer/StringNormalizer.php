@@ -1,35 +1,34 @@
 <?php
 
-namespace Palmtree\Csv\Formatter;
+namespace Palmtree\Csv\Normalizer;
 
 /**
- * StringFormatter formats a CSV cell as a string.
+ * StringNormalizer formats a CSV cell as a string.
  * It will trim the string by default.
  */
-class StringFormatter extends AbstractFormatter
+class StringNormalizer extends AbstractNormalizer
 {
-    protected $trim = true;
-    protected $trimCharMask = " \t\n\r\0\x0B";
+    /** @var bool */
+    protected $trim;
+    /** @var string */
+    protected $trimCharMask;
 
-    public function __construct($formatter = null, $trim = true, $trimCharMask = null)
+    public function __construct($normalizer = null, $trim = true, $trimCharMask = " \t\n\r\0\x0B")
     {
-        parent::__construct($formatter);
+        parent::__construct($normalizer);
 
-        $this->setTrim($trim);
-
-        if ($trimCharMask) {
-            $this->setTrimCharMask($trimCharMask);
-        }
+        $this->setTrim($trim)
+             ->setTrimCharMask($trimCharMask);
     }
 
     /**
      * @param bool $trim
      *
-     * @return StringFormatter
+     * @return StringNormalizer
      */
     public function setTrim($trim)
     {
-        $this->trim = $trim;
+        $this->trim = (bool)$trim;
 
         return $this;
     }
@@ -37,7 +36,7 @@ class StringFormatter extends AbstractFormatter
     /**
      * @param null|string $trimCharMask
      *
-     * @return StringFormatter
+     * @return StringNormalizer
      */
     public function setTrimCharMask($trimCharMask)
     {
@@ -57,14 +56,14 @@ class StringFormatter extends AbstractFormatter
     /**
      * @return bool
      */
-    public function isTrim()
+    public function shouldTrim()
     {
         return $this->trim;
     }
 
-    protected function getFormattedValue($value)
+    protected function getNormalizedValue($value)
     {
-        if ($this->isTrim()) {
+        if ($this->shouldTrim()) {
             $value = trim($value, $this->getTrimCharMask());
         }
 

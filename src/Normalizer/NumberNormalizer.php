@@ -1,31 +1,31 @@
 <?php
 
-namespace Palmtree\Csv\Formatter;
+namespace Palmtree\Csv\Normalizer;
 
 /**
- * NumberFormatter converts numeric strings to ints and floats.
+ * NumberNormalizer converts numeric strings to ints and floats.
  */
-class NumberFormatter extends AbstractFormatter
+class NumberNormalizer extends AbstractNormalizer
 {
     protected $decimals;
 
     /**
-     * NumberFormatter constructor.
+     * NumberNormalizer constructor.
      *
-     * @param null|FormatterInterface $formatter
-     * @param null|int                $decimals
+     * @param null|NormalizerInterface $normalizer
+     * @param null|int                 $decimals
      */
-    public function __construct($formatter = null, $decimals = null)
+    public function __construct($normalizer = null, $decimals = null)
     {
         $this->setDecimals($decimals);
 
-        parent::__construct($formatter);
+        parent::__construct($normalizer);
     }
 
     /**
      * @param null|int $decimals
      *
-     * @return NumberFormatter
+     * @return NumberNormalizer
      */
     public function setDecimals($decimals)
     {
@@ -42,7 +42,7 @@ class NumberFormatter extends AbstractFormatter
         return $this->decimals;
     }
 
-    protected function getFormattedValue($value)
+    protected function getNormalizedValue($value)
     {
         $numberValue = is_numeric($value) ? trim($value) + 0 : 0;
 

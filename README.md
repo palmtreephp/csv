@@ -90,22 +90,40 @@ foreach($csv as $row) {
 }
 ```
 
-#### Formatting
+#### Normalizing data types
+
+A number of different normalizers can be used to convert data from strings into certain data types.
+Below is contrived example using all currently bundle normalizers:
 ```php
 <?php
 use Palmtree\Csv\Reader;
-use Palmtree\Csv\Formatter as Formatter;
+use Palmtree\Csv\Normalizer as Normalizer;
 
 $csv = new Reader(__DIR__ . '/../products.csv');
 
-$csv->addFormatters([
-    'product_id'          => new Formatter\NumberFormatter(),
-    'name'                => new Formatter\StringFormatter(),
-    'price'               => (new Formatter\NumberFormatter())->setDecimals(4),
-    'quantity'            => new Formatter\NumberFormatter(),
-    'enabled'             => new Formatter\BooleanFormatter(),
-    'related_product_ids' => new Formatter\ArrayFormatter(new Formatter\NumberFormatter()),
-    'specials'            => new Formatter\CallableFormatter(function ($value) {
+$integerNormalizer = (new Normalizer\NumberNormalizer())->setDecimals(0);
+
+$csv->addNormalizers([
+     // Convert to integer
+    'product_id'          => $integerNormalizer,
+    
+    // Keep data as string but trim it
+    'name'                => new Normalizer\StringNormalizer(),
+     
+     // Convert to float
+    'price'               => (new Normalizer\NumberNormalizer())->setDecimals(4),
+     
+     // Convert to integer
+    'quantity'            => $integerNormalizer,
+    
+    // Convert to boolean true or false
+    'enabled'             => new Normalizer\BooleanNormalizer(),
+    
+    // Convert to an array of numbers
+    'related_product_ids' => new Normalizer\ArrayNormalizer($integerNormalizer),
+    
+    // Custom conversion with a callback
+    'specials'            => new Normalizer\CallableNormalizer(function ($value) {
         return json_decode($value, true);
     }),
 ]);

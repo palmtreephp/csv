@@ -3,21 +3,21 @@
 require_once dirname(__DIR__) . '/../vendor/autoload.php';
 
 use Palmtree\Csv\Cell\Cell;
-use Palmtree\Csv\Formatter as Formatter;
+use Palmtree\Csv\Normalizer as Normalizer;
 use Palmtree\Csv\Reader;
 
 $csv = new Reader(__DIR__ . '/../products.csv');
 
-$csv->addFormatters([
-        'product_id'          => new Formatter\NumberFormatter(),
-        'name'                => new Formatter\StringFormatter(),
-        'price'               => (new Formatter\NumberFormatter())->setDecimals(4),
-        'quantity'            => new Formatter\NumberFormatter(),
-        'enabled'             => (new Formatter\BooleanFormatter())->setPairs(['yes' => 'no'])->setNullable(true),
-        'related_product_ids' => new Formatter\ArrayFormatter(new Formatter\NumberFormatter()),
-        'description'         => new Formatter\HtmlFormatter(),
-        'specials'            => new Formatter\CallableFormatter(function ($value, $formatter) {
-            // $formatter is the CallableFormatter instance.
+$csv->addNormalizers([
+        'product_id'          => new Normalizer\NumberNormalizer(),
+        'name'                => new Normalizer\StringNormalizer(),
+        'price'               => (new Normalizer\NumberNormalizer())->setDecimals(4),
+        'quantity'            => new Normalizer\NumberNormalizer(),
+        'enabled'             => (new Normalizer\BooleanNormalizer())->setPairs(['yes' => 'no'])->setNullable(true),
+        'related_product_ids' => new Normalizer\ArrayNormalizer(new Normalizer\NumberNormalizer()),
+        'description'         => new Normalizer\HtmlNormalizer(),
+        'specials'            => new Normalizer\CallableNormalizer(function ($value, $normalizer) {
+            // $normalizer is the CallableNormalizer instance.
             return json_decode($value, true);
         }),
     ]);

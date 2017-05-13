@@ -59,9 +59,9 @@ class Row implements \ArrayAccess, \Countable, \IteratorAggregate
 
     public function addCell($key, $value)
     {
-        $formatter = $this->getReader()->getFormatter($key);
+        $normalizer = $this->getReader()->getNormalizer($key);
 
-        $cell = new Cell($value, $formatter);
+        $cell = new Cell($value, $normalizer);
 
         $this->cells[$key] = $cell;
     }

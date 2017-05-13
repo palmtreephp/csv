@@ -1,11 +1,11 @@
 <?php
 
-namespace Palmtree\Csv\Formatter;
+namespace Palmtree\Csv\Normalizer;
 
 /**
- * BooleanFormatter formats a CSV cell as a boolean
+ * BooleanNormalizer formats a CSV cell as a boolean
  */
-class BooleanFormatter extends AbstractFormatter
+class BooleanNormalizer extends AbstractNormalizer
 {
     /**
      * @var array $defaultPairs Default truthy/falsey pairs.
@@ -26,14 +26,14 @@ class BooleanFormatter extends AbstractFormatter
     protected $caseSensitive;
 
     /**
-     * BooleanFormatter constructor.
+     * BooleanNormalizer constructor.
      *
-     * @param null|FormatterInterface $formatter
-     * @param bool                    $nullable
-     * @param bool                    $caseSensitive
-     * @param array|null              $pairs
+     * @param null|NormalizerInterface $normalizer
+     * @param bool                     $nullable
+     * @param bool                     $caseSensitive
+     * @param array|null               $pairs
      */
-    public function __construct($formatter = null, $nullable = false, $caseSensitive = false, $pairs = null)
+    public function __construct($normalizer = null, $nullable = false, $caseSensitive = false, $pairs = null)
     {
         if (!is_array($pairs)) {
             $pairs = static::$defaultPairs;
@@ -43,13 +43,13 @@ class BooleanFormatter extends AbstractFormatter
              ->setCaseSensitive($caseSensitive)
              ->setPairs($pairs);
 
-        parent::__construct($formatter);
+        parent::__construct($normalizer);
     }
 
     /**
      * @param array $pairs
      *
-     * @return BooleanFormatter
+     * @return BooleanNormalizer
      */
     public function setPairs(array $pairs)
     {
@@ -90,7 +90,7 @@ class BooleanFormatter extends AbstractFormatter
      *
      * @return bool|null
      */
-    protected function getFormattedValue($value)
+    protected function getNormalizedValue($value)
     {
         $value = trim($value);
 
@@ -108,7 +108,7 @@ class BooleanFormatter extends AbstractFormatter
     /**
      * @param bool $caseSensitive
      *
-     * @return BooleanFormatter
+     * @return BooleanNormalizer
      */
     public function setCaseSensitive($caseSensitive)
     {
@@ -128,7 +128,7 @@ class BooleanFormatter extends AbstractFormatter
     /**
      * @param bool $nullable
      *
-     * @return BooleanFormatter
+     * @return BooleanNormalizer
      */
     public function setNullable($nullable)
     {

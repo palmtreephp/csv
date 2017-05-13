@@ -1,20 +1,20 @@
 <?php
 
-namespace Palmtree\Csv\Formatter;
+namespace Palmtree\Csv\Normalizer;
 
-class MoneyFormatter extends AbstractFormatter
+class MoneyNormalizer extends AbstractNormalizer
 {
     protected $moneyFormat;
 
     /**
-     * MoneyFormatter constructor.
+     * MoneyNormalizer constructor.
      *
-     * @param null|FormatterInterface $formatter
-     * @param string                  $format
+     * @param null|NormalizerInterface $normalizer
+     * @param string                   $format
      */
-    public function __construct($formatter = null, $format = '%.2n')
+    public function __construct($normalizer = null, $format = '%.2n')
     {
-        parent::__construct($formatter);
+        parent::__construct($normalizer);
 
         $this->setMoneyFormat($format);
     }
@@ -22,7 +22,7 @@ class MoneyFormatter extends AbstractFormatter
     /**
      * @param string $moneyFormat
      *
-     * @return MoneyFormatter
+     * @return MoneyNormalizer
      */
     public function setMoneyFormat($moneyFormat)
     {
@@ -39,7 +39,7 @@ class MoneyFormatter extends AbstractFormatter
         return $this->moneyFormat;
     }
 
-    protected function getFormattedValue($value)
+    protected function getNormalizedValue($value)
     {
         return money_format($this->getMoneyFormat(), $value);
     }
