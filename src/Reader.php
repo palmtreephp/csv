@@ -162,6 +162,7 @@ class Reader extends AbstractCsv implements \Iterator
 
         if ($this->hasHeaders()) {
             $this->headers = $this->getCurrentRow();
+            $this->next();
         }
     }
 
