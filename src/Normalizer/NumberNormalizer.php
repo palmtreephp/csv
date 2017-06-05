@@ -3,7 +3,7 @@
 namespace Palmtree\Csv\Normalizer;
 
 /**
- * NumberNormalizer converts numeric strings to ints and floats.
+ * NumberNormalizer converts numeric strings to integers and floats.
  */
 class NumberNormalizer extends AbstractNormalizer
 {
@@ -44,7 +44,11 @@ class NumberNormalizer extends AbstractNormalizer
 
     protected function getNormalizedValue($value)
     {
-        $numberValue = is_numeric($value) ? trim($value) + 0 : 0;
+        if (!is_numeric($value)) {
+            return 0;
+        }
+
+        $numberValue = trim($value) + 0;
 
         if ($this->getDecimals() !== null) {
             $numberValue = round($numberValue, $this->getDecimals());
