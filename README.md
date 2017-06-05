@@ -36,6 +36,73 @@ This is because Macs used to use `\r` as a line separator. See [here](http://php
 
 ## Usage
 
+#### Read a CSV file
+```php
+<?php
+use Palmtree\Csv\Reader;
+
+$csv = new Reader('people.csv');
+
+foreach($csv as $row) {
+	echo "{$row['name']} is a {$row['age']} year old {$row['gender']}";
+}
+```
+
+#### Normalize data types
+
+A number of different normalizers can be used to convert data from strings into certain data types.
+Below is contrived example using all currently bundled normalizers:
+```php
+<?php
+use Palmtree\Csv\Reader;
+use Palmtree\Csv\Normalizer as Normalizer;
+
+$csv = new Reader(__DIR__ . '/../products.csv');
+
+// Create a NumberNormalizer instance which rounds to 0 decimals
+$integerNormalizer = (new Normalizer\NumberNormalizer())->setDecimals(0);
+
+$csv->addNormalizers([
+     // Convert to integer
+    'product_id'          => $integerNormalizer,
+
+    // Keep data as string but trim it
+    'name'                => new Normalizer\StringNormalizer(),
+
+     // Convert to float
+    'price'               => (new Normalizer\NumberNormalizer())->setDecimals(4),
+
+     // Convert to integer
+    'quantity'            => $integerNormalizer,
+
+    // Convert to boolean true or false
+    'enabled'             => new Normalizer\BooleanNormalizer(),
+
+    // Convert to an array of numbers
+    'related_product_ids' => new Normalizer\ArrayNormalizer($integerNormalizer),
+
+    // Custom conversion with a callback
+    'specials'            => new Normalizer\CallableNormalizer(function ($value) {
+        return json_decode($value, true);
+    }),
+]);
+```
+
+#### No Headers
+If your CSV contains no headers:
+
+```php
+<?php
+use Palmtree\Csv\Reader;
+
+// Pass `false` as the second constructor argument to treat the first row as data
+$csv = new Reader('people.csv', false);
+
+// Alternatively, call the setHasHeaders() method after instantiation:
+//$csv->setHasHeaders(false);
+
+```
+
 #### Build and Download a CSV file
 ```php
 <?php
@@ -78,58 +145,46 @@ $people[] = [
 Writer::write('people.csv', $people);
 ```
 
-#### Read a CSV file
+See the [examples](examples) directory for more usage examples.
+
+## Advanced Usage
+
+#### CSV Control
+
+You can access the document object to change the CSV delimiter, enclosure and escape character:
 ```php
 <?php
 use Palmtree\Csv\Reader;
 
 $csv = new Reader('people.csv');
 
-foreach($csv as $row) {
-	echo "{$row['name']} is a {$row['age']} year old {$row['gender']}";
-}
+$csv->getDocument()->setDelimiter("\t");
+$csv->getDocument()->setEnclosure('"');
+$csv->getDocument()->setEscapeChar("\\");
 ```
 
-#### Normalizing data types
+#### Line Endings
+CSVs default to `\r\n` line endings. Access the document object if you need to change this:
 
-A number of different normalizers can be used to convert data from strings into certain data types.
-Below is contrived example using all currently bundle normalizers:
+```php
+<?php
+use Palmtree\Csv\Writer;
+
+$csv = new Writer('people.csv');
+$csv->getDocument()->setLineEnding("\n");
+```
+
+
+#### Fine-grained Control
+The document object extends PHP's [SplFileObject](http://php.net/manual/en/class.splfileobject.php) and inherits it's methods:
+
 ```php
 <?php
 use Palmtree\Csv\Reader;
-use Palmtree\Csv\Normalizer as Normalizer;
 
-$csv = new Reader(__DIR__ . '/../products.csv');
-
-$integerNormalizer = (new Normalizer\NumberNormalizer())->setDecimals(0);
-
-$csv->addNormalizers([
-     // Convert to integer
-    'product_id'          => $integerNormalizer,
-    
-    // Keep data as string but trim it
-    'name'                => new Normalizer\StringNormalizer(),
-     
-     // Convert to float
-    'price'               => (new Normalizer\NumberNormalizer())->setDecimals(4),
-     
-     // Convert to integer
-    'quantity'            => $integerNormalizer,
-    
-    // Convert to boolean true or false
-    'enabled'             => new Normalizer\BooleanNormalizer(),
-    
-    // Convert to an array of numbers
-    'related_product_ids' => new Normalizer\ArrayNormalizer($integerNormalizer),
-    
-    // Custom conversion with a callback
-    'specials'            => new Normalizer\CallableNormalizer(function ($value) {
-        return json_decode($value, true);
-    }),
-]);
+$csv = new Reader('people.csv');
+$csv->getDocument()->setFlags(\SplFileObject::DROP_NEW_LINE);
 ```
-
-See the [examples](examples) directory for more usage examples.
 
 ## License
 
