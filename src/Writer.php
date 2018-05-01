@@ -9,6 +9,8 @@ class Writer extends AbstractCsv
 {
     /** @var string */
     protected $openMode = 'w+';
+    /** @var array */
+    protected $headers = [];
 
     public static function write($file, $data)
     {
@@ -47,7 +49,25 @@ class Writer extends AbstractCsv
     {
         $this->createDocument();
 
-        $this->addRow($headers);
+        $this->headers = $headers;
+
+        $this->addRow($this->headers);
+
+        return $this;
+    }
+
+    /**
+     * @param string $header
+     *
+     * @return Writer
+     */
+    public function addHeader($header)
+    {
+        $headers = $this->headers;
+
+        $headers[] = $header;
+
+        $this->setHeaders($headers);
 
         return $this;
     }
