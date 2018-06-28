@@ -10,12 +10,12 @@ class BooleanNormalizerTest extends TestCase
     /**
      * @dataProvider configProvider
      *
-     * @param $binaries
+     * @param $pairs
      */
-    public function testTruthyValues($binaries)
+    public function testTruthyValues($pairs)
     {
         $normalizer = new BooleanNormalizer();
-        $normalizer->setPairs($binaries);
+        $normalizer->setPairs($pairs);
 
         $this->assertTrue($normalizer->normalize('true'));
         $this->assertTrue($normalizer->normalize('enabled'));
@@ -27,13 +27,13 @@ class BooleanNormalizerTest extends TestCase
     /**
      * @dataProvider configProvider
      *
-     * @param $binaries
+     * @param $pairs
      */
-    public function testFalseyValues($binaries)
+    public function testFalseyValues($pairs)
     {
         $normalizer = new BooleanNormalizer();
         $normalizer->setNullable(true);
-        $normalizer->setPairs($binaries);
+        $normalizer->setPairs($pairs);
 
         $this->assertFalse($normalizer->normalize('false'));
         $this->assertFalse($normalizer->normalize('disabled'));
