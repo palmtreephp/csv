@@ -223,5 +223,4 @@ class Reader extends AbstractCsv implements \Iterator
     {
         return $this->bom;
     }
-
 }
