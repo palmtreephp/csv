@@ -176,6 +176,9 @@ class Reader extends AbstractCsv implements \Iterator
         $this->getDocument()->rewind();
 
         if ($this->hasHeaders()) {
+            // Set headers to null first so the header row is a zero-based array and can be used
+            // to set the array keys of all other rows.
+            $this->headers = null;
             $this->headers = $this->getCurrentRow();
             $this->next();
         }

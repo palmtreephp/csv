@@ -15,6 +15,27 @@ class ReaderTest extends TestCase
         $reader->createDocument();
     }
 
+    public function testMultipleIterations()
+    {
+        $reader = new Reader(__DIR__ . '/fixtures/products.csv');
+
+        $asserted = false;
+        foreach ($reader as $row) {
+            if (!$asserted) {
+                $this->assertArrayHasKey('product_id', $row);
+                $asserted = true;
+            }
+        }
+
+        $asserted = false;
+        foreach ($reader as $row) {
+            if (!$asserted) {
+                $this->assertArrayHasKey('product_id', $row);
+                $asserted = true;
+            }
+        }
+    }
+
     public function testBomStripping()
     {
         // Load our BOM prefixed file.
