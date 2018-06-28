@@ -5,6 +5,7 @@ namespace Palmtree\Csv;
 use Palmtree\Csv\Normalizer\NormalizerInterface;
 use Palmtree\Csv\Normalizer\NullNormalizer;
 use Palmtree\Csv\Row\Row;
+use Palmtree\Csv\Util\StringUtil;
 
 /**
  * Reads a CSV file by loading each line into memory
@@ -22,6 +23,8 @@ class Reader extends AbstractCsv implements \Iterator
     protected $headers;
     /** @var Row */
     protected $row;
+    /** @var bool */
+    protected $bom = false;
 
     /**
      * @param string $file
@@ -40,6 +43,10 @@ class Reader extends AbstractCsv implements \Iterator
      */
     public function getHeaders()
     {
+        if (is_null($this->headers) && $this->hasHeaders()) {
+            $this->rewind();
+        }
+
         return $this->headers;
     }
 
@@ -114,6 +121,14 @@ class Reader extends AbstractCsv implements \Iterator
             return null;
         }
 
+        if ($this->key() === 0 && $this->hasBom()) {
+            $stripped = StringUtil::stripBom($cells[0], StringUtil::BOM_UTF8);
+
+            if ($stripped !== $cells[0]) {
+                $cells[0] = trim($stripped, $this->getEnclosure());
+            }
+        }
+
         $row = new Row($cells, $this);
 
         return $row;
@@ -185,4 +200,25 @@ class Reader extends AbstractCsv implements \Iterator
     {
         return $this->defaultNormalizer;
     }
+
+    /**
+     * @param bool $bom
+     *
+     * @return Reader
+     */
+    public function setBom($bom)
+    {
+        $this->bom = $bom;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasBom()
+    {
+        return $this->bom;
+    }
+
 }
