@@ -224,4 +224,17 @@ class Reader extends AbstractCsv implements \Iterator
         return $this->bom;
     }
 
+    /**
+     * @return array
+     */
+    public function toArray()
+    {
+        $result = [];
+        foreach ($this as $rowKey => $row) {
+            $result[$rowKey] = $row->toArray();
+        }
+
+        return $result;
+    }
+
 }
