@@ -113,4 +113,19 @@ class Row implements \ArrayAccess, \Countable, \IteratorAggregate
     {
         return new \ArrayIterator($this->getCells());
     }
+
+
+    /**
+     * @return array
+     */
+    public function toArray()
+    {
+        $result = [];
+
+        foreach ($this->getCells() as $key => $cell) {
+            $result[$key] = $cell->getValue();
+        }
+
+        return $result;
+    }
 }
