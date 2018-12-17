@@ -25,6 +25,8 @@ class Reader extends AbstractCsv implements \Iterator
     protected $row;
     /** @var bool */
     protected $bom = false;
+    /** @var int */
+    protected $offset = 0;
 
     /**
      * @param string $file
@@ -174,6 +176,7 @@ class Reader extends AbstractCsv implements \Iterator
     public function rewind()
     {
         $this->getDocument()->rewind();
+        $this->getDocument()->seek($this->offset);
 
         if ($this->hasHeaders()) {
             // Set headers to null first so the header row is a zero-based array and can be used
@@ -222,6 +225,22 @@ class Reader extends AbstractCsv implements \Iterator
     public function hasBom()
     {
         return $this->bom;
+    }
+
+    /**
+     * @param int $offset
+     */
+    public function setOffset($offset)
+    {
+        $this->offset = $offset;
+    }
+
+    /**
+     * @return int
+     */
+    public function getOffset()
+    {
+        return $this->offset;
     }
 
     /**

@@ -57,4 +57,18 @@ class ReaderTest extends TestCase
 
         $this->assertTrue(StringUtil::hasBom($header, StringUtil::BOM_UTF8), "UTF-8 BOM was not stripped");
     }
+
+    public function testLineOffset()
+    {
+        $reader = new Reader(__DIR__ . '/fixtures/products-offset.csv');
+        $reader->setOffset(1);
+
+        $asserted = false;
+        foreach ($reader as $row) {
+            if (!$asserted) {
+                $this->assertArrayHasKey('product_id', $row);
+                $asserted = true;
+            }
+        }
+    }
 }
