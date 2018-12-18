@@ -15,6 +15,8 @@ class Reader extends AbstractCsv implements \Iterator
 {
     /** @var string */
     protected $defaultNormalizer = NullNormalizer::class;
+    /** @var NormalizerInterface */
+    protected $headerNormalizer;
     /** @var string */
     protected $openMode = 'r';
     /** @var NormalizerInterface[] */
@@ -27,6 +29,12 @@ class Reader extends AbstractCsv implements \Iterator
     protected $bom = false;
     /** @var int */
     protected $offset = 0;
+
+    public function __construct(string $file, bool $hasHeaders = true, string $delimiter = ',', string $enclosure = '"', string $escape = "\0")
+    {
+        $this->headerNormalizer = new NullNormalizer();
+        parent::__construct($file, $hasHeaders, $delimiter, $enclosure, $escape);
+    }
 
     /**
      * @param string $file
@@ -67,6 +75,16 @@ class Reader extends AbstractCsv implements \Iterator
     }
 
     /**
+     * @param NormalizerInterface $headerNormalizer
+     */
+    public function setHeaderNormalizer(NormalizerInterface $headerNormalizer)
+    {
+        $this->headerNormalizer = $headerNormalizer;
+
+        return $this;
+    }
+
+    /**
      * @param mixed               $key
      * @param NormalizerInterface $normalizer Normalizer instance.
      *
@@ -100,6 +118,10 @@ class Reader extends AbstractCsv implements \Iterator
      */
     public function getNormalizer($key)
     {
+        if ($this->hasHeaders && is_int($key)) {
+            $this->normalizers[$key] = $this->headerNormalizer;
+        }
+
         if (!isset($this->normalizers[$key])) {
             $class = $this->getDefaultNormalizer();
 
