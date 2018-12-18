@@ -76,6 +76,8 @@ class Reader extends AbstractCsv implements \Iterator
 
     /**
      * @param NormalizerInterface $headerNormalizer
+     *
+     * @return self
      */
     public function setHeaderNormalizer(NormalizerInterface $headerNormalizer)
     {
@@ -88,7 +90,7 @@ class Reader extends AbstractCsv implements \Iterator
      * @param mixed               $key
      * @param NormalizerInterface $normalizer Normalizer instance.
      *
-     * @return $this
+     * @return self
      */
     public function addNormalizer($key, NormalizerInterface $normalizer)
     {
@@ -100,7 +102,7 @@ class Reader extends AbstractCsv implements \Iterator
     /**
      * @param array|\Traversable $normalizers
      *
-     * @return $this
+     * @return self
      */
     public function addNormalizers($normalizers)
     {
