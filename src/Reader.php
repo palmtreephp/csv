@@ -30,7 +30,7 @@ class Reader extends AbstractCsv implements \Iterator
     /** @var int */
     protected $offset = 0;
 
-    public function __construct(string $file, bool $hasHeaders = true, string $delimiter = ',', string $enclosure = '"', string $escape = "\0")
+    public function __construct($file, $hasHeaders = true, $delimiter = ',', $enclosure = '"', $escape = "\0")
     {
         $this->headerNormalizer = new NullNormalizer();
         parent::__construct($file, $hasHeaders, $delimiter, $enclosure, $escape);
