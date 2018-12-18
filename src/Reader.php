@@ -29,6 +29,8 @@ class Reader extends AbstractCsv implements \Iterator
     protected $bom = false;
     /** @var int */
     protected $offset = 0;
+    /** @var int */
+    protected $headerOffset = 0;
 
     public function __construct($file, $hasHeaders = true, $delimiter = ',', $enclosure = '"', $escape = "\0")
     {
@@ -200,14 +202,23 @@ class Reader extends AbstractCsv implements \Iterator
     public function rewind()
     {
         $this->getDocument()->rewind();
-        $this->getDocument()->seek($this->offset);
 
+        $dataOffset = $this->offset + $this->headerOffset;
         if ($this->hasHeaders()) {
+            if ($this->headerOffset) {
+                $this->getDocument()->seek($this->headerOffset);
+            }
+
             // Set headers to null first so the header row is a zero-based array and can be used
             // to set the array keys of all other rows.
             $this->headers = null;
             $this->headers = $this->getCurrentRow();
-            $this->next();
+
+            $dataOffset++;
+        }
+
+        if ($dataOffset) {
+            $this->getDocument()->seek($dataOffset);
         }
     }
 
@@ -253,10 +264,14 @@ class Reader extends AbstractCsv implements \Iterator
 
     /**
      * @param int $offset
+     *
+     * @return self
      */
     public function setOffset($offset)
     {
         $this->offset = $offset;
+
+        return $this;
     }
 
     /**
@@ -265,6 +280,26 @@ class Reader extends AbstractCsv implements \Iterator
     public function getOffset()
     {
         return $this->offset;
+    }
+
+    /**
+     * @param int $headerOffset
+     *
+     * @return self
+     */
+    public function setHeaderOffset($headerOffset)
+    {
+        $this->headerOffset = $headerOffset;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getHeaderOffset()
+    {
+        return $this->headerOffset;
     }
 
     /**
