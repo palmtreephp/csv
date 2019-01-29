@@ -102,4 +102,15 @@ class Writer extends AbstractCsv
 
         return true;
     }
+
+    /**
+     * @return string
+     */
+    public function getContents()
+    {
+        $this->getDocument()->trimFinalLineEnding();
+        $this->getDocument()->fseek(0);
+
+        return $this->getDocument()->fread($this->getDocument()->getSize());
+    }
 }
