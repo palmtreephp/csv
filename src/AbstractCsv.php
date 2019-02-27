@@ -57,7 +57,6 @@ abstract class AbstractCsv
         $document->setFlags(
             CsvFileObject::READ_CSV |
             CsvFileObject::READ_AHEAD |
-            CsvFileObject::SKIP_EMPTY |
             CsvFileObject::DROP_NEW_LINE
         );
 
