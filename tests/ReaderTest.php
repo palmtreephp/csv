@@ -77,4 +77,12 @@ class ReaderTest extends TestCase
             }
         }
     }
+
+    public function testNewLines()
+    {
+        $reader = new Reader(__DIR__ . '/fixtures/newlines.csv', false);
+        $rows   = $reader->toArray();
+
+        $this->assertEquals("Hello\nWorld", $rows[0][0]);
+    }
 }

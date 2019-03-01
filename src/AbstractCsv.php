@@ -54,12 +54,7 @@ abstract class AbstractCsv
 
         $document = new CsvFileObject($this->getFile(), $this->getOpenMode());
 
-        $document->setFlags(
-            CsvFileObject::READ_CSV |
-            CsvFileObject::READ_AHEAD |
-            CsvFileObject::DROP_NEW_LINE
-        );
-
+        $document->setFlags(CsvFileObject::READ_CSV);
         $document->setCsvControl($this->getDelimiter(), $this->getEnclosure(), $this->getEscapeCharacter());
 
         $this->setDocument($document);
