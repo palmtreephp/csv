@@ -4,7 +4,8 @@ namespace Palmtree\Csv\Normalizer;
 
 class DateTimeNormalizer extends AbstractNormalizer
 {
-    protected $format;
+    /** @var string */
+    private $format;
 
     /**
      * DateTimeNormalizer constructor.

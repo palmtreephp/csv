@@ -7,10 +7,13 @@ namespace Palmtree\Csv;
  */
 class Writer extends AbstractCsv
 {
-    /** @var string */
-    protected $openMode = 'w+';
     /** @var array */
-    protected $headers = [];
+    private $headers = [];
+
+    public function getOpenMode()
+    {
+        return 'w+';
+    }
 
     public static function write($file, $data)
     {

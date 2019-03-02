@@ -4,8 +4,10 @@ namespace Palmtree\Csv\Normalizer;
 
 class HtmlNormalizer extends AbstractNormalizer
 {
-    protected $encode = true;
-    protected $flags  = ENT_QUOTES;
+    /** @var bool */
+    private $encode = true;
+    /** @var int */
+    private $flags  = ENT_QUOTES;
 
     /**
      * @return bool

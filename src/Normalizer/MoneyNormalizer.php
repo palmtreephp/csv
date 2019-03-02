@@ -4,7 +4,8 @@ namespace Palmtree\Csv\Normalizer;
 
 class MoneyNormalizer extends AbstractNormalizer
 {
-    protected $moneyFormat;
+    /** @var string */
+    private $moneyFormat;
 
     /**
      * MoneyNormalizer constructor.

@@ -7,9 +7,9 @@ use Palmtree\Csv\Normalizer\NormalizerInterface;
 class Cell
 {
     /** @var NormalizerInterface $normalizer */
-    protected $normalizer;
+    private $normalizer;
     /** @var string */
-    protected $value;
+    private $value;
 
     /**
      * Cell constructor.
@@ -36,7 +36,7 @@ class Cell
      */
     public function getValue()
     {
-        return $this->getNormalizer()->normalize($this->getRawValue());
+        return $this->normalizer->normalize($this->getRawValue());
     }
 
     /**

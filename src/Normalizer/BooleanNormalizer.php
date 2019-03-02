@@ -19,11 +19,11 @@ class BooleanNormalizer extends AbstractNormalizer
     ];
 
     /** @var array */
-    protected $values = [];
+    private $values = [];
     /** @var bool */
-    protected $nullable;
+    private $nullable;
     /** @var bool */
-    protected $caseSensitive;
+    private $caseSensitive;
 
     /**
      * BooleanNormalizer constructor.

@@ -7,7 +7,8 @@ namespace Palmtree\Csv\Normalizer;
  */
 class NumberNormalizer extends AbstractNormalizer
 {
-    protected $decimals;
+    /** @var */
+    private $decimals;
 
     /**
      * NumberNormalizer constructor.

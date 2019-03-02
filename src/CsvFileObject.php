@@ -4,8 +4,8 @@ namespace Palmtree\Csv;
 
 class CsvFileObject extends \SplFileObject
 {
-    protected $bytesWritten = 0;
-    protected $lineEnding   = "\r\n";
+    private $bytesWritten = 0;
+    private $lineEnding   = "\r\n";
 
     public function fwriteCsv(array $row, $delimiter = null, $enclosure = null)
     {

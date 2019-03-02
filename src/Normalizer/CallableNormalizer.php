@@ -4,7 +4,8 @@ namespace Palmtree\Csv\Normalizer;
 
 class CallableNormalizer extends AbstractNormalizer
 {
-    protected $callback;
+    /** @var callable */
+    private $callback;
 
     /**
      * CallableNormalizer constructor.

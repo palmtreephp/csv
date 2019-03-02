@@ -14,28 +14,34 @@ use Palmtree\Csv\Util\StringUtil;
 class Reader extends AbstractCsv implements \Iterator
 {
     /** @var string */
-    protected $defaultNormalizer = NullNormalizer::class;
+    private $defaultNormalizer = NullNormalizer::class;
     /** @var NormalizerInterface */
-    protected $headerNormalizer;
-    /** @var string */
-    protected $openMode = 'r';
+    private $headerNormalizer;
     /** @var NormalizerInterface[] */
-    protected $normalizers = [];
+    private $normalizers = [];
     /** @var Row */
-    protected $headers;
+    private $headers;
     /** @var Row */
-    protected $row;
+    private $row;
     /** @var bool */
-    protected $bom = false;
+    private $bom = false;
     /** @var int */
-    protected $offset = 0;
+    private $offset = 0;
     /** @var int */
-    protected $headerOffset = 0;
+    private $headerOffset = 0;
 
     public function __construct($file, $hasHeaders = true, $delimiter = ',', $enclosure = '"', $escape = "\0")
     {
         $this->headerNormalizer = new NullNormalizer();
         parent::__construct($file, $hasHeaders, $delimiter, $enclosure, $escape);
+    }
+
+    /**
+     * @return string
+     */
+    public function getOpenMode()
+    {
+        return 'r';
     }
 
     /**

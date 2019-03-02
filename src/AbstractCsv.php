@@ -5,8 +5,6 @@ namespace Palmtree\Csv;
 abstract class AbstractCsv
 {
     /** @var string */
-    protected $openMode;
-    /** @var string */
     protected $file;
     /** @var bool */
     protected $hasHeaders;
@@ -37,9 +35,6 @@ abstract class AbstractCsv
              ->setEscapeCharacter($escape);
     }
 
-    /**
-     * AbstractCsv destructor.
-     */
     public function __destruct()
     {
         $this->closeDocument();
@@ -178,10 +173,7 @@ abstract class AbstractCsv
     /**
      * @return string
      */
-    public function getOpenMode()
-    {
-        return $this->openMode;
-    }
+    abstract public function getOpenMode();
 
     /**
      * @return string

@@ -4,9 +4,10 @@ namespace Palmtree\Csv\Normalizer;
 
 class ArrayNormalizer extends AbstractNormalizer
 {
-    protected $delimiter;
-
-    protected $stringNormalizer;
+    /** @var string */
+    private $delimiter;
+    /** @var StringNormalizer */
+    private $stringNormalizer;
 
     /**
      * ArrayNormalizer constructor.

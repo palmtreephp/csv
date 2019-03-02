@@ -8,11 +8,11 @@ use Palmtree\Csv\Reader;
 class Row implements \ArrayAccess, \Countable, \IteratorAggregate
 {
     /** @var Reader $reader */
-    protected $reader;
+    private $reader;
     /** @var Cell[] $cells */
-    protected $cells = [];
+    private $cells = [];
 
-    public function __construct($cells, Reader $reader)
+    public function __construct(array $cells, Reader $reader)
     {
         $this->setReader($reader);
         $this->addCells($cells);
@@ -71,7 +71,7 @@ class Row implements \ArrayAccess, \Countable, \IteratorAggregate
      */
     public function offsetExists($offset)
     {
-        return \array_key_exists($offset, $this->getCells());
+        return isset($this->cells[$offset]) || \array_key_exists($offset, $this->cells);
     }
 
     /**
@@ -79,7 +79,7 @@ class Row implements \ArrayAccess, \Countable, \IteratorAggregate
      */
     public function offsetGet($offset)
     {
-        return $this->getCells()[$offset]->getValue();
+        return $this->cells[$offset]->getValue();
     }
 
     /**
@@ -103,7 +103,7 @@ class Row implements \ArrayAccess, \Countable, \IteratorAggregate
      */
     public function count()
     {
-        return \count($this->getCells());
+        return \count($this->cells);
     }
 
     /**
@@ -111,7 +111,7 @@ class Row implements \ArrayAccess, \Countable, \IteratorAggregate
      */
     public function getIterator()
     {
-        return new \ArrayIterator($this->getCells());
+        return new \ArrayIterator($this->cells);
     }
 
     /**
@@ -121,7 +121,7 @@ class Row implements \ArrayAccess, \Countable, \IteratorAggregate
     {
         $result = [];
 
-        foreach ($this->getCells() as $key => $cell) {
+        foreach ($this->cells as $key => $cell) {
             $result[$key] = $cell->getValue();
         }
 

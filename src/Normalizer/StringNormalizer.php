@@ -9,9 +9,9 @@ namespace Palmtree\Csv\Normalizer;
 class StringNormalizer extends AbstractNormalizer
 {
     /** @var bool */
-    protected $trim;
+    private $trim;
     /** @var string */
-    protected $trimCharMask;
+    private $trimCharMask;
 
     /**
      * StringNormalizer constructor.

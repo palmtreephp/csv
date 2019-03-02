@@ -10,7 +10,7 @@ class Downloader extends Writer
      *
      * @var array
      */
-    protected $responseHeaders = [
+    private $responseHeaders = [
         'Content-Type'              => 'text/csv',
         'Content-Description'       => 'File Transfer',
         'Content-Transfer-Encoding' => 'Binary',
@@ -20,7 +20,7 @@ class Downloader extends Writer
     ];
 
     /** @var string */
-    protected $filename;
+    private $filename;
 
     public function __construct($filename, $responseHeaders = [])
     {
