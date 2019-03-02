@@ -1,39 +1,38 @@
 {
-  "name": "palmtree/csv",
-  "type": "library",
-  "description": "CSV Reader and Writer",
-  "keywords": [
-    "csv",
-    "import",
-    "export",
-    "read",
-    "write"
-  ],
-  "license": "MIT",
-  "authors": [
-    {
-      "name": "Andy Palmer",
-      "email": "andy@andypalmer.me",
-      "homepage": "https://andypalmer.me"
+    "name": "palmtree/csv",
+    "type": "library",
+    "description": "CSV Reader and Writer",
+    "keywords": [
+        "csv",
+        "import",
+        "export",
+        "read",
+        "write"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Andy Palmer",
+            "email": "andy@andypalmer.me",
+            "homepage": "https://andypalmer.me"
+        }
+    ],
+    "require": {
+        "php": ">=5.6"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~6.0|~5.7",
+        "friendsofphp/php-cs-fixer": "^2.14"
+    },
+    "autoload": {
+        "psr-4": {
+            "Palmtree\\Csv\\": "src"
+        }
+    },
+    "scripts": {
+        "test": "./vendor/bin/phpunit -v",
+        "sniff": "vendor/bin/php-cs-fixer fix -v --dry-run --stop-on-violation --using-cache=no --diff --diff-format=udiff",
+        "fix": "vendor/bin/php-cs-fixer fix --diff",
+        "lint": "find -L .  -path ./vendor -prune -o -type f -name '*.php' -print0 | xargs -0 -n 1 -P 4 php -l"
     }
-  ],
-  "require": {
-    "php": ">=5.6"
-  },
-  "require-dev": {
-    "squizlabs/php_codesniffer": "~2.8",
-    "phpunit/phpunit": "~6.0|~5.7"
-  },
-  "autoload": {
-    "psr-4": {
-      "Palmtree\\Csv\\": "src"
-    }
-  },
-  "scripts": {
-    "test": "./vendor/bin/phpunit -v",
-    "sniff": "./vendor/bin/phpcs -v --report=full",
-    "lint": "find -L .  -path ./vendor -prune -o -type f -name '*.php' -print0 | xargs -0 -n 1 -P 4 php -l"
-  },
-  "minimum-stability": "dev",
-  "prefer-stable": true
 }

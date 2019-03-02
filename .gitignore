@@ -3,3 +3,4 @@
 /examples/*.csv
 .~lock*
 /phpunit.xml
+/.php_cs.cache
