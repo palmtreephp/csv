@@ -12,10 +12,10 @@ class NumberNormalizer extends AbstractNormalizer
     /**
      * NumberNormalizer constructor.
      *
-     * @param null|NormalizerInterface $normalizer
-     * @param null|int                 $decimals
+     * @param NormalizerInterface|null $normalizer
+     * @param int|null                 $decimals
      */
-    public function __construct($normalizer = null, $decimals = null)
+    public function __construct(NormalizerInterface $normalizer = null, $decimals = null)
     {
         $this->setDecimals($decimals);
 
@@ -23,7 +23,7 @@ class NumberNormalizer extends AbstractNormalizer
     }
 
     /**
-     * @param null|int $decimals
+     * @param int|null $decimals
      *
      * @return NumberNormalizer
      */
@@ -35,7 +35,7 @@ class NumberNormalizer extends AbstractNormalizer
     }
 
     /**
-     * @return null|int
+     * @return int|null
      */
     public function getDecimals()
     {
@@ -44,14 +44,14 @@ class NumberNormalizer extends AbstractNormalizer
 
     protected function getNormalizedValue($value)
     {
-        if (!is_numeric($value)) {
+        if (!\is_numeric($value)) {
             return 0;
         }
 
-        $numberValue = trim($value) + 0;
+        $numberValue = \trim($value) + 0;
 
         if ($this->getDecimals() !== null) {
-            $numberValue = round($numberValue, $this->getDecimals());
+            $numberValue = \round($numberValue, $this->getDecimals());
         }
 
         return $numberValue;

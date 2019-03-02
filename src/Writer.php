@@ -32,7 +32,7 @@ class Writer extends AbstractCsv
     public function setData(array $data)
     {
         if ($this->hasHeaders()) {
-            $this->setHeaders(array_keys(reset($data)));
+            $this->setHeaders(\array_keys(\reset($data)));
         }
 
         $this->addRows($data);

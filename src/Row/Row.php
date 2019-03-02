@@ -71,7 +71,7 @@ class Row implements \ArrayAccess, \Countable, \IteratorAggregate
      */
     public function offsetExists($offset)
     {
-        return array_key_exists($offset, $this->getCells());
+        return \array_key_exists($offset, $this->getCells());
     }
 
     /**
@@ -103,7 +103,7 @@ class Row implements \ArrayAccess, \Countable, \IteratorAggregate
      */
     public function count()
     {
-        return count($this->getCells());
+        return \count($this->getCells());
     }
 
     /**
@@ -113,7 +113,6 @@ class Row implements \ArrayAccess, \Countable, \IteratorAggregate
     {
         return new \ArrayIterator($this->getCells());
     }
-
 
     /**
      * @return array

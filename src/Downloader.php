@@ -26,7 +26,7 @@ class Downloader extends Writer
     {
         $this->setFilename($filename);
 
-        $this->addResponseHeader('Content-Disposition', sprintf('attachment; filename="%s"', $this->getFilename()));
+        $this->addResponseHeader('Content-Disposition', \sprintf('attachment; filename="%s"', $this->getFilename()));
         $this->addResponseHeaders($responseHeaders);
 
         parent::__construct('php://temp');
@@ -48,11 +48,11 @@ class Downloader extends Writer
     {
         $this->getDocument()->trimFinalLineEnding();
 
-        if (!headers_sent()) {
-            header(sprintf('Content-Length: %s', $this->getDocument()->getSize()));
+        if (!\headers_sent()) {
+            \header(\sprintf('Content-Length: %s', $this->getDocument()->getSize()));
 
             foreach ($this->getResponseHeaders() as $key => $value) {
-                header(sprintf('%s: %s', $key, $value));
+                \header(\sprintf('%s: %s', $key, $value));
             }
         }
 

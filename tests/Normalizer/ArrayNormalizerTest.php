@@ -14,7 +14,7 @@ class ArrayNormalizerTest extends TestCase
 
         $value = $normalizer->normalize('1,2,3');
 
-        $this->assertTrue(is_array($value));
+        $this->assertTrue(\is_array($value));
         $this->assertSame([1, 2, 3], $value);
     }
 }

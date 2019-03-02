@@ -4,7 +4,7 @@ namespace Palmtree\Csv\Util;
 
 class StringUtil
 {
-    const BOM_UTF8 = "\xEF\xBB\xBF";
+    const BOM_UTF8     = "\xEF\xBB\xBF";
     const BOM_UTF16_BE = "\xFE\xFF";
     const BOM_UTF16_LE = "\xFF\xFE";
     const BOM_UTF32_BE = "\x00\x00\xFE\xFF";
@@ -14,12 +14,13 @@ class StringUtil
      * Returns whether the given string starts with a UTF-8 Byte Order Mark.
      *
      * @param string $input
+     * @param string $bom
      *
      * @return bool
      */
     public static function hasBom($input, $bom)
     {
-        return substr($input, 0, strlen($bom)) === $bom;
+        return \substr($input, 0, \strlen($bom)) === $bom;
     }
 
     /**
@@ -33,7 +34,7 @@ class StringUtil
     public static function stripBom($input, $bom)
     {
         if (self::hasBom($input, $bom)) {
-            return substr($input, strlen($bom));
+            return \substr($input, \strlen($bom));
         }
 
         return $input;

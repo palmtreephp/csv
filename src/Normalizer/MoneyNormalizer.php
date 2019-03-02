@@ -9,7 +9,7 @@ class MoneyNormalizer extends AbstractNormalizer
     /**
      * MoneyNormalizer constructor.
      *
-     * @param null|NormalizerInterface $normalizer
+     * @param NormalizerInterface|null $normalizer
      * @param string                   $format
      */
     public function __construct($normalizer = null, $format = '%.2n')
@@ -41,6 +41,6 @@ class MoneyNormalizer extends AbstractNormalizer
 
     protected function getNormalizedValue($value)
     {
-        return money_format($this->getMoneyFormat(), $value);
+        return \money_format($this->getMoneyFormat(), $value);
     }
 }

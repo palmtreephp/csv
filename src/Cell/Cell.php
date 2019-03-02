@@ -8,13 +8,14 @@ class Cell
 {
     /** @var NormalizerInterface $normalizer */
     protected $normalizer;
+    /** @var string */
     protected $value;
 
     /**
      * Cell constructor.
      *
-     * @param                         $value
-     * @param NormalizerInterface     $normalizer
+     * @param string              $value
+     * @param NormalizerInterface $normalizer
      */
     public function __construct($value, NormalizerInterface $normalizer)
     {

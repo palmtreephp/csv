@@ -10,9 +10,9 @@ abstract class AbstractNormalizer implements NormalizerInterface
     /**
      * AbstractNormalizer constructor.
      *
-     * @param null|NormalizerInterface $normalizer
+     * @param NormalizerInterface|null $normalizer
      */
-    public function __construct($normalizer = null)
+    public function __construct(NormalizerInterface $normalizer = null)
     {
         if (!$normalizer instanceof NormalizerInterface) {
             $normalizer = new NullNormalizer();

@@ -44,7 +44,7 @@ class ReaderTest extends TestCase
 
         $header = $reader->getHeaders()[0];
 
-        $this->assertFalse(StringUtil::hasBom($header, StringUtil::BOM_UTF8), "UTF-8 BOM was not stripped");
+        $this->assertFalse(StringUtil::hasBom($header, StringUtil::BOM_UTF8), 'UTF-8 BOM was not stripped');
     }
 
     public function testNoBomStripping()
@@ -55,7 +55,7 @@ class ReaderTest extends TestCase
 
         $header = $reader->getHeaders()[0];
 
-        $this->assertTrue(StringUtil::hasBom($header, StringUtil::BOM_UTF8), "UTF-8 BOM was not stripped");
+        $this->assertTrue(StringUtil::hasBom($header, StringUtil::BOM_UTF8), 'UTF-8 BOM was not stripped');
     }
 
     public function testHeaderOffset()

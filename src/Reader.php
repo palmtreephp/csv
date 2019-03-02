@@ -55,7 +55,7 @@ class Reader extends AbstractCsv implements \Iterator
      */
     public function getHeaders()
     {
-        if (is_null($this->headers) && $this->hasHeaders()) {
+        if (null === $this->headers && $this->hasHeaders()) {
             $this->rewind();
         }
 
@@ -122,7 +122,7 @@ class Reader extends AbstractCsv implements \Iterator
      */
     public function getNormalizer($key)
     {
-        if ($this->hasHeaders && is_int($key)) {
+        if ($this->hasHeaders && \is_int($key)) {
             $this->normalizers[$key] = $this->headerNormalizer;
         }
 
@@ -145,7 +145,7 @@ class Reader extends AbstractCsv implements \Iterator
     {
         $cells = $this->getDocument()->current();
 
-        if (!is_array($cells) || $cells == [null]) {
+        if (!\is_array($cells) || $cells == [null]) {
             return null;
         }
 
@@ -153,7 +153,7 @@ class Reader extends AbstractCsv implements \Iterator
             $stripped = StringUtil::stripBom($cells[0], StringUtil::BOM_UTF8);
 
             if ($stripped !== $cells[0]) {
-                $cells[0] = trim($stripped, $this->getEnclosure());
+                $cells[0] = \trim($stripped, $this->getEnclosure());
             }
         }
 
@@ -214,7 +214,7 @@ class Reader extends AbstractCsv implements \Iterator
             $this->headers = null;
             $this->headers = $this->getCurrentRow();
 
-            $dataOffset++;
+            ++$dataOffset;
         }
 
         if ($dataOffset) {

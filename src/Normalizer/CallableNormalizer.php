@@ -10,9 +10,9 @@ class CallableNormalizer extends AbstractNormalizer
      * CallableNormalizer constructor.
      *
      * @param callable                 $callback
-     * @param null|NormalizerInterface $normalizer
+     * @param NormalizerInterface|null $normalizer
      */
-    public function __construct(callable $callback, $normalizer = null)
+    public function __construct(callable $callback, NormalizerInterface $normalizer = null)
     {
         $this->setCallback($callback);
 
@@ -46,7 +46,7 @@ class CallableNormalizer extends AbstractNormalizer
      */
     protected function getNormalizedValue($value)
     {
-        $value = call_user_func($this->getCallback(), $value, $this);
+        $value = \call_user_func($this->getCallback(), $value, $this);
 
         return $value;
     }

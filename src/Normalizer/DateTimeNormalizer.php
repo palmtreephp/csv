@@ -9,10 +9,10 @@ class DateTimeNormalizer extends AbstractNormalizer
     /**
      * DateTimeNormalizer constructor.
      *
-     * @param null|NormalizerInterface $normalizer
+     * @param NormalizerInterface|null $normalizer
      * @param string                   $format
      */
-    public function __construct($normalizer = null, $format = 'Y-m-d')
+    public function __construct(NormalizerInterface $normalizer = null, $format = 'Y-m-d')
     {
         parent::__construct($normalizer);
 

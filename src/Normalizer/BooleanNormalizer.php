@@ -3,12 +3,12 @@
 namespace Palmtree\Csv\Normalizer;
 
 /**
- * BooleanNormalizer formats a CSV cell as a boolean
+ * BooleanNormalizer formats a CSV cell as a boolean.
  */
 class BooleanNormalizer extends AbstractNormalizer
 {
     /**
-     * @var array $defaultPairs Default truthy/falsey pairs.
+     * @var array Default truthy/falsey pairs.
      */
     public static $defaultPairs = [
         'true'    => 'false',
@@ -28,14 +28,14 @@ class BooleanNormalizer extends AbstractNormalizer
     /**
      * BooleanNormalizer constructor.
      *
-     * @param null|NormalizerInterface $normalizer
+     * @param NormalizerInterface|null $normalizer
      * @param bool                     $nullable
      * @param bool                     $caseSensitive
      * @param array|null               $pairs
      */
-    public function __construct($normalizer = null, $nullable = false, $caseSensitive = false, $pairs = null)
+    public function __construct(NormalizerInterface $normalizer = null, $nullable = false, $caseSensitive = false, $pairs = null)
     {
-        if (!is_array($pairs)) {
+        if (!\is_array($pairs)) {
             $pairs = static::$defaultPairs;
         }
 
@@ -69,8 +69,8 @@ class BooleanNormalizer extends AbstractNormalizer
     public function addPair($truthy, $falsey)
     {
         if (!$this->isCaseSensitive()) {
-            $truthy = strtolower($truthy);
-            $falsey = strtolower($falsey);
+            $truthy = \strtolower($truthy);
+            $falsey = \strtolower($falsey);
         }
 
         $this->values[$truthy] = true;
@@ -92,10 +92,10 @@ class BooleanNormalizer extends AbstractNormalizer
      */
     protected function getNormalizedValue($value)
     {
-        $value = trim($value);
+        $value = \trim($value);
 
         if (!$this->isCaseSensitive()) {
-            $value = strtolower($value);
+            $value = \strtolower($value);
         }
 
         if (isset($this->values[$value])) {

@@ -11,10 +11,10 @@ class ArrayNormalizer extends AbstractNormalizer
     /**
      * ArrayNormalizer constructor.
      *
-     * @param null|NormalizerInterface $normalizer
+     * @param NormalizerInterface|null $normalizer
      * @param string                   $delimiter
      */
-    public function __construct($normalizer = null, $delimiter = ',')
+    public function __construct(NormalizerInterface $normalizer = null, $delimiter = ',')
     {
         $this->setDelimiter($delimiter);
 
@@ -31,8 +31,8 @@ class ArrayNormalizer extends AbstractNormalizer
 
     protected function getNormalizedValue($value)
     {
-        $value          = $this->stringNormalizer->normalize($value);
-        $normalizedValue = explode($this->getDelimiter(), $value);
+        $value           = $this->stringNormalizer->normalize($value);
+        $normalizedValue = \explode($this->getDelimiter(), $value);
 
         foreach ($normalizedValue as &$part) {
             $part = $this->getNormalizer()->normalize($part);
