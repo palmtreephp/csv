@@ -83,6 +83,8 @@ class ReaderTest extends TestCase
         $reader = new Reader(__DIR__ . '/fixtures/newlines.csv', false);
         $rows   = $reader->toArray();
 
+        $this->assertCount(2, $rows);
         $this->assertEquals("Hello\nWorld", $rows[0][0]);
+        $this->assertEquals("Foo\nBar", $rows[1][0]);
     }
 }
