@@ -46,7 +46,7 @@ class NumberNormalizer extends AbstractNormalizer
             return 0;
         }
 
-        $numberValue = \trim($value) + 0;
+        $numberValue = \trim($value) * 1;
 
         if ($this->getDecimals() !== null) {
             $numberValue = \round($numberValue, $this->getDecimals());

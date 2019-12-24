@@ -15,4 +15,31 @@ class NumberNormalizerTest extends TestCase
 
         $this->assertSame(123, $value);
     }
+
+    public function testFloats()
+    {
+        $normalizer = new NumberNormalizer();
+
+        $value = $normalizer->normalize('1.234');
+
+        $this->assertSame(1.234, $value);
+    }
+
+    public function testIntegers()
+    {
+        $normalizer = new NumberNormalizer();
+
+        $value = $normalizer->normalize('100');
+
+        $this->assertSame(100, $value);
+    }
+
+    public function testRounding()
+    {
+        $normalizer = new NumberNormalizer(null, 2);
+
+        $value = $normalizer->normalize(M_PI);
+
+        $this->assertSame(3.14, $value);
+    }
 }
