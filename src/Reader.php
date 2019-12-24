@@ -152,7 +152,7 @@ class Reader extends AbstractCsv implements \Iterator
             return null;
         }
 
-        if ($this->key() === 0 && $this->stripBom !== null) {
+        if ($this->key() === 0 && $this->stripBom) {
             $stripped = StringUtil::stripBom($cells[0], $this->stripBom);
 
             if ($stripped !== $cells[0]) {

@@ -50,7 +50,7 @@ class ReaderTest extends TestCase
     {
         // Load our BOM prefixed file.
         $reader = new Reader(__DIR__ . '/fixtures/products-bom.csv');
-        $reader->setStripBom(false);
+        $reader->setStripBom(null);
 
         $header = $reader->getHeaders()[0];
 
