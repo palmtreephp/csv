@@ -12,8 +12,6 @@ class Cell
     private $value;
 
     /**
-     * Cell constructor.
-     *
      * @param string $value
      */
     public function __construct($value, NormalizerInterface $normalizer)

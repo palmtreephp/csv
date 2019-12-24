@@ -18,8 +18,6 @@ abstract class AbstractCsv
     protected $document;
 
     /**
-     * AbstractCsv constructor.
-     *
      * @param string $file       Path to CSV file.
      * @param bool   $hasHeaders Whether the CSV file contains headers.
      * @param string $delimiter  Cell delimiter. Default ',' (comma).
