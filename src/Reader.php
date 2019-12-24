@@ -23,8 +23,8 @@ class Reader extends AbstractCsv implements \Iterator
     private $headers;
     /** @var Row */
     private $row;
-    /** @var bool */
-    private $bom = false;
+    /** @var bool|null */
+    private $bom;
     /** @var int */
     private $offset = 0;
     /** @var int */
@@ -155,7 +155,7 @@ class Reader extends AbstractCsv implements \Iterator
             return null;
         }
 
-        if ($this->key() === 0 && $this->hasBom()) {
+        if ($this->key() === 0 && $this->hasBom() !== false) {
             $stripped = StringUtil::stripBom($cells[0], StringUtil::BOM_UTF8);
 
             if ($stripped !== $cells[0]) {
