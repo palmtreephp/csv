@@ -4,7 +4,7 @@ namespace Palmtree\Csv\Util;
 
 class StringUtil
 {
-    const BOM_UTF8     = "\xEF\xBB\xBF";
+    const BOM_UTF8 = "\xEF\xBB\xBF";
     const BOM_UTF16_BE = "\xFE\xFF";
     const BOM_UTF16_LE = "\xFF\xFE";
     const BOM_UTF32_BE = "\x00\x00\xFE\xFF";
@@ -20,7 +20,7 @@ class StringUtil
      */
     public static function hasBom($input, $bom)
     {
-        return \substr($input, 0, \strlen($bom)) === $bom;
+        return \strpos($input, $bom) === 0;
     }
 
     /**
@@ -28,6 +28,7 @@ class StringUtil
      * if it is present.
      *
      * @param string $input Data to be stripped of its BOM.
+     * @param string $bom
      *
      * @return string The stripped input string.
      */
