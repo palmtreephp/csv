@@ -11,7 +11,7 @@ class StringUtil
     const BOM_UTF32_LE = "\xFF\xFE\x00\x00";
 
     /**
-     * Returns whether the given string starts with a UTF-8 Byte Order Mark.
+     * Returns whether the given string starts with the given Byte Order Mark.
      *
      * @param string $input
      * @param string $bom
@@ -24,8 +24,7 @@ class StringUtil
     }
 
     /**
-     * Strips the UTF-8 Byte Order Mark from the beginning of a string
-     * if it is present.
+     * Strips a Byte Order Mark from the beginning of a string if it is present.
      *
      * @param string $input Data to be stripped of its BOM.
      * @param string $bom

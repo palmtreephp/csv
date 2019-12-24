@@ -23,8 +23,8 @@ class Reader extends AbstractCsv implements \Iterator
     private $headers;
     /** @var Row */
     private $row;
-    /** @var bool|null */
-    private $bom;
+    /** @var string|null */
+    private $stripBom = StringUtil::BOM_UTF8;
     /** @var int */
     private $offset = 0;
     /** @var int */
@@ -142,8 +142,7 @@ class Reader extends AbstractCsv implements \Iterator
     }
 
     /**
-     * Reads the next line in the CSV file
-     * and returns a Row object from it.
+     * Reads the next line in the CSV file and returns a Row object from it.
      *
      * @return Row|null
      */
@@ -155,8 +154,8 @@ class Reader extends AbstractCsv implements \Iterator
             return null;
         }
 
-        if ($this->key() === 0 && $this->hasBom() !== false) {
-            $stripped = StringUtil::stripBom($cells[0], StringUtil::BOM_UTF8);
+        if ($this->key() === 0 && $this->stripBom !== null) {
+            $stripped = StringUtil::stripBom($cells[0], $this->stripBom);
 
             if ($stripped !== $cells[0]) {
                 $cells[0] = \trim($stripped, $this->getEnclosure());
@@ -249,23 +248,15 @@ class Reader extends AbstractCsv implements \Iterator
     }
 
     /**
-     * @param bool $bom
+     * @param string|null $stripBom
      *
      * @return Reader
      */
-    public function setBom($bom)
+    public function setStripBom($stripBom)
     {
-        $this->bom = $bom;
+        $this->stripBom = $stripBom;
 
         return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function hasBom()
-    {
-        return $this->bom;
     }
 
     /**
