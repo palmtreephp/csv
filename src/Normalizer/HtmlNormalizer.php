@@ -20,7 +20,7 @@ class HtmlNormalizer extends AbstractNormalizer
     /**
      * @param bool $encode
      *
-     * @return $this
+     * @return self
      */
     public function setEncode($encode)
     {
@@ -32,7 +32,7 @@ class HtmlNormalizer extends AbstractNormalizer
     /**
      * @param int $flags
      *
-     * @return $this
+     * @return self
      */
     public function setFlags($flags)
     {

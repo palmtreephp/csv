@@ -26,12 +26,10 @@ class CsvFileObject extends \SplFileObject
     }
 
     /**
-     * Returns a string representation of a row to be written
-     * as a line in a CSV file.
+     * Returns a string representation of a row to be written as a line in a CSV file.
      *
-     * @param array $row
-     * @param       $delimiter
-     * @param       $enclosure
+     * @param $delimiter
+     * @param $enclosure
      *
      * @return string
      */

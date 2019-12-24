@@ -10,10 +10,7 @@ class ArrayNormalizer extends AbstractNormalizer
     private $stringNormalizer;
 
     /**
-     * ArrayNormalizer constructor.
-     *
-     * @param NormalizerInterface|null $normalizer
-     * @param string                   $delimiter
+     * @param string $delimiter
      */
     public function __construct(NormalizerInterface $normalizer = null, $delimiter = ',')
     {
@@ -45,7 +42,7 @@ class ArrayNormalizer extends AbstractNormalizer
     /**
      * @param string $delimiter
      *
-     * @return ArrayNormalizer
+     * @return self
      */
     public function setDelimiter($delimiter)
     {

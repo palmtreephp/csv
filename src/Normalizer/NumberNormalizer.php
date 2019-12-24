@@ -11,10 +11,7 @@ class NumberNormalizer extends AbstractNormalizer
     private $decimals;
 
     /**
-     * NumberNormalizer constructor.
-     *
-     * @param NormalizerInterface|null $normalizer
-     * @param int|null                 $decimals
+     * @param int|null $decimals
      */
     public function __construct(NormalizerInterface $normalizer = null, $decimals = null)
     {
@@ -26,7 +23,7 @@ class NumberNormalizer extends AbstractNormalizer
     /**
      * @param int|null $decimals
      *
-     * @return NumberNormalizer
+     * @return self
      */
     public function setDecimals($decimals)
     {

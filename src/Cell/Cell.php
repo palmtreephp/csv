@@ -14,8 +14,7 @@ class Cell
     /**
      * Cell constructor.
      *
-     * @param string              $value
-     * @param NormalizerInterface $normalizer
+     * @param string $value
      */
     public function __construct($value, NormalizerInterface $normalizer)
     {
@@ -48,8 +47,6 @@ class Cell
     }
 
     /**
-     * @param NormalizerInterface $normalizer
-     *
      * @return Cell
      */
     public function setNormalizer(NormalizerInterface $normalizer)

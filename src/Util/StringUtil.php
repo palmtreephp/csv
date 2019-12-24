@@ -4,7 +4,7 @@ namespace Palmtree\Csv\Util;
 
 class StringUtil
 {
-    const BOM_UTF8 = "\xEF\xBB\xBF";
+    const BOM_UTF8     = "\xEF\xBB\xBF";
     const BOM_UTF16_BE = "\xFE\xFF";
     const BOM_UTF16_LE = "\xFF\xFE";
     const BOM_UTF32_BE = "\x00\x00\xFE\xFF";

@@ -8,10 +8,7 @@ class DateTimeNormalizer extends AbstractNormalizer
     private $format;
 
     /**
-     * DateTimeNormalizer constructor.
-     *
-     * @param NormalizerInterface|null $normalizer
-     * @param string                   $format
+     * @param string $format
      */
     public function __construct(NormalizerInterface $normalizer = null, $format = 'Y-m-d')
     {

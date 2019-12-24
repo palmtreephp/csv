@@ -7,11 +7,6 @@ abstract class AbstractNormalizer implements NormalizerInterface
     /** @var NormalizerInterface */
     protected $normalizer;
 
-    /**
-     * AbstractNormalizer constructor.
-     *
-     * @param NormalizerInterface|null $normalizer
-     */
     public function __construct(NormalizerInterface $normalizer = null)
     {
         if (!$normalizer instanceof NormalizerInterface) {
@@ -41,9 +36,7 @@ abstract class AbstractNormalizer implements NormalizerInterface
     }
 
     /**
-     * @param NormalizerInterface $normalizer
-     *
-     * @return AbstractNormalizer
+     * @return self
      */
     public function setNormalizer(NormalizerInterface $normalizer)
     {

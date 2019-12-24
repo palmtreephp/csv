@@ -8,8 +8,6 @@ class MoneyNormalizer extends AbstractNormalizer
     private $moneyFormat;
 
     /**
-     * MoneyNormalizer constructor.
-     *
      * @param NormalizerInterface|null $normalizer
      * @param string                   $format
      */
@@ -23,7 +21,7 @@ class MoneyNormalizer extends AbstractNormalizer
     /**
      * @param string $moneyFormat
      *
-     * @return MoneyNormalizer
+     * @return self
      */
     public function setMoneyFormat($moneyFormat)
     {

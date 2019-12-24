@@ -14,11 +14,8 @@ class StringNormalizer extends AbstractNormalizer
     private $trimCharMask;
 
     /**
-     * StringNormalizer constructor.
-     *
-     * @param NormalizerInterface|null $normalizer
-     * @param bool                     $trim
-     * @param string                   $trimCharMask
+     * @param bool   $trim
+     * @param string $trimCharMask
      */
     public function __construct(NormalizerInterface $normalizer = null, $trim = true, $trimCharMask = " \t\n\r\0\x0B")
     {
@@ -31,7 +28,7 @@ class StringNormalizer extends AbstractNormalizer
     /**
      * @param bool $trim
      *
-     * @return StringNormalizer
+     * @return self
      */
     public function setTrim($trim)
     {
@@ -43,7 +40,7 @@ class StringNormalizer extends AbstractNormalizer
     /**
      * @param string|null $trimCharMask
      *
-     * @return StringNormalizer
+     * @return self
      */
     public function setTrimCharMask($trimCharMask)
     {

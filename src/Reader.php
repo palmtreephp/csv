@@ -83,8 +83,6 @@ class Reader extends AbstractCsv implements \Iterator
     }
 
     /**
-     * @param NormalizerInterface $headerNormalizer
-     *
      * @return self
      */
     public function setHeaderNormalizer(NormalizerInterface $headerNormalizer)
@@ -162,9 +160,7 @@ class Reader extends AbstractCsv implements \Iterator
             }
         }
 
-        $row = new Row($cells, $this);
-
-        return $row;
+        return new Row($cells, $this);
     }
 
     /**

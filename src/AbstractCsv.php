@@ -101,7 +101,7 @@ abstract class AbstractCsv
     /**
      * @param string $file
      *
-     * @return $this
+     * @return self
      */
     public function setFile($file)
     {

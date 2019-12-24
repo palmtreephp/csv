@@ -27,9 +27,7 @@ class Row implements \ArrayAccess, \Countable, \IteratorAggregate
     }
 
     /**
-     * @param Reader $reader
-     *
-     * @return $this
+     * @return self
      */
     public function setReader(Reader $reader)
     {
@@ -46,9 +44,6 @@ class Row implements \ArrayAccess, \Countable, \IteratorAggregate
         return $this->cells;
     }
 
-    /**
-     * @param array $cells
-     */
     public function addCells(array $cells)
     {
         foreach ($cells as $key => $value) {

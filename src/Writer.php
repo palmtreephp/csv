@@ -30,7 +30,7 @@ class Writer extends AbstractCsv
      *
      * @param $data
      *
-     * @return $this
+     * @return self
      */
     public function setData(array $data)
     {
@@ -44,9 +44,7 @@ class Writer extends AbstractCsv
     }
 
     /**
-     * @param array $headers
-     *
-     * @return $this
+     * @return self
      */
     public function setHeaders(array $headers)
     {
@@ -62,7 +60,7 @@ class Writer extends AbstractCsv
     /**
      * @param string $header
      *
-     * @return Writer
+     * @return self
      */
     public function addHeader($header)
     {
@@ -77,8 +75,6 @@ class Writer extends AbstractCsv
 
     /**
      * Adds multiple rows of data to the CSV file.
-     *
-     * @param array $rows
      */
     public function addRows(array $rows)
     {

@@ -26,12 +26,9 @@ class BooleanNormalizer extends AbstractNormalizer
     private $caseSensitive;
 
     /**
-     * BooleanNormalizer constructor.
-     *
-     * @param NormalizerInterface|null $normalizer
-     * @param bool                     $nullable
-     * @param bool                     $caseSensitive
-     * @param array|null               $pairs
+     * @param bool       $nullable
+     * @param bool       $caseSensitive
+     * @param array|null $pairs
      */
     public function __construct(NormalizerInterface $normalizer = null, $nullable = false, $caseSensitive = false, $pairs = null)
     {
@@ -47,9 +44,7 @@ class BooleanNormalizer extends AbstractNormalizer
     }
 
     /**
-     * @param array $pairs
-     *
-     * @return BooleanNormalizer
+     * @return self
      */
     public function setPairs(array $pairs)
     {
@@ -108,7 +103,7 @@ class BooleanNormalizer extends AbstractNormalizer
     /**
      * @param bool $caseSensitive
      *
-     * @return BooleanNormalizer
+     * @return self
      */
     public function setCaseSensitive($caseSensitive)
     {
@@ -128,7 +123,7 @@ class BooleanNormalizer extends AbstractNormalizer
     /**
      * @param bool $nullable
      *
-     * @return BooleanNormalizer
+     * @return self
      */
     public function setNullable($nullable)
     {

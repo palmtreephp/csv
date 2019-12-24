@@ -7,12 +7,6 @@ class CallableNormalizer extends AbstractNormalizer
     /** @var callable */
     private $callback;
 
-    /**
-     * CallableNormalizer constructor.
-     *
-     * @param callable                 $callback
-     * @param NormalizerInterface|null $normalizer
-     */
     public function __construct(callable $callback, NormalizerInterface $normalizer = null)
     {
         $this->setCallback($callback);
@@ -21,9 +15,7 @@ class CallableNormalizer extends AbstractNormalizer
     }
 
     /**
-     * @param callable $callback
-     *
-     * @return CallableNormalizer
+     * @return self
      */
     public function setCallback(callable $callback)
     {
