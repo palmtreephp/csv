@@ -21,32 +21,18 @@ class BooleanNormalizer extends AbstractNormalizer
     /** @var array */
     private $values = [];
     /** @var bool */
-    private $nullable;
+    private $nullable = false;
     /** @var bool */
-    private $caseSensitive;
+    private $caseSensitive = false;
 
-    /**
-     * @param bool       $nullable
-     * @param bool       $caseSensitive
-     * @param array|null $pairs
-     */
-    public function __construct(NormalizerInterface $normalizer = null, $nullable = false, $caseSensitive = false, $pairs = null)
+    public function __construct(NormalizerInterface $normalizer = null)
     {
-        if (!\is_array($pairs)) {
-            $pairs = static::$defaultPairs;
-        }
-
-        $this->setNullable($nullable)
-             ->setCaseSensitive($caseSensitive)
-             ->setPairs($pairs);
+        $this->setPairs(self::$defaultPairs);
 
         parent::__construct($normalizer);
     }
 
-    /**
-     * @return self
-     */
-    public function setPairs(array $pairs)
+    public function setPairs(array $pairs): self
     {
         $this->values = [];
 
@@ -57,13 +43,9 @@ class BooleanNormalizer extends AbstractNormalizer
         return $this;
     }
 
-    /**
-     * @param string $truthy
-     * @param string $falsey
-     */
-    public function addPair($truthy, $falsey)
+    public function addPair(string $truthy, string $falsey): void
     {
-        if (!$this->isCaseSensitive()) {
+        if (!$this->caseSensitive) {
             $truthy = \strtolower($truthy);
             $falsey = \strtolower($falsey);
         }
@@ -72,24 +54,19 @@ class BooleanNormalizer extends AbstractNormalizer
         $this->values[$falsey] = false;
     }
 
-    /**
-     * @return array
-     */
-    public function getValues()
+    public function getValues(): array
     {
         return $this->values;
     }
 
     /**
-     * @param $value
-     *
      * @return bool|null
      */
-    protected function getNormalizedValue($value)
+    protected function getNormalizedValue(string $value)
     {
         $value = \trim($value);
 
-        if (!$this->isCaseSensitive()) {
+        if (!$this->caseSensitive) {
             $value = \strtolower($value);
         }
 
@@ -100,42 +77,26 @@ class BooleanNormalizer extends AbstractNormalizer
         return $this->isNullable() ? null : false;
     }
 
-    /**
-     * @param bool $caseSensitive
-     *
-     * @return self
-     */
-    public function setCaseSensitive($caseSensitive)
+    public function setCaseSensitive(bool $caseSensitive): self
     {
         $this->caseSensitive = $caseSensitive;
 
         return $this;
     }
 
-    /**
-     * @return bool
-     */
-    public function isCaseSensitive()
+    public function isCaseSensitive(): bool
     {
         return $this->caseSensitive;
     }
 
-    /**
-     * @param bool $nullable
-     *
-     * @return self
-     */
-    public function setNullable($nullable)
+    public function setNullable(bool $nullable): self
     {
-        $this->nullable = (bool)$nullable;
+        $this->nullable = $nullable;
 
         return $this;
     }
 
-    /**
-     * @return bool
-     */
-    public function isNullable()
+    public function isNullable(): bool
     {
         return $this->nullable;
     }

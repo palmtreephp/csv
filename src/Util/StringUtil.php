@@ -12,26 +12,16 @@ class StringUtil
 
     /**
      * Returns whether the given string starts with the given Byte Order Mark.
-     *
-     * @param string $input
-     * @param string $bom
-     *
-     * @return bool
      */
-    public static function hasBom($input, $bom)
+    public static function hasBom(string $input, string $bom): bool
     {
         return \strpos($input, $bom) === 0;
     }
 
     /**
      * Strips a Byte Order Mark from the beginning of a string if it is present.
-     *
-     * @param string $input Data to be stripped of its BOM.
-     * @param string $bom
-     *
-     * @return string The stripped input string.
      */
-    public static function stripBom($input, $bom)
+    public static function stripBom(string $input, string $bom): string
     {
         if (self::hasBom($input, $bom)) {
             return \substr($input, \strlen($bom));

@@ -22,7 +22,7 @@ class Downloader extends Writer
     /** @var string */
     private $filename;
 
-    public function __construct($filename, $responseHeaders = [])
+    public function __construct(string $filename, iterable $responseHeaders = [])
     {
         $this->setFilename($filename);
 
@@ -32,7 +32,7 @@ class Downloader extends Writer
         parent::__construct('php://temp');
     }
 
-    public static function download($file, $data)
+    public static function download($file, $data): void
     {
         $downloader = new static($file);
         $downloader->setData($data);
@@ -41,10 +41,8 @@ class Downloader extends Writer
 
     /**
      * Attempts to send the file as a download to the client.
-     *
-     * @throws \Exception
      */
-    public function sendResponse()
+    public function sendResponse(): void
     {
         $this->getDocument()->trimFinalLineEnding();
 
@@ -60,12 +58,12 @@ class Downloader extends Writer
         $this->getDocument()->fpassthru();
     }
 
-    public function getResponseHeaders()
+    public function getResponseHeaders(): array
     {
         return $this->responseHeaders;
     }
 
-    public function addResponseHeaders($headers = [])
+    public function addResponseHeaders(iterable $headers = []): self
     {
         foreach ($headers as $key => $value) {
             $this->addResponseHeader($key, $value);
@@ -74,30 +72,25 @@ class Downloader extends Writer
         return $this;
     }
 
-    public function addResponseHeader($key, $value)
+    public function addResponseHeader($key, $value): void
     {
         $this->responseHeaders[$key] = $value;
     }
 
-    public function removeResponseHeader($key)
+    public function removeResponseHeader($key): void
     {
         unset($this->responseHeaders[$key]);
     }
 
-    /**
-     * @return string
-     */
-    public function getFilename()
+    public function getFilename(): string
     {
         return $this->filename;
     }
 
     /**
-     * @param string $filename
-     *
      * @return Downloader
      */
-    public function setFilename($filename)
+    public function setFilename(string $filename): self
     {
         $this->filename = $filename;
 

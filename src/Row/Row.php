@@ -18,18 +18,12 @@ class Row implements \ArrayAccess, \Countable, \IteratorAggregate
         $this->addCells($cells);
     }
 
-    /**
-     * @return Reader
-     */
-    public function getReader()
+    public function getReader(): Reader
     {
         return $this->reader;
     }
 
-    /**
-     * @return self
-     */
-    public function setReader(Reader $reader)
+    public function setReader(Reader $reader): self
     {
         $this->reader = $reader;
 
@@ -39,12 +33,12 @@ class Row implements \ArrayAccess, \Countable, \IteratorAggregate
     /**
      * @return Cell[]
      */
-    public function getCells()
+    public function getCells(): array
     {
         return $this->cells;
     }
 
-    public function addCells(array $cells)
+    public function addCells(array $cells): void
     {
         foreach ($cells as $key => $value) {
             $key = $this->reader->getHeader($key);
@@ -52,7 +46,7 @@ class Row implements \ArrayAccess, \Countable, \IteratorAggregate
         }
     }
 
-    public function addCell($key, $value)
+    public function addCell($key, $value): void
     {
         $normalizer = $this->reader->getNormalizer($key);
 
@@ -64,7 +58,7 @@ class Row implements \ArrayAccess, \Countable, \IteratorAggregate
     /**
      * @inheritDoc
      */
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         return isset($this->cells[$offset]) || \array_key_exists($offset, $this->cells);
     }
@@ -80,7 +74,7 @@ class Row implements \ArrayAccess, \Countable, \IteratorAggregate
     /**
      * @inheritDoc
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         $this->addCell($offset, $value);
     }
@@ -88,7 +82,7 @@ class Row implements \ArrayAccess, \Countable, \IteratorAggregate
     /**
      * @inheritDoc
      */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         unset($this->cells[$offset]);
     }
@@ -96,7 +90,7 @@ class Row implements \ArrayAccess, \Countable, \IteratorAggregate
     /**
      * @inheritDoc
      */
-    public function count()
+    public function count(): int
     {
         return \count($this->cells);
     }
@@ -104,15 +98,12 @@ class Row implements \ArrayAccess, \Countable, \IteratorAggregate
     /**
      * @inheritDoc
      */
-    public function getIterator()
+    public function getIterator(): \ArrayIterator
     {
         return new \ArrayIterator($this->cells);
     }
 
-    /**
-     * @return array
-     */
-    public function toArray()
+    public function toArray(): array
     {
         $result = [];
 

@@ -4,33 +4,25 @@ namespace Palmtree\Csv;
 
 abstract class AbstractCsv
 {
-    /** @var string */
+    /** @var string Path to CSV file. */
     protected $file;
-    /** @var bool */
-    protected $hasHeaders;
-    /** @var string */
-    protected $delimiter;
-    /** @var string */
-    protected $enclosure;
-    /** @var string */
-    protected $escapeCharacter;
+    /** @var bool Whether the CSV file contains headers */
+    protected $hasHeaders = true;
+    /** @var string Cell delimiter. Default ',' (comma) */
+    protected $delimiter = ',';
+    /** @var string Cell enclosure. Default '"' (double quote) */
+    protected $enclosure = '"';
+    /** @var string Cell escape character. Default null byte */
+    protected $escapeCharacter = "\0";
     /** @var CsvFileObject */
     protected $document;
 
     /**
-     * @param string $file       Path to CSV file.
-     * @param bool   $hasHeaders Whether the CSV file contains headers.
-     * @param string $delimiter  Cell delimiter. Default ',' (comma).
-     * @param string $enclosure  Cell enclosure. Default '"' (double quote)
-     * @param string $escape     Cell escape character. Default null byte.
+     * @param string $file Path to CSV file.
      */
-    public function __construct($file, $hasHeaders = true, $delimiter = ',', $enclosure = '"', $escape = "\0")
+    public function __construct(string $file)
     {
-        $this->setFile($file)
-             ->setHasHeaders($hasHeaders)
-             ->setDelimiter($delimiter)
-             ->setEnclosure($enclosure)
-             ->setEscapeCharacter($escape);
+        $this->setFile($file);
     }
 
     public function __destruct()
@@ -38,12 +30,9 @@ abstract class AbstractCsv
         $this->closeDocument();
     }
 
-    /**
-     * @return string
-     */
-    abstract public function getOpenMode();
+    abstract public function getOpenMode(): string;
 
-    public function createDocument()
+    public function createDocument(): void
     {
         $this->closeDocument();
 
@@ -58,15 +47,12 @@ abstract class AbstractCsv
     /**
      * Closes the document by setting our reference to null to ensure its destructor is called.
      */
-    public function closeDocument()
+    public function closeDocument(): void
     {
         $this->document = null;
     }
 
-    /**
-     * @return self
-     */
-    public function setDocument(CsvFileObject $document = null)
+    public function setDocument(CsvFileObject $document = null): self
     {
         $this->closeDocument();
 
@@ -75,10 +61,7 @@ abstract class AbstractCsv
         return $this;
     }
 
-    /**
-     * @return CsvFileObject
-     */
-    public function getDocument()
+    public function getDocument(): CsvFileObject
     {
         if (!$this->document) {
             $this->createDocument();
@@ -87,100 +70,60 @@ abstract class AbstractCsv
         return $this->document;
     }
 
-    /**
-     * @return string
-     */
-    public function getFile()
+    public function getFile(): string
     {
         return $this->file;
     }
 
-    /**
-     * @param string $file
-     *
-     * @return self
-     */
-    public function setFile($file)
+    public function setFile(string $file): self
     {
         $this->file = $file;
 
         return $this;
     }
 
-    /**
-     * @return bool
-     */
-    public function hasHeaders()
+    public function hasHeaders(): bool
     {
         return $this->hasHeaders;
     }
 
-    /**
-     * @param bool $hasHeaders
-     *
-     * @return self
-     */
-    public function setHasHeaders($hasHeaders)
+    public function setHasHeaders(bool $hasHeaders): self
     {
         $this->hasHeaders = (bool)$hasHeaders;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getDelimiter()
+    public function getDelimiter(): string
     {
         return $this->delimiter;
     }
 
-    /**
-     * @param string $delimiter
-     *
-     * @return self
-     */
-    public function setDelimiter($delimiter)
+    public function setDelimiter(string $delimiter): self
     {
         $this->delimiter = $delimiter;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getEnclosure()
+    public function getEnclosure(): string
     {
         return $this->enclosure;
     }
 
-    /**
-     * @param string $enclosure
-     *
-     * @return self
-     */
-    public function setEnclosure($enclosure)
+    public function setEnclosure(string $enclosure): self
     {
         $this->enclosure = $enclosure;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getEscapeCharacter()
+    public function getEscapeCharacter(): string
     {
         return $this->escapeCharacter;
     }
 
-    /**
-     * @param string $escapeCharacter
-     *
-     * @return self
-     */
-    public function setEscapeCharacter($escapeCharacter)
+    public function setEscapeCharacter(string $escapeCharacter): self
     {
         $this->escapeCharacter = $escapeCharacter;
 

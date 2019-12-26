@@ -10,37 +10,19 @@ class NumberNormalizer extends AbstractNormalizer
     /** @var */
     private $decimals;
 
-    /**
-     * @param int|null $decimals
-     */
-    public function __construct(NormalizerInterface $normalizer = null, $decimals = null)
-    {
-        $this->setDecimals($decimals);
-
-        parent::__construct($normalizer);
-    }
-
-    /**
-     * @param int|null $decimals
-     *
-     * @return self
-     */
-    public function setDecimals($decimals)
+    public function setDecimals(?int $decimals): self
     {
         $this->decimals = $decimals;
 
         return $this;
     }
 
-    /**
-     * @return int|null
-     */
-    public function getDecimals()
+    public function getDecimals(): ?int
     {
         return $this->decimals;
     }
 
-    protected function getNormalizedValue($value)
+    protected function getNormalizedValue(string $value)
     {
         if (!\is_numeric($value)) {
             return 0;

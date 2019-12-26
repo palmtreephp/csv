@@ -9,25 +9,22 @@ class ArrayNormalizer extends AbstractNormalizer
     /** @var StringNormalizer */
     private $stringNormalizer;
 
-    /**
-     * @param string $delimiter
-     */
-    public function __construct(NormalizerInterface $normalizer = null, $delimiter = ',')
+    public function __construct(NormalizerInterface $normalizer = null, string $delimiter = ',')
     {
         $this->setDelimiter($delimiter);
 
         $this->stringNormalizer = new StringNormalizer();
-        $this->stringNormalizer->setTrimCharMask($this->stringNormalizer->getTrimCharMask() . $this->getDelimiter());
+        $this->stringNormalizer->setTrimCharMask($this->stringNormalizer->getTrimCharMask() . $this->delimiter);
 
         parent::__construct($normalizer);
     }
 
-    public function normalize($value)
+    public function normalize(string $value)
     {
         return $this->getNormalizedValue($value);
     }
 
-    protected function getNormalizedValue($value)
+    protected function getNormalizedValue(string $value)
     {
         $value           = $this->stringNormalizer->normalize($value);
         $normalizedValue = \explode($this->delimiter, $value);
@@ -39,22 +36,14 @@ class ArrayNormalizer extends AbstractNormalizer
         return $normalizedValue;
     }
 
-    /**
-     * @param string $delimiter
-     *
-     * @return self
-     */
-    public function setDelimiter($delimiter)
+    public function setDelimiter(string $delimiter): self
     {
         $this->delimiter = $delimiter;
 
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getDelimiter()
+    public function getDelimiter(): string
     {
         return $this->delimiter;
     }

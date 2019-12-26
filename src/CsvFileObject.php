@@ -9,7 +9,7 @@ class CsvFileObject extends \SplFileObject
     /** @var string */
     private $lineEnding = "\r\n";
 
-    public function fwriteCsv(array $row, $delimiter = null, $enclosure = null)
+    public function fwriteCsv(array $row, ?string $delimiter = null, ?string $enclosure = null)
     {
         $bytes = $this->fwrite($this->getCsvString($row, $delimiter, $enclosure));
 
@@ -29,18 +29,13 @@ class CsvFileObject extends \SplFileObject
 
     /**
      * Returns a string representation of a row to be written as a line in a CSV file.
-     *
-     * @param $delimiter
-     * @param $enclosure
-     *
-     * @return string
      */
-    protected function getCsvString(array $row, $delimiter, $enclosure)
+    protected function getCsvString(array $row, ?string $delimiter = null, ?string $enclosure = null): string
     {
         $csvControl = $this->getCsvControl();
 
-        $delimiter = $delimiter ? : $csvControl[0];
-        $enclosure = $enclosure ? : $csvControl[1];
+        $delimiter = $delimiter ?: $csvControl[0];
+        $enclosure = $enclosure ?: $csvControl[1];
 
         $result = $enclosure;
         $result .= \implode($enclosure . $delimiter . $enclosure, self::escapeEnclosure($row, $enclosure));
@@ -51,35 +46,24 @@ class CsvFileObject extends \SplFileObject
         return $result;
     }
 
-    /**
-     * @return int
-     */
-    public function getBytesWritten()
+    public function getBytesWritten(): int
     {
         return $this->bytesWritten;
     }
 
-    /**
-     * @return string
-     */
-    public function getLineEnding()
+    public function getLineEnding(): string
     {
         return $this->lineEnding;
     }
 
-    /**
-     * @param string $lineEnding
-     *
-     * @return self
-     */
-    public function setLineEnding($lineEnding)
+    public function setLineEnding(string $lineEnding): self
     {
         $this->lineEnding = $lineEnding;
 
         return $this;
     }
 
-    public function getSize()
+    public function getSize(): int
     {
         try {
             $size = parent::getSize();
@@ -94,7 +78,7 @@ class CsvFileObject extends \SplFileObject
      * Trims the line ending delimiter from the end of the CSV file.
      * RFC-4180 states CSV files should not contain a trailing new line.
      */
-    public function trimFinalLineEnding()
+    public function trimFinalLineEnding(): void
     {
         if ($this->bytesWritten > 0) {
             // Only trim the file if it ends with the line ending delimiter.
@@ -113,12 +97,11 @@ class CsvFileObject extends \SplFileObject
      * RFC-4180 states the enclosure character (usually double quotes) should be
      * escaped by itself, so " becomes "".
      *
-     * @param mixed  $data Array or string of data to escape.
-     * @param string $enclosure
+     * @param mixed $data Array or string of data to escape.
      *
      * @return mixed Escaped data
      */
-    protected static function escapeEnclosure($data, $enclosure)
+    protected static function escapeEnclosure($data, string $enclosure)
     {
         if (\is_array($data)) {
             foreach ($data as $key => $value) {

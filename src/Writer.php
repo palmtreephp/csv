@@ -10,12 +10,12 @@ class Writer extends AbstractCsv
     /** @var array */
     private $headers = [];
 
-    public function getOpenMode()
+    public function getOpenMode(): string
     {
         return 'w+';
     }
 
-    public static function write($file, $data)
+    public static function write($file, $data): void
     {
         $writer = new static($file);
         $writer->setData($data);
@@ -27,10 +27,8 @@ class Writer extends AbstractCsv
      * then closes the file handle.
      *
      * Uses the first row's keys as headers.
-     *
-     * @return self
      */
-    public function setData(array $data)
+    public function setData(array $data): self
     {
         if ($this->hasHeaders) {
             $this->setHeaders(\array_keys(\reset($data)));
@@ -41,10 +39,7 @@ class Writer extends AbstractCsv
         return $this;
     }
 
-    /**
-     * @return self
-     */
-    public function setHeaders(array $headers)
+    public function setHeaders(array $headers): self
     {
         $this->createDocument();
 
@@ -55,12 +50,7 @@ class Writer extends AbstractCsv
         return $this;
     }
 
-    /**
-     * @param string $header
-     *
-     * @return self
-     */
-    public function addHeader($header)
+    public function addHeader(string $header): self
     {
         $headers = $this->headers;
 
@@ -74,7 +64,7 @@ class Writer extends AbstractCsv
     /**
      * Adds multiple rows of data to the CSV file.
      */
-    public function addRows(array $rows)
+    public function addRows(array $rows): void
     {
         foreach ($rows as $row) {
             $this->addRow($row);
@@ -88,7 +78,7 @@ class Writer extends AbstractCsv
      *
      * @return bool Whether the row was written to the file.
      */
-    public function addRow(array $row)
+    public function addRow(array $row): bool
     {
         $result = $this->getDocument()->fwriteCsv($row);
 

@@ -7,9 +7,9 @@ use PHPUnit\Framework\TestCase;
 
 class WriterTest extends TestCase
 {
-    /** @expectedException \Exception */
-    public function testInvalidFile()
+    public function testInvalidFile(): void
     {
+        $this->expectException('TypeError');
         $writer = new Writer(null);
         $writer->createDocument();
     }

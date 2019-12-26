@@ -7,49 +7,33 @@ class HtmlNormalizer extends AbstractNormalizer
     /** @var bool */
     private $encode = true;
     /** @var int */
-    private $flags  = ENT_QUOTES;
+    private $flags = ENT_QUOTES;
 
-    /**
-     * @return bool
-     */
-    public function shouldEncode()
+    public function shouldEncode(): bool
     {
         return $this->encode;
     }
 
-    /**
-     * @param bool $encode
-     *
-     * @return self
-     */
-    public function setEncode($encode)
+    public function setEncode(bool $encode): self
     {
-        $this->encode = (bool)$encode;
+        $this->encode = $encode;
 
         return $this;
     }
 
-    /**
-     * @param int $flags
-     *
-     * @return self
-     */
-    public function setFlags($flags)
+    public function setFlags(int $flags): self
     {
         $this->flags = (int)$flags;
 
         return $this;
     }
 
-    /**
-     * @return int
-     */
-    public function getFlags()
+    public function getFlags(): int
     {
         return $this->flags;
     }
 
-    protected function getNormalizedValue($value)
+    protected function getNormalizedValue(string $value): string
     {
         if ($this->shouldEncode()) {
             $value = \htmlentities($value, $this->getFlags());

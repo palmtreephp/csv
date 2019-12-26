@@ -5,40 +5,21 @@ namespace Palmtree\Csv\Normalizer;
 class MoneyNormalizer extends AbstractNormalizer
 {
     /** @var string */
-    private $moneyFormat;
+    private $moneyFormat = '%.2n';
 
-    /**
-     * @param NormalizerInterface|null $normalizer
-     * @param string                   $format
-     */
-    public function __construct($normalizer = null, $format = '%.2n')
-    {
-        parent::__construct($normalizer);
-
-        $this->setMoneyFormat($format);
-    }
-
-    /**
-     * @param string $moneyFormat
-     *
-     * @return self
-     */
-    public function setMoneyFormat($moneyFormat)
+    public function setMoneyFormat(string $moneyFormat): self
     {
         $this->moneyFormat = $moneyFormat;
 
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getMoneyFormat()
+    public function getMoneyFormat(): string
     {
         return $this->moneyFormat;
     }
 
-    protected function getNormalizedValue($value)
+    protected function getNormalizedValue(string $value): string
     {
         return \money_format($this->getMoneyFormat(), $value);
     }

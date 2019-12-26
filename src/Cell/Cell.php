@@ -11,21 +11,10 @@ class Cell
     /** @var string */
     private $value;
 
-    /**
-     * @param string $value
-     */
-    public function __construct($value, NormalizerInterface $normalizer)
+    public function __construct(string $value, NormalizerInterface $normalizer)
     {
         $this->setRawValue($value);
         $this->setNormalizer($normalizer);
-    }
-
-    /**
-     * @return string
-     */
-    public function getRawValue()
-    {
-        return $this->value;
     }
 
     /**
@@ -36,25 +25,31 @@ class Cell
         return $this->normalizer->normalize($this->getRawValue());
     }
 
-    /**
-     * @return NormalizerInterface
-     */
-    public function getNormalizer()
+    public function setRawValue(string $value): self
+    {
+        $this->value = $value;
+
+        return $this;
+    }
+
+    public function getRawValue(): string
+    {
+        return $this->value;
+    }
+
+    public function getNormalizer(): NormalizerInterface
     {
         return $this->normalizer;
     }
 
-    /**
-     * @return self
-     */
-    public function setNormalizer(NormalizerInterface $normalizer)
+    public function setNormalizer(NormalizerInterface $normalizer): self
     {
         $this->normalizer = $normalizer;
 
         return $this;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         try {
             $value = (string)$this->getValue();
@@ -63,17 +58,5 @@ class Cell
         }
 
         return $value;
-    }
-
-    /**
-     * @param mixed $value
-     *
-     * @return Cell
-     */
-    public function setRawValue($value)
-    {
-        $this->value = $value;
-
-        return $this;
     }
 }

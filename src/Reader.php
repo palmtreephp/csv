@@ -29,36 +29,23 @@ class Reader extends AbstractCsv implements \Iterator
     /** @var int */
     private $headerOffset = 0;
 
-    public function __construct($file, $hasHeaders = true, $delimiter = ',', $enclosure = '"', $escape = "\0")
+    public function __construct(string $file)
     {
         $this->headerNormalizer = new NullNormalizer();
-        parent::__construct($file, $hasHeaders, $delimiter, $enclosure, $escape);
+        parent::__construct($file);
     }
 
-    /**
-     * @return string
-     */
-    public function getOpenMode()
+    public function getOpenMode(): string
     {
         return 'r';
     }
 
-    /**
-     * @param string $file
-     *
-     * @return self
-     */
-    public static function read($file)
+    public static function read(string $file): self
     {
-        $csv = new static($file);
-
-        return $csv;
+        return new self($file);
     }
 
-    /**
-     * @return Row
-     */
-    public function getHeaders()
+    public function getHeaders(): Row
     {
         if (null === $this->headers && $this->hasHeaders) {
             $this->rewind();
@@ -67,12 +54,7 @@ class Reader extends AbstractCsv implements \Iterator
         return $this->headers;
     }
 
-    /**
-     * @param $key
-     *
-     * @return mixed
-     */
-    public function getHeader($key)
+    public function getHeader(string $key): string
     {
         if (!isset($this->headers[$key])) {
             return $key;
@@ -81,35 +63,21 @@ class Reader extends AbstractCsv implements \Iterator
         return $this->headers[$key];
     }
 
-    /**
-     * @return self
-     */
-    public function setHeaderNormalizer(NormalizerInterface $headerNormalizer)
+    public function setHeaderNormalizer(NormalizerInterface $headerNormalizer): self
     {
         $this->headerNormalizer = $headerNormalizer;
 
         return $this;
     }
 
-    /**
-     * @param mixed               $key
-     * @param NormalizerInterface $normalizer
-     *
-     * @return self
-     */
-    public function addNormalizer($key, NormalizerInterface $normalizer)
+    public function addNormalizer(string $key, NormalizerInterface $normalizer): self
     {
         $this->normalizers[$key] = $normalizer;
 
         return $this;
     }
 
-    /**
-     * @param iterable $normalizers
-     *
-     * @return self
-     */
-    public function addNormalizers($normalizers)
+    public function addNormalizers(iterable $normalizers): self
     {
         foreach ($normalizers as $key => $normalizer) {
             $this->addNormalizer($key, $normalizer);
@@ -120,10 +88,8 @@ class Reader extends AbstractCsv implements \Iterator
 
     /**
      * @param mixed $key
-     *
-     * @return NormalizerInterface
      */
-    public function getNormalizer($key)
+    public function getNormalizer($key): NormalizerInterface
     {
         if ($this->hasHeaders && \is_int($key)) {
             $this->normalizers[$key] = $this->headerNormalizer;
@@ -140,10 +106,8 @@ class Reader extends AbstractCsv implements \Iterator
 
     /**
      * Reads the next line in the CSV file and returns a Row object from it.
-     *
-     * @return Row|null
      */
-    protected function getCurrentRow()
+    protected function getCurrentRow(): ?Row
     {
         $cells = $this->getDocument()->current();
 
@@ -165,7 +129,7 @@ class Reader extends AbstractCsv implements \Iterator
     /**
      * @inheritDoc
      */
-    public function current()
+    public function current(): Row
     {
         return $this->row;
     }
@@ -173,7 +137,7 @@ class Reader extends AbstractCsv implements \Iterator
     /**
      * @inheritDoc
      */
-    public function next()
+    public function next(): void
     {
         $this->getDocument()->next();
     }
@@ -181,7 +145,7 @@ class Reader extends AbstractCsv implements \Iterator
     /**
      * @inheritDoc
      */
-    public function key()
+    public function key(): int
     {
         return $this->getDocument()->key();
     }
@@ -189,7 +153,7 @@ class Reader extends AbstractCsv implements \Iterator
     /**
      * @inheritDoc
      */
-    public function valid()
+    public function valid(): bool
     {
         $this->row = $this->getCurrentRow();
 
@@ -199,7 +163,7 @@ class Reader extends AbstractCsv implements \Iterator
     /**
      * @inheritDoc
      */
-    public function rewind()
+    public function rewind(): void
     {
         $this->getDocument()->rewind();
 
@@ -222,82 +186,50 @@ class Reader extends AbstractCsv implements \Iterator
         }
     }
 
-    /**
-     * @param string $defaultNormalizer
-     *
-     * @return self
-     */
-    public function setDefaultNormalizer($defaultNormalizer)
+    public function setDefaultNormalizer(string $defaultNormalizer): self
     {
         $this->defaultNormalizer = $defaultNormalizer;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getDefaultNormalizer()
+    public function getDefaultNormalizer(): string
     {
         return $this->defaultNormalizer;
     }
 
-    /**
-     * @param string|null $stripBom
-     *
-     * @return self
-     */
-    public function setStripBom($stripBom)
+    public function setStripBom(?string $stripBom): self
     {
         $this->stripBom = $stripBom;
 
         return $this;
     }
 
-    /**
-     * @param int $offset
-     *
-     * @return self
-     */
-    public function setOffset($offset)
+    public function setOffset(int $offset): self
     {
         $this->offset = $offset;
 
         return $this;
     }
 
-    /**
-     * @return int
-     */
-    public function getOffset()
+    public function getOffset(): int
     {
         return $this->offset;
     }
 
-    /**
-     * @param int $headerOffset
-     *
-     * @return self
-     */
-    public function setHeaderOffset($headerOffset)
+    public function setHeaderOffset(int $headerOffset): self
     {
         $this->headerOffset = $headerOffset;
 
         return $this;
     }
 
-    /**
-     * @return int
-     */
-    public function getHeaderOffset()
+    public function getHeaderOffset(): int
     {
         return $this->headerOffset;
     }
 
-    /**
-     * @return array
-     */
-    public function toArray()
+    public function toArray(): array
     {
         $result = [];
         foreach ($this as $rowKey => $row) {
