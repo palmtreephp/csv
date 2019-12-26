@@ -29,8 +29,10 @@ class ArrayNormalizer extends AbstractNormalizer
         $value           = $this->stringNormalizer->normalize($value);
         $normalizedValue = \explode($this->delimiter, $value);
 
-        foreach ($normalizedValue as &$part) {
-            $part = $this->normalizer->normalize($part);
+        if ($this->normalizer) {
+            foreach ($normalizedValue as &$part) {
+                $part = $this->normalizer->normalize($part);
+            }
         }
 
         return $normalizedValue;

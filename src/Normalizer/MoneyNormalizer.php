@@ -21,6 +21,6 @@ class MoneyNormalizer extends AbstractNormalizer
 
     protected function getNormalizedValue(string $value): string
     {
-        return \money_format($this->getMoneyFormat(), $value);
+        return \money_format($this->getMoneyFormat(), (float)$value);
     }
 }

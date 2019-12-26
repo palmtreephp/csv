@@ -131,13 +131,13 @@ use Palmtree\Csv\Writer;
 
 $people   = [];
 $people[] = [
-    'name'  => 'Alice',
-    'age'   => '24',
+    'name'   => 'Alice',
+    'age'    => '24',
     'gender' => 'Female',
 ];
 $people[] = [
-    'name'  => 'Bob',
-    'age'   => '28',
+    'name'   => 'Bob',
+    'age'    => '28',
     'gender' => 'Male',
 ];
 

@@ -29,9 +29,10 @@ class Reader extends AbstractCsv implements \Iterator
     /** @var int */
     private $headerOffset = 0;
 
-    public function __construct(string $file)
+    public function __construct(string $file, bool $hasHeaders = true)
     {
         $this->headerNormalizer = new NullNormalizer();
+        $this->setHasHeaders($hasHeaders);
         parent::__construct($file);
     }
 
@@ -45,7 +46,7 @@ class Reader extends AbstractCsv implements \Iterator
         return new self($file);
     }
 
-    public function getHeaders(): Row
+    public function getHeaders(): ?Row
     {
         if (null === $this->headers && $this->hasHeaders) {
             $this->rewind();
