@@ -39,23 +39,24 @@ abstract class AbstractCsv
     }
 
     /**
-     * Creates a new SplFileObject instance.
+     * @return string
      */
+    abstract public function getOpenMode();
+
     public function createDocument()
     {
         $this->closeDocument();
 
-        $document = new CsvFileObject($this->getFile(), $this->getOpenMode());
+        $document = new CsvFileObject($this->file, $this->getOpenMode());
 
         $document->setFlags(CsvFileObject::READ_CSV);
-        $document->setCsvControl($this->getDelimiter(), $this->getEnclosure(), $this->getEscapeCharacter());
+        $document->setCsvControl($this->delimiter, $this->enclosure, $this->escapeCharacter);
 
         $this->setDocument($document);
     }
 
     /**
-     * Closes the document by setting our reference to null
-     * to ensure its destructor is called.
+     * Closes the document by setting our reference to null to ensure its destructor is called.
      */
     public function closeDocument()
     {
@@ -63,11 +64,9 @@ abstract class AbstractCsv
     }
 
     /**
-     * @param CsvFileObject|null $document
-     *
-     * @return AbstractCsv
+     * @return self
      */
-    public function setDocument($document)
+    public function setDocument(CsvFileObject $document = null)
     {
         $this->closeDocument();
 
@@ -119,7 +118,7 @@ abstract class AbstractCsv
     /**
      * @param bool $hasHeaders
      *
-     * @return AbstractCsv
+     * @return self
      */
     public function setHasHeaders($hasHeaders)
     {
@@ -139,7 +138,7 @@ abstract class AbstractCsv
     /**
      * @param string $delimiter
      *
-     * @return AbstractCsv
+     * @return self
      */
     public function setDelimiter($delimiter)
     {
@@ -159,7 +158,7 @@ abstract class AbstractCsv
     /**
      * @param string $enclosure
      *
-     * @return AbstractCsv
+     * @return self
      */
     public function setEnclosure($enclosure)
     {
@@ -167,11 +166,6 @@ abstract class AbstractCsv
 
         return $this;
     }
-
-    /**
-     * @return string
-     */
-    abstract public function getOpenMode();
 
     /**
      * @return string
@@ -184,7 +178,7 @@ abstract class AbstractCsv
     /**
      * @param string $escapeCharacter
      *
-     * @return AbstractCsv
+     * @return self
      */
     public function setEscapeCharacter($escapeCharacter)
     {

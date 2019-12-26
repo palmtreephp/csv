@@ -45,7 +45,7 @@ class Cell
     }
 
     /**
-     * @return Cell
+     * @return self
      */
     public function setNormalizer(NormalizerInterface $normalizer)
     {

@@ -28,13 +28,11 @@ class Writer extends AbstractCsv
      *
      * Uses the first row's keys as headers.
      *
-     * @param $data
-     *
      * @return self
      */
     public function setData(array $data)
     {
-        if ($this->hasHeaders()) {
+        if ($this->hasHeaders) {
             $this->setHeaders(\array_keys(\reset($data)));
         }
 

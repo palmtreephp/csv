@@ -8,8 +8,7 @@ use Palmtree\Csv\Row\Row;
 use Palmtree\Csv\Util\StringUtil;
 
 /**
- * Reads a CSV file by loading each line into memory
- * one at a time.
+ * Reads a CSV file by loading each line into memory one at a time.
  */
 class Reader extends AbstractCsv implements \Iterator
 {
@@ -47,7 +46,7 @@ class Reader extends AbstractCsv implements \Iterator
     /**
      * @param string $file
      *
-     * @return Reader
+     * @return self
      */
     public static function read($file)
     {
@@ -61,7 +60,7 @@ class Reader extends AbstractCsv implements \Iterator
      */
     public function getHeaders()
     {
-        if (null === $this->headers && $this->hasHeaders()) {
+        if (null === $this->headers && $this->hasHeaders) {
             $this->rewind();
         }
 
@@ -94,7 +93,7 @@ class Reader extends AbstractCsv implements \Iterator
 
     /**
      * @param mixed               $key
-     * @param NormalizerInterface $normalizer Normalizer instance.
+     * @param NormalizerInterface $normalizer
      *
      * @return self
      */
@@ -106,7 +105,7 @@ class Reader extends AbstractCsv implements \Iterator
     }
 
     /**
-     * @param array|\Traversable $normalizers
+     * @param iterable $normalizers
      *
      * @return self
      */
@@ -156,7 +155,7 @@ class Reader extends AbstractCsv implements \Iterator
             $stripped = StringUtil::stripBom($cells[0], $this->stripBom);
 
             if ($stripped !== $cells[0]) {
-                $cells[0] = \trim($stripped, $this->getEnclosure());
+                $cells[0] = \trim($stripped, $this->enclosure);
             }
         }
 
@@ -205,7 +204,7 @@ class Reader extends AbstractCsv implements \Iterator
         $this->getDocument()->rewind();
 
         $dataOffset = $this->offset + $this->headerOffset;
-        if ($this->hasHeaders()) {
+        if ($this->hasHeaders) {
             if ($this->headerOffset) {
                 $this->getDocument()->seek($this->headerOffset);
             }
@@ -218,7 +217,7 @@ class Reader extends AbstractCsv implements \Iterator
             ++$dataOffset;
         }
 
-        if ($dataOffset) {
+        if ($dataOffset > 0) {
             $this->getDocument()->seek($dataOffset);
         }
     }
@@ -226,7 +225,7 @@ class Reader extends AbstractCsv implements \Iterator
     /**
      * @param string $defaultNormalizer
      *
-     * @return Reader
+     * @return self
      */
     public function setDefaultNormalizer($defaultNormalizer)
     {
@@ -246,7 +245,7 @@ class Reader extends AbstractCsv implements \Iterator
     /**
      * @param string|null $stripBom
      *
-     * @return Reader
+     * @return self
      */
     public function setStripBom($stripBom)
     {

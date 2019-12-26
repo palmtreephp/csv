@@ -47,14 +47,14 @@ class Row implements \ArrayAccess, \Countable, \IteratorAggregate
     public function addCells(array $cells)
     {
         foreach ($cells as $key => $value) {
-            $key = $this->getReader()->getHeader($key);
+            $key = $this->reader->getHeader($key);
             $this->addCell($key, $value);
         }
     }
 
     public function addCell($key, $value)
     {
-        $normalizer = $this->getReader()->getNormalizer($key);
+        $normalizer = $this->reader->getNormalizer($key);
 
         $cell = new Cell($value, $normalizer);
 

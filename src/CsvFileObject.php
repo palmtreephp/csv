@@ -4,8 +4,10 @@ namespace Palmtree\Csv;
 
 class CsvFileObject extends \SplFileObject
 {
+    /** @var int */
     private $bytesWritten = 0;
-    private $lineEnding   = "\r\n";
+    /** @var string */
+    private $lineEnding = "\r\n";
 
     public function fwriteCsv(array $row, $delimiter = null, $enclosure = null)
     {
@@ -37,14 +39,14 @@ class CsvFileObject extends \SplFileObject
     {
         $csvControl = $this->getCsvControl();
 
-        $delimiter = $delimiter ?: $csvControl[0];
-        $enclosure = $enclosure ?: $csvControl[1];
+        $delimiter = $delimiter ? : $csvControl[0];
+        $enclosure = $enclosure ? : $csvControl[1];
 
         $result = $enclosure;
         $result .= \implode($enclosure . $delimiter . $enclosure, self::escapeEnclosure($row, $enclosure));
         $result .= $enclosure;
 
-        $result .= $this->getLineEnding();
+        $result .= $this->lineEnding;
 
         return $result;
     }
@@ -54,7 +56,7 @@ class CsvFileObject extends \SplFileObject
      */
     public function getBytesWritten()
     {
-        return (int)$this->bytesWritten;
+        return $this->bytesWritten;
     }
 
     /**
@@ -68,7 +70,7 @@ class CsvFileObject extends \SplFileObject
     /**
      * @param string $lineEnding
      *
-     * @return CsvFileObject
+     * @return self
      */
     public function setLineEnding($lineEnding)
     {
@@ -94,14 +96,14 @@ class CsvFileObject extends \SplFileObject
      */
     public function trimFinalLineEnding()
     {
-        if ($this->getBytesWritten() > 0) {
+        if ($this->bytesWritten > 0) {
             // Only trim the file if it ends with the line ending delimiter.
-            $length = \strlen($this->getLineEnding());
+            $length = \strlen($this->lineEnding);
 
             $this->fseek(-$length, SEEK_END);
 
-            if ($this->fread($length) === $this->getLineEnding()) {
-                $this->ftruncate($this->getBytesWritten() - $length);
+            if ($this->fread($length) === $this->lineEnding) {
+                $this->ftruncate($this->bytesWritten - $length);
             }
         }
     }
@@ -111,8 +113,8 @@ class CsvFileObject extends \SplFileObject
      * RFC-4180 states the enclosure character (usually double quotes) should be
      * escaped by itself, so " becomes "".
      *
-     * @param mixed $data      Array or string of data to escape.
-     * @param       $enclosure
+     * @param mixed  $data Array or string of data to escape.
+     * @param string $enclosure
      *
      * @return mixed Escaped data
      */

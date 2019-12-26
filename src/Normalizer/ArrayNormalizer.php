@@ -30,10 +30,10 @@ class ArrayNormalizer extends AbstractNormalizer
     protected function getNormalizedValue($value)
     {
         $value           = $this->stringNormalizer->normalize($value);
-        $normalizedValue = \explode($this->getDelimiter(), $value);
+        $normalizedValue = \explode($this->delimiter, $value);
 
         foreach ($normalizedValue as &$part) {
-            $part = $this->getNormalizer()->normalize($part);
+            $part = $this->normalizer->normalize($part);
         }
 
         return $normalizedValue;
