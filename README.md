@@ -158,9 +158,9 @@ use Palmtree\Csv\Reader;
 
 $csv = new Reader('people.csv');
 
-$csv->getDocument()->setDelimiter("\t");
-$csv->getDocument()->setEnclosure('"');
-$csv->getDocument()->setEscapeChar("\\");
+$csv->setDelimiter("\t");
+$csv->setEnclosure('"');
+$csv->setEscapeCharacter("\\");
 ```
 
 #### Line Endings
