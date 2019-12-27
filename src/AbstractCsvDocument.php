@@ -103,6 +103,8 @@ abstract class AbstractCsvDocument
     {
         $this->delimiter = $delimiter;
 
+        $this->getDocument()->setCsvControl($this->delimiter, $this->enclosure, $this->escapeCharacter);
+
         return $this;
     }
 
@@ -115,6 +117,8 @@ abstract class AbstractCsvDocument
     {
         $this->enclosure = $enclosure;
 
+        $this->getDocument()->setCsvControl($this->delimiter, $this->enclosure, $this->escapeCharacter);
+
         return $this;
     }
 
@@ -126,6 +130,8 @@ abstract class AbstractCsvDocument
     public function setEscapeCharacter(string $escapeCharacter): self
     {
         $this->escapeCharacter = $escapeCharacter;
+
+        $this->getDocument()->setCsvControl($this->delimiter, $this->enclosure, $this->escapeCharacter);
 
         return $this;
     }
