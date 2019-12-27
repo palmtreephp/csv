@@ -10,7 +10,7 @@ use Palmtree\Csv\Util\StringUtil;
 /**
  * Reads a CSV file by loading each line into memory one at a time.
  */
-class Reader extends AbstractCsv implements \Iterator
+class Reader extends AbstractCsvDocument implements \Iterator
 {
     /** @var string */
     private $defaultNormalizer = NullNormalizer::class;
@@ -29,11 +29,11 @@ class Reader extends AbstractCsv implements \Iterator
     /** @var int */
     private $headerOffset = 0;
 
-    public function __construct(string $file, bool $hasHeaders = true)
+    public function __construct(string $filePath, bool $hasHeaders = true)
     {
         $this->headerNormalizer = new NullNormalizer();
         $this->setHasHeaders($hasHeaders);
-        parent::__construct($file);
+        parent::__construct($filePath);
     }
 
     public function getOpenMode(): string
@@ -41,9 +41,9 @@ class Reader extends AbstractCsv implements \Iterator
         return 'r';
     }
 
-    public static function read(string $file): self
+    public static function read(string $file, bool $hasHeaders = true): self
     {
-        return new self($file);
+        return new self($file, $hasHeaders);
     }
 
     public function getHeaders(): ?Row

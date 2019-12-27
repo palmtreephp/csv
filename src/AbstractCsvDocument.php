@@ -2,10 +2,10 @@
 
 namespace Palmtree\Csv;
 
-abstract class AbstractCsv
+abstract class AbstractCsvDocument
 {
     /** @var string Path to CSV file. */
-    protected $file;
+    protected $filePath;
     /** @var bool Whether the CSV file contains headers */
     protected $hasHeaders = true;
     /** @var string Cell delimiter. Default ',' (comma) */
@@ -18,11 +18,11 @@ abstract class AbstractCsv
     protected $document;
 
     /**
-     * @param string $file Path to CSV file.
+     * @param string $filePath Path to CSV file.
      */
-    public function __construct(string $file)
+    public function __construct(string $filePath)
     {
-        $this->setFile($file);
+        $this->setFilePath($filePath);
     }
 
     public function __destruct()
@@ -36,7 +36,7 @@ abstract class AbstractCsv
     {
         $this->closeDocument();
 
-        $document = new CsvFileObject($this->file, $this->getOpenMode());
+        $document = new CsvFileObject($this->filePath, $this->getOpenMode());
 
         $document->setFlags(CsvFileObject::READ_CSV);
         $document->setCsvControl($this->delimiter, $this->enclosure, $this->escapeCharacter);
@@ -70,14 +70,14 @@ abstract class AbstractCsv
         return $this->document;
     }
 
-    public function getFile(): string
+    public function getFilePath(): string
     {
-        return $this->file;
+        return $this->filePath;
     }
 
-    public function setFile(string $file): self
+    public function setFilePath(string $filePath): self
     {
-        $this->file = $file;
+        $this->filePath = $filePath;
 
         return $this;
     }
@@ -89,7 +89,7 @@ abstract class AbstractCsv
 
     public function setHasHeaders(bool $hasHeaders): self
     {
-        $this->hasHeaders = (bool)$hasHeaders;
+        $this->hasHeaders = $hasHeaders;
 
         return $this;
     }

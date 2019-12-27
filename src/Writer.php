@@ -5,7 +5,7 @@ namespace Palmtree\Csv;
 /**
  * Writes an array to a CSV file.
  */
-class Writer extends AbstractCsv
+class Writer extends AbstractCsvDocument
 {
     /** @var array */
     private $headers = [];
