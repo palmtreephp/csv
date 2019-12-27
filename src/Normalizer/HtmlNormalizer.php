@@ -23,7 +23,7 @@ class HtmlNormalizer extends AbstractNormalizer
 
     public function setFlags(int $flags): self
     {
-        $this->flags = (int)$flags;
+        $this->flags = $flags;
 
         return $this;
     }
