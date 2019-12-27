@@ -9,9 +9,9 @@ class CsvFileObject extends \SplFileObject
     /** @var string */
     private $lineEnding = "\r\n";
 
-    public function fwriteCsv(array $row, ?string $delimiter = null, ?string $enclosure = null)
+    public function fwriteCsv(array $row)
     {
-        $bytes = $this->fwrite($this->getCsvString($row, $delimiter, $enclosure));
+        $bytes = $this->fwrite($this->getCsvString($row));
 
         if ($bytes === false) {
             return false;
@@ -25,25 +25,6 @@ class CsvFileObject extends \SplFileObject
     public function __destruct()
     {
         $this->trimFinalLineEnding();
-    }
-
-    /**
-     * Returns a string representation of a row to be written as a line in a CSV file.
-     */
-    protected function getCsvString(array $row, ?string $delimiter = null, ?string $enclosure = null): string
-    {
-        $csvControl = $this->getCsvControl();
-
-        $delimiter = $delimiter ?: $csvControl[0];
-        $enclosure = $enclosure ?: $csvControl[1];
-
-        $result = $enclosure;
-        $result .= \implode($enclosure . $delimiter . $enclosure, self::escapeEnclosure($row, $enclosure));
-        $result .= $enclosure;
-
-        $result .= $this->lineEnding;
-
-        return $result;
     }
 
     public function getBytesWritten(): int
@@ -77,6 +58,8 @@ class CsvFileObject extends \SplFileObject
     /**
      * Trims the line ending delimiter from the end of the CSV file.
      * RFC-4180 states CSV files should not contain a trailing new line.
+     *
+     * @link https://tools.ietf.org/html/rfc4180#section-2
      */
     public function trimFinalLineEnding(): void
     {
@@ -93,15 +76,30 @@ class CsvFileObject extends \SplFileObject
     }
 
     /**
+     * Returns a string representation of a row to be written as a line in a CSV file.
+     */
+    private function getCsvString(array $row): string
+    {
+        list($delimiter, $enclosure) = $this->getCsvControl();
+
+        return $enclosure .
+               \implode($enclosure . $delimiter . $enclosure, self::escapeEnclosure($row, $enclosure)) .
+               $enclosure .
+               $this->lineEnding;
+    }
+
+    /**
      * Escapes the enclosure character recursively.
      * RFC-4180 states the enclosure character (usually double quotes) should be
      * escaped by itself, so " becomes "".
      *
-     * @param mixed $data Array or string of data to escape.
+     * @link https://tools.ietf.org/html/rfc4180#section-2
      *
-     * @return mixed Escaped data
+     * @param array|string $data Array or string of data to escape.
+     *
+     * @return array|string Escaped data.
      */
-    protected static function escapeEnclosure($data, string $enclosure)
+    private static function escapeEnclosure($data, string $enclosure)
     {
         if (\is_array($data)) {
             foreach ($data as $key => $value) {
