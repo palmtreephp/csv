@@ -20,9 +20,11 @@ abstract class AbstractCsvDocument
     /**
      * @param string $filePath Path to CSV file.
      */
-    public function __construct(string $filePath)
+    public function __construct(string $filePath, bool $hasHeaders = true)
     {
-        $this->setFilePath($filePath);
+        $this
+            ->setHasHeaders($hasHeaders)
+            ->setFilePath($filePath);
     }
 
     public function __destruct()

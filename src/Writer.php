@@ -15,9 +15,9 @@ class Writer extends AbstractCsvDocument
         return 'w+';
     }
 
-    public static function write($file, $data): void
+    public static function write($filePath, $data): void
     {
-        $writer = new static($file);
+        $writer = new self($filePath);
         $writer->setData($data);
         $writer->closeDocument();
     }

@@ -29,13 +29,6 @@ class Reader extends AbstractCsvDocument implements \Iterator
     /** @var int */
     private $headerOffset = 0;
 
-    public function __construct(string $filePath, bool $hasHeaders = true)
-    {
-        $this->headerNormalizer = new NullNormalizer();
-        $this->setHasHeaders($hasHeaders);
-        parent::__construct($filePath);
-    }
-
     public function getOpenMode(): string
     {
         return 'r';
@@ -48,7 +41,7 @@ class Reader extends AbstractCsvDocument implements \Iterator
 
     public function getHeaders(): ?Row
     {
-        if (null === $this->headers && $this->hasHeaders) {
+        if ($this->hasHeaders && $this->headers === null) {
             $this->rewind();
         }
 
@@ -70,6 +63,15 @@ class Reader extends AbstractCsvDocument implements \Iterator
         $this->headerNormalizer = $headerNormalizer;
 
         return $this;
+    }
+
+    public function getHeaderNormalizer(): NormalizerInterface
+    {
+        if (!$this->headerNormalizer) {
+            $this->headerNormalizer = new NullNormalizer();
+        }
+
+        return $this->headerNormalizer;
     }
 
     public function addNormalizer(string $key, NormalizerInterface $normalizer): self
@@ -94,7 +96,7 @@ class Reader extends AbstractCsvDocument implements \Iterator
     public function getNormalizer($key): NormalizerInterface
     {
         if ($this->hasHeaders && \is_int($key)) {
-            $this->normalizers[$key] = $this->headerNormalizer;
+            $this->normalizers[$key] = $this->getHeaderNormalizer();
         }
 
         if (!isset($this->normalizers[$key])) {
@@ -109,7 +111,7 @@ class Reader extends AbstractCsvDocument implements \Iterator
     /**
      * Reads the next line in the CSV file and returns a Row object from it.
      */
-    protected function getCurrentRow(): ?Row
+    private function getCurrentRow(): ?Row
     {
         $cells = $this->getDocument()->current();
 
