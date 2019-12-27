@@ -87,4 +87,18 @@ class ReaderTest extends TestCase
         $this->assertEquals("Hello\nWorld", $rows[0][0]);
         $this->assertEquals("Foo\nBar", $rows[1][0]);
     }
+
+    public function testUsingTabAsDelimiter(): void
+    {
+        $reader = new Reader(__DIR__ . '/fixtures/tabs.tsv');
+        $reader->setHasHeaders(false);
+        $reader->setDelimiter("\t");
+
+        $row = $reader->toArray()[0];
+
+        $this->assertCount(3, $row);
+        $this->assertEquals('Foo', $row[0]);
+        $this->assertEquals('Bar', $row[1]);
+        $this->assertEquals('Baz', $row[2]);
+    }
 }
