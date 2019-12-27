@@ -1,6 +1,5 @@
 /vendor/
 /composer.lock
-/examples/*.csv
 .~lock*
 /phpunit.xml
 /.php_cs.cache
