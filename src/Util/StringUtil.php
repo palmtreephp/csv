@@ -30,12 +30,12 @@ class StringUtil
         return $input;
     }
 
-/**
+    /**
      * Escapes the enclosure character recursively.
      * RFC-4180 states the enclosure character (usually double quotes) should be
      * escaped by itself, so " becomes "".
      *
-     * @link https://tools.ietf.org/html/rfc4180#section-2
+     * @see https://tools.ietf.org/html/rfc4180#section-2
      */
     public static function escapeEnclosure(array $data, string $enclosure): array
     {

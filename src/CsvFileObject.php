@@ -57,7 +57,7 @@ class CsvFileObject extends \SplFileObject
      * Trims the line ending delimiter from the end of the CSV file.
      * RFC-4180 states CSV files should not contain a trailing new line.
      *
-     * @link https://tools.ietf.org/html/rfc4180#section-2
+     * @see https://tools.ietf.org/html/rfc4180#section-2
      */
     public function trimFinalLineEnding(): void
     {
