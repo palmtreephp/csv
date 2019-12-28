@@ -14,11 +14,11 @@ class Reader extends AbstractCsvDocument implements \Iterator
 {
     /** @var string */
     private $defaultNormalizer = NullNormalizer::class;
-    /** @var NormalizerInterface */
+    /** @var NormalizerInterface|null */
     private $headerNormalizer;
     /** @var NormalizerInterface[] */
     private $normalizers = [];
-    /** @var Row */
+    /** @var Row|null */
     private $headers;
     /** @var Row */
     private $row;
@@ -62,7 +62,7 @@ class Reader extends AbstractCsvDocument implements \Iterator
 
     public function getHeaderNormalizer(): NormalizerInterface
     {
-        if (!$this->headerNormalizer) {
+        if ($this->headerNormalizer === null) {
             $this->headerNormalizer = new NullNormalizer();
         }
 

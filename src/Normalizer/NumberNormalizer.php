@@ -7,10 +7,10 @@ namespace Palmtree\Csv\Normalizer;
  */
 class NumberNormalizer extends AbstractNormalizer
 {
-    /** @var */
+    /** @var int|null */
     private $decimals;
 
-    public function setDecimals(?int $decimals): self
+    public function setDecimals(?int $decimals = null): self
     {
         $this->decimals = $decimals;
 
@@ -30,8 +30,8 @@ class NumberNormalizer extends AbstractNormalizer
 
         $numberValue = \trim($value) * 1;
 
-        if ($this->getDecimals() !== null) {
-            $numberValue = \round($numberValue, $this->getDecimals());
+        if ($this->decimals !== null) {
+            $numberValue = \round($numberValue, $this->decimals);
         }
 
         return $numberValue;

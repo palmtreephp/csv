@@ -14,7 +14,7 @@ abstract class AbstractCsvDocument
     protected $enclosure = '"';
     /** @var string Cell escape character. Default null byte */
     protected $escapeCharacter = "\0";
-    /** @var CsvFileObject */
+    /** @var CsvFileObject|null */
     protected $document;
 
     public function __construct(string $filePath, bool $hasHeaders = true)
@@ -39,7 +39,7 @@ abstract class AbstractCsvDocument
         $this->document = null;
     }
 
-    public function setDocument(CsvFileObject $document = null): self
+    public function setDocument(?CsvFileObject $document = null): self
     {
         $this->closeDocument();
 
@@ -50,7 +50,7 @@ abstract class AbstractCsvDocument
 
     public function getDocument(): CsvFileObject
     {
-        if (!$this->document) {
+        if ($this->document === null) {
             $this->createDocument();
         }
 
@@ -132,6 +132,6 @@ abstract class AbstractCsvDocument
         $document->setFlags(CsvFileObject::READ_CSV);
         $document->setCsvControl($this->delimiter, $this->enclosure, $this->escapeCharacter);
 
-        $this->setDocument($document);
+        $this->document = $document;
     }
 }

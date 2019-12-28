@@ -8,7 +8,7 @@ class Downloader extends Writer
      * Default headers used to tell client the response is a downloadable,
      * non-cacheable file.
      *
-     * @var array
+     * @var array<string, string>
      */
     private $responseHeaders = [
         'Content-Type'              => 'text/csv',

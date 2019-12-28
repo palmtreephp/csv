@@ -10,7 +10,7 @@ class Writer extends AbstractCsvDocument
     /** @var array */
     private $headers = [];
 
-    public static function write($filePath, $data): void
+    public static function write(string $filePath, array $data): void
     {
         $writer = new self($filePath);
         $writer->setData($data);
@@ -75,7 +75,7 @@ class Writer extends AbstractCsvDocument
     {
         $result = $this->getDocument()->fwriteCsv($row);
 
-        if ($result === false) {
+        if ($result === 0) {
             // @todo: handle error
             return false;
         }
@@ -88,7 +88,13 @@ class Writer extends AbstractCsvDocument
         $this->getDocument()->trimFinalLineEnding();
         $this->getDocument()->fseek(0);
 
-        return $this->getDocument()->fread($this->getDocument()->getSize());
+        $data = $this->getDocument()->fread($this->getDocument()->getSize());
+
+        if ($data === false) {
+            return '';
+        }
+
+        return $data;
     }
 
     protected function getOpenMode(): string

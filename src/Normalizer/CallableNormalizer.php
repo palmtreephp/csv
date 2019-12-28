@@ -27,14 +27,12 @@ class CallableNormalizer extends AbstractNormalizer
     }
 
     /**
-     * @param $value
-     *
      * @return mixed
      */
     protected function getNormalizedValue(string $value)
     {
-        $value = \call_user_func($this->getCallback(), $value, $this);
+        $callback = $this->callback;
 
-        return $value;
+        return $callback($value, $this);
     }
 }

@@ -46,7 +46,8 @@ class Row implements \ArrayAccess, \Countable, \IteratorAggregate
         }
     }
 
-    public function addCell($key, $value): void
+    /** @param string|int $key */
+    public function addCell($key, string $value): void
     {
         $normalizer = $this->reader->getNormalizer($key);
 
@@ -57,6 +58,8 @@ class Row implements \ArrayAccess, \Countable, \IteratorAggregate
 
     /**
      * @inheritDoc
+     *
+     * @param string|int $offset
      */
     public function offsetExists($offset): bool
     {
@@ -65,6 +68,8 @@ class Row implements \ArrayAccess, \Countable, \IteratorAggregate
 
     /**
      * @inheritDoc
+     *
+     * @param string|int $offset
      */
     public function offsetGet($offset)
     {
@@ -73,6 +78,9 @@ class Row implements \ArrayAccess, \Countable, \IteratorAggregate
 
     /**
      * @inheritDoc
+     *
+     * @param string|int $offset
+     * @param string     $value
      */
     public function offsetSet($offset, $value): void
     {
@@ -81,6 +89,8 @@ class Row implements \ArrayAccess, \Countable, \IteratorAggregate
 
     /**
      * @inheritDoc
+     *
+     * @param string|int $offset
      */
     public function offsetUnset($offset): void
     {
