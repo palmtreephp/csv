@@ -34,9 +34,9 @@ class Reader extends AbstractCsvDocument implements \Iterator
         return 'r';
     }
 
-    public static function read(string $file, bool $hasHeaders = true): self
+    public static function read(string $filePath, bool $hasHeaders = true): self
     {
-        return new self($file, $hasHeaders);
+        return new self($filePath, $hasHeaders);
     }
 
     public function getHeaders(): ?Row
