@@ -17,9 +17,6 @@ abstract class AbstractCsvDocument
     /** @var CsvFileObject */
     protected $document;
 
-    /**
-     * @param string $filePath Path to CSV file.
-     */
     public function __construct(string $filePath, bool $hasHeaders = true)
     {
         $this
@@ -33,18 +30,6 @@ abstract class AbstractCsvDocument
     }
 
     abstract public function getOpenMode(): string;
-
-    public function createDocument(): void
-    {
-        $this->closeDocument();
-
-        $document = new CsvFileObject($this->filePath, $this->getOpenMode());
-
-        $document->setFlags(CsvFileObject::READ_CSV);
-        $document->setCsvControl($this->delimiter, $this->enclosure, $this->escapeCharacter);
-
-        $this->setDocument($document);
-    }
 
     /**
      * Closes the document by setting our reference to null to ensure its destructor is called.
@@ -136,5 +121,17 @@ abstract class AbstractCsvDocument
         $this->getDocument()->setCsvControl($this->delimiter, $this->enclosure, $this->escapeCharacter);
 
         return $this;
+    }
+
+    private function createDocument(): void
+    {
+        $this->closeDocument();
+
+        $document = new CsvFileObject($this->filePath, $this->getOpenMode());
+
+        $document->setFlags(CsvFileObject::READ_CSV);
+        $document->setCsvControl($this->delimiter, $this->enclosure, $this->escapeCharacter);
+
+        $this->setDocument($document);
     }
 }
