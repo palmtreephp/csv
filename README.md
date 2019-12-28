@@ -1,9 +1,9 @@
 # Palmtree CSV
 
 [![License](http://img.shields.io/packagist/l/palmtree/csv.svg)](LICENSE)
-[![Travis](https://img.shields.io/travis/palmtreephp/csv.svg)](https://travis-ci.org/palmtreephp/csv)
-[![Scrutinizer](https://img.shields.io/scrutinizer/g/palmtreephp/csv.svg)](https://scrutinizer-ci.com/g/palmtreephp/csv/)
-[![Scrutinizer Coverage](https://img.shields.io/scrutinizer/coverage/g/palmtreephp/csv.svg)](https://scrutinizer-ci.com/g/palmtreephp/csv/)
+[![Build Status](https://img.shields.io/scrutinizer/build/g/palmtreephp/csv)](https://scrutinizer-ci.com/g/palmtreephp/csv/build-status/master)
+[![Code Quality](https://img.shields.io/scrutinizer/quality/g/palmtreephp/csv)](https://scrutinizer-ci.com/g/palmtreephp/csv/)
+[![Code Coverage](https://img.shields.io/scrutinizer/coverage/g/palmtreephp/csv.svg)](https://scrutinizer-ci.com/g/palmtreephp/csv/code-structure/master/code-coverage)
 
 A CSV reader and writer for PHP.
 
@@ -112,13 +112,13 @@ use Palmtree\Csv\Downloader;
 
 $people   = [];
 $people[] = [
-    'name'  => 'Alice',
-    'age'   => '24',
+    'name'   => 'Alice',
+    'age'    => '24',
     'gender' => 'Female',
 ];
 $people[] = [
-    'name'  => 'Bob',
-    'age'   => '28',
+    'name'   => 'Bob',
+    'age'    => '28',
     'gender' => 'Male',
 ];
 
@@ -178,7 +178,7 @@ $csv->getDocument()->setLineEnding("\n");
 
 
 #### Fine-grained Control
-The document object extends PHP's [SplFileObject](http://php.net/manual/en/class.splfileobject.php) and inherits it's methods:
+The document object extends PHP's [SplFileObject](http://php.net/manual/en/class.splfileobject.php) and inherits its methods:
 
 ```php
 <?php
