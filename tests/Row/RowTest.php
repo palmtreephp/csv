@@ -2,6 +2,7 @@
 
 namespace Palmtree\Csv\Test\Row;
 
+use Palmtree\Csv\Cell\Cell;
 use Palmtree\Csv\Reader;
 use Palmtree\Csv\Row\Row;
 use PHPUnit\Framework\TestCase;
@@ -14,7 +15,20 @@ class RowTest extends TestCase
 
         $row = new Row(['foo', 'bar'], $reader);
 
-        $this->assertEquals('bar', $row[1]);
+        $this->assertSame('bar', $row[1]);
+
+        $row[2] = 'baz';
+
+        $cells = $row->getCells();
+
+        $this->assertInstanceOf(Cell::class, $cells[2]);
+        $this->assertSame('baz', $cells[2]->getValue());
+
+        unset($row[2]);
+
+        $cells = $row->getCells();
+
+        $this->assertArrayNotHasKey(2, $cells);
     }
 
     public function testRowIsCountable(): void
@@ -37,5 +51,15 @@ class RowTest extends TestCase
         foreach ($row as $i => $cell) {
             $this->assertSame($i ? 'bar' : 'foo', $cell->getValue());
         }
+    }
+
+    public function testCanGetReader(): void
+    {
+        $reader = new Reader('php://memory');
+
+        $row = new Row(['foo', 'bar'], $reader);
+
+        $this->assertInstanceOf(Reader::class, $row->getReader());
+        $this->assertSame($reader, $row->getReader());
     }
 }
