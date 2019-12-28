@@ -26,15 +26,15 @@ class Downloader extends Writer
     {
         $this->setFilename($filename);
 
-        $this->addResponseHeader('Content-Disposition', \sprintf('attachment; filename="%s"', $this->getFilename()));
         $this->addResponseHeaders($responseHeaders);
+        $this->addResponseHeader('Content-Disposition', \sprintf('attachment; filename="%s"', $this->getFilename()));
 
         parent::__construct('php://temp');
     }
 
-    public static function download($file, $data): void
+    public static function download(string $filename, array $data): void
     {
-        $downloader = new static($file);
+        $downloader = new self($filename);
         $downloader->setData($data);
         $downloader->sendResponse();
     }
@@ -50,7 +50,7 @@ class Downloader extends Writer
             \header(\sprintf('Content-Length: %s', $this->getDocument()->getSize()));
 
             foreach ($this->getResponseHeaders() as $key => $value) {
-                \header(\sprintf('%s: %s', $key, $value));
+                \header("$key: $value");
             }
         }
 
@@ -72,12 +72,12 @@ class Downloader extends Writer
         return $this;
     }
 
-    public function addResponseHeader($key, $value): void
+    public function addResponseHeader(string $key, string $value): void
     {
         $this->responseHeaders[$key] = $value;
     }
 
-    public function removeResponseHeader($key): void
+    public function removeResponseHeader(string $key): void
     {
         unset($this->responseHeaders[$key]);
     }
@@ -87,9 +87,6 @@ class Downloader extends Writer
         return $this->filename;
     }
 
-    /**
-     * @return Downloader
-     */
     public function setFilename(string $filename): self
     {
         $this->filename = $filename;
