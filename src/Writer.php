@@ -10,11 +10,6 @@ class Writer extends AbstractCsvDocument
     /** @var array */
     private $headers = [];
 
-    public function getOpenMode(): string
-    {
-        return 'w+';
-    }
-
     public static function write($filePath, $data): void
     {
         $writer = new self($filePath);
@@ -41,8 +36,6 @@ class Writer extends AbstractCsvDocument
 
     public function setHeaders(array $headers): self
     {
-        $this->createDocument();
-
         $this->headers = $headers;
 
         $this->addRow($this->headers);
@@ -90,14 +83,16 @@ class Writer extends AbstractCsvDocument
         return true;
     }
 
-    /**
-     * @return string
-     */
-    public function getContents()
+    public function getContents(): string
     {
         $this->getDocument()->trimFinalLineEnding();
         $this->getDocument()->fseek(0);
 
         return $this->getDocument()->fread($this->getDocument()->getSize());
+    }
+
+    protected function getOpenMode(): string
+    {
+        return 'w+';
     }
 }

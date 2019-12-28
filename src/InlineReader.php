@@ -11,7 +11,7 @@ class InlineReader extends Reader
         $this->getDocument()->fwrite($data);
     }
 
-    public function getOpenMode(): string
+    protected function getOpenMode(): string
     {
         return 'r+';
     }

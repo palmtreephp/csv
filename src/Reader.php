@@ -29,11 +29,6 @@ class Reader extends AbstractCsvDocument implements \Iterator
     /** @var int */
     private $headerOffset = 0;
 
-    public function getOpenMode(): string
-    {
-        return 'r';
-    }
-
     public static function read(string $filePath, bool $hasHeaders = true): self
     {
         return new self($filePath, $hasHeaders);
@@ -241,5 +236,10 @@ class Reader extends AbstractCsvDocument implements \Iterator
         }
 
         return $result;
+    }
+
+    protected function getOpenMode(): string
+    {
+        return 'r';
     }
 }

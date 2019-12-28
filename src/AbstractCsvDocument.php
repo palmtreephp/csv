@@ -29,7 +29,7 @@ abstract class AbstractCsvDocument
         $this->closeDocument();
     }
 
-    abstract public function getOpenMode(): string;
+    abstract protected function getOpenMode(): string;
 
     /**
      * Closes the document by setting our reference to null to ensure its destructor is called.
