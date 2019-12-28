@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 class ArrayNormalizerTest extends TestCase
 {
-    public function testNormalizerReturnsArray()
+    public function testNormalizerReturnsArray(): void
     {
         $normalizer = new ArrayNormalizer(new NumberNormalizer(), ',');
 

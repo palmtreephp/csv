@@ -12,31 +12,41 @@ class StringUtil
 
     /**
      * Returns whether the given string starts with the given Byte Order Mark.
-     *
-     * @param string $input
-     * @param string $bom
-     *
-     * @return bool
      */
-    public static function hasBom($input, $bom)
+    public static function hasBom(string $input, string $bom): bool
     {
         return \strpos($input, $bom) === 0;
     }
 
     /**
      * Strips a Byte Order Mark from the beginning of a string if it is present.
-     *
-     * @param string $input Data to be stripped of its BOM.
-     * @param string $bom
-     *
-     * @return string The stripped input string.
      */
-    public static function stripBom($input, $bom)
+    public static function stripBom(string $input, string $bom): string
     {
         if (self::hasBom($input, $bom)) {
             return \substr($input, \strlen($bom));
         }
 
         return $input;
+    }
+
+    /**
+     * Escapes the enclosure character recursively.
+     * RFC-4180 states the enclosure character (usually double quotes) should be
+     * escaped by itself, so " becomes "".
+     *
+     * @see https://tools.ietf.org/html/rfc4180#section-2
+     */
+    public static function escapeEnclosure(array $data, string $enclosure): array
+    {
+        foreach ($data as $key => $value) {
+            if (\is_array($value)) {
+                $data[$key] = self::escapeEnclosure($value, $enclosure);
+            } else {
+                $data[$key] = \str_replace($enclosure, \str_repeat($enclosure, 2), $value);
+            }
+        }
+
+        return $data;
     }
 }

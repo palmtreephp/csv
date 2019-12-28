@@ -8,30 +8,34 @@ use PHPUnit\Framework\TestCase;
 
 class RowTest extends TestCase
 {
-    public function testRowArrayAccess()
+    public function testRowArrayAccess(): void
     {
-        $reader = new Reader('php://memory', false);
+        $reader = new Reader('php://memory');
 
         $row = new Row(['foo', 'bar'], $reader);
 
         $this->assertEquals('bar', $row[1]);
     }
 
-    public function testRowCounting()
+    public function testRowIsCountable(): void
     {
-        $reader = new Reader('php://memory', false);
+        $reader = new Reader('php://memory');
 
         $row = new Row(['foo', 'bar'], $reader);
 
         $this->assertCount(2, $row);
     }
 
-    public function testRowIsTraversable()
+    public function testRowIsTraversable(): void
     {
-        $reader = new Reader('php://memory', false);
+        $reader = new Reader('php://memory');
 
         $row = new Row(['foo', 'bar'], $reader);
 
-        $this->assertInstanceOf(\Traversable::class, $row);
+        $this->assertInstanceOf('Traversable', $row);
+
+        foreach ($row as $i => $cell) {
+            $this->assertSame($i ? 'bar' : 'foo', $cell->getValue());
+        }
     }
 }

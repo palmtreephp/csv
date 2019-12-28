@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 class CellTest extends TestCase
 {
-    public function testCellFormatting()
+    public function testCellFormatting(): void
     {
         $cell = new Cell('1', new NumberNormalizer());
         $this->assertSame(1, $cell->getValue());

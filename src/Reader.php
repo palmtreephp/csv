@@ -10,15 +10,15 @@ use Palmtree\Csv\Util\StringUtil;
 /**
  * Reads a CSV file by loading each line into memory one at a time.
  */
-class Reader extends AbstractCsv implements \Iterator
+class Reader extends AbstractCsvDocument implements \Iterator
 {
     /** @var string */
     private $defaultNormalizer = NullNormalizer::class;
-    /** @var NormalizerInterface */
+    /** @var NormalizerInterface|null */
     private $headerNormalizer;
     /** @var NormalizerInterface[] */
     private $normalizers = [];
-    /** @var Row */
+    /** @var Row|null */
     private $headers;
     /** @var Row */
     private $row;
@@ -29,38 +29,14 @@ class Reader extends AbstractCsv implements \Iterator
     /** @var int */
     private $headerOffset = 0;
 
-    public function __construct($file, $hasHeaders = true, $delimiter = ',', $enclosure = '"', $escape = "\0")
+    public static function read(string $filePath, bool $hasHeaders = true): self
     {
-        $this->headerNormalizer = new NullNormalizer();
-        parent::__construct($file, $hasHeaders, $delimiter, $enclosure, $escape);
+        return new self($filePath, $hasHeaders);
     }
 
-    /**
-     * @return string
-     */
-    public function getOpenMode()
+    public function getHeaders(): ?Row
     {
-        return 'r';
-    }
-
-    /**
-     * @param string $file
-     *
-     * @return self
-     */
-    public static function read($file)
-    {
-        $csv = new static($file);
-
-        return $csv;
-    }
-
-    /**
-     * @return Row
-     */
-    public function getHeaders()
-    {
-        if (null === $this->headers && $this->hasHeaders) {
+        if ($this->hasHeaders && $this->headers === null) {
             $this->rewind();
         }
 
@@ -68,48 +44,39 @@ class Reader extends AbstractCsv implements \Iterator
     }
 
     /**
-     * @param $key
+     * @param string|int $key
      *
-     * @return mixed
+     * @return string|int
      */
     public function getHeader($key)
     {
-        if (!isset($this->headers[$key])) {
-            return $key;
-        }
-
-        return $this->headers[$key];
+        return $this->headers[$key] ?? $key;
     }
 
-    /**
-     * @return self
-     */
-    public function setHeaderNormalizer(NormalizerInterface $headerNormalizer)
+    public function setHeaderNormalizer(NormalizerInterface $headerNormalizer): self
     {
         $this->headerNormalizer = $headerNormalizer;
 
         return $this;
     }
 
-    /**
-     * @param mixed               $key
-     * @param NormalizerInterface $normalizer
-     *
-     * @return self
-     */
-    public function addNormalizer($key, NormalizerInterface $normalizer)
+    public function getHeaderNormalizer(): NormalizerInterface
+    {
+        if ($this->headerNormalizer === null) {
+            $this->headerNormalizer = new NullNormalizer();
+        }
+
+        return $this->headerNormalizer;
+    }
+
+    public function addNormalizer(string $key, NormalizerInterface $normalizer): self
     {
         $this->normalizers[$key] = $normalizer;
 
         return $this;
     }
 
-    /**
-     * @param iterable $normalizers
-     *
-     * @return self
-     */
-    public function addNormalizers($normalizers)
+    public function addNormalizers(iterable $normalizers): self
     {
         foreach ($normalizers as $key => $normalizer) {
             $this->addNormalizer($key, $normalizer);
@@ -119,14 +86,12 @@ class Reader extends AbstractCsv implements \Iterator
     }
 
     /**
-     * @param mixed $key
-     *
-     * @return NormalizerInterface
+     * @param string|int $key
      */
-    public function getNormalizer($key)
+    public function getNormalizer($key): NormalizerInterface
     {
         if ($this->hasHeaders && \is_int($key)) {
-            $this->normalizers[$key] = $this->headerNormalizer;
+            $this->normalizers[$key] = $this->getHeaderNormalizer();
         }
 
         if (!isset($this->normalizers[$key])) {
@@ -140,10 +105,8 @@ class Reader extends AbstractCsv implements \Iterator
 
     /**
      * Reads the next line in the CSV file and returns a Row object from it.
-     *
-     * @return Row|null
      */
-    protected function getCurrentRow()
+    private function getCurrentRow(): ?Row
     {
         $cells = $this->getDocument()->current();
 
@@ -165,7 +128,7 @@ class Reader extends AbstractCsv implements \Iterator
     /**
      * @inheritDoc
      */
-    public function current()
+    public function current(): Row
     {
         return $this->row;
     }
@@ -173,7 +136,7 @@ class Reader extends AbstractCsv implements \Iterator
     /**
      * @inheritDoc
      */
-    public function next()
+    public function next(): void
     {
         $this->getDocument()->next();
     }
@@ -181,7 +144,7 @@ class Reader extends AbstractCsv implements \Iterator
     /**
      * @inheritDoc
      */
-    public function key()
+    public function key(): int
     {
         return $this->getDocument()->key();
     }
@@ -189,7 +152,7 @@ class Reader extends AbstractCsv implements \Iterator
     /**
      * @inheritDoc
      */
-    public function valid()
+    public function valid(): bool
     {
         $this->row = $this->getCurrentRow();
 
@@ -199,7 +162,7 @@ class Reader extends AbstractCsv implements \Iterator
     /**
      * @inheritDoc
      */
-    public function rewind()
+    public function rewind(): void
     {
         $this->getDocument()->rewind();
 
@@ -222,88 +185,61 @@ class Reader extends AbstractCsv implements \Iterator
         }
     }
 
-    /**
-     * @param string $defaultNormalizer
-     *
-     * @return self
-     */
-    public function setDefaultNormalizer($defaultNormalizer)
+    public function setDefaultNormalizer(string $defaultNormalizer): self
     {
         $this->defaultNormalizer = $defaultNormalizer;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getDefaultNormalizer()
+    public function getDefaultNormalizer(): string
     {
         return $this->defaultNormalizer;
     }
 
-    /**
-     * @param string|null $stripBom
-     *
-     * @return self
-     */
-    public function setStripBom($stripBom)
+    public function setStripBom(?string $stripBom): self
     {
         $this->stripBom = $stripBom;
 
         return $this;
     }
 
-    /**
-     * @param int $offset
-     *
-     * @return self
-     */
-    public function setOffset($offset)
+    public function setOffset(int $offset): self
     {
         $this->offset = $offset;
 
         return $this;
     }
 
-    /**
-     * @return int
-     */
-    public function getOffset()
+    public function getOffset(): int
     {
         return $this->offset;
     }
 
-    /**
-     * @param int $headerOffset
-     *
-     * @return self
-     */
-    public function setHeaderOffset($headerOffset)
+    public function setHeaderOffset(int $headerOffset): self
     {
         $this->headerOffset = $headerOffset;
 
         return $this;
     }
 
-    /**
-     * @return int
-     */
-    public function getHeaderOffset()
+    public function getHeaderOffset(): int
     {
         return $this->headerOffset;
     }
 
-    /**
-     * @return array
-     */
-    public function toArray()
+    public function toArray(): array
     {
         $result = [];
-        foreach ($this as $rowKey => $row) {
-            $result[$rowKey] = $row->toArray();
+        foreach ($this as $row) {
+            $result[] = $row->toArray();
         }
 
         return $result;
+    }
+
+    protected function getOpenMode(): string
+    {
+        return 'r';
     }
 }

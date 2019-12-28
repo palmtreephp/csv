@@ -10,7 +10,7 @@ class NullNormalizer implements NormalizerInterface
     /**
      * @inheritdoc
      */
-    public function normalize($value)
+    public function normalize(string $value): string
     {
         return $value;
     }

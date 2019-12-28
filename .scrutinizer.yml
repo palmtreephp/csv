@@ -1,0 +1,33 @@
+checks:
+    php: true
+filter:
+    excluded_paths:
+        - 'examples/'
+        - 'tests/'
+tools:
+    php_loc:
+        enabled: true
+        excluded_dirs: [tests, vendor]
+    php_cpd:
+        enabled: true
+    php_sim:
+        enabled: true
+build:
+    environment:
+        php: '7.4'
+        postgresql: false
+        redis: false
+    cache:
+        directories:
+            - 'vendor/'
+            - '~/.composer/cache/files'
+    tests:
+        override:
+            -
+                command: 'vendor/bin/phpunit --coverage-clover=coverage'
+                coverage:
+                    file: 'coverage'
+                    format: 'clover'
+            - php-scrutinizer-run
+            -
+                command: 'vendor/bin/php-cs-fixer fix -v --dry-run --stop-on-violation --using-cache=no --diff --diff-format=udiff'

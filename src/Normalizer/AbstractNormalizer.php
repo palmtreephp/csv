@@ -7,22 +7,20 @@ abstract class AbstractNormalizer implements NormalizerInterface
     /** @var NormalizerInterface|null */
     protected $normalizer;
 
-    public function __construct(NormalizerInterface $normalizer = null)
+    public function __construct(?NormalizerInterface $normalizer = null)
     {
         $this->setNormalizer($normalizer);
     }
 
     /**
-     * @param string $value
-     *
      * @return mixed
      */
-    abstract protected function getNormalizedValue($value);
+    abstract protected function getNormalizedValue(string $value);
 
     /**
      * @inheritdoc
      */
-    public function normalize($value)
+    public function normalize(string $value)
     {
         if ($this->normalizer) {
             $value = $this->normalizer->normalize($value);
@@ -33,20 +31,14 @@ abstract class AbstractNormalizer implements NormalizerInterface
         return $value;
     }
 
-    /**
-     * @return self
-     */
-    public function setNormalizer(NormalizerInterface $normalizer = null)
+    public function setNormalizer(?NormalizerInterface $normalizer = null): self
     {
         $this->normalizer = $normalizer;
 
         return $this;
     }
 
-    /**
-     * @return NormalizerInterface
-     */
-    public function getNormalizer()
+    public function getNormalizer(): ?NormalizerInterface
     {
         return $this->normalizer;
     }

@@ -5,19 +5,14 @@ namespace Palmtree\Csv;
 /**
  * Writes an array to a CSV file.
  */
-class Writer extends AbstractCsv
+class Writer extends AbstractCsvDocument
 {
     /** @var array */
     private $headers = [];
 
-    public function getOpenMode()
+    public static function write(string $filePath, array $data): void
     {
-        return 'w+';
-    }
-
-    public static function write($file, $data)
-    {
-        $writer = new static($file);
+        $writer = new self($filePath);
         $writer->setData($data);
         $writer->closeDocument();
     }
@@ -27,10 +22,8 @@ class Writer extends AbstractCsv
      * then closes the file handle.
      *
      * Uses the first row's keys as headers.
-     *
-     * @return self
      */
-    public function setData(array $data)
+    public function setData(array $data): self
     {
         if ($this->hasHeaders) {
             $this->setHeaders(\array_keys(\reset($data)));
@@ -41,13 +34,8 @@ class Writer extends AbstractCsv
         return $this;
     }
 
-    /**
-     * @return self
-     */
-    public function setHeaders(array $headers)
+    public function setHeaders(array $headers): self
     {
-        $this->createDocument();
-
         $this->headers = $headers;
 
         $this->addRow($this->headers);
@@ -55,12 +43,7 @@ class Writer extends AbstractCsv
         return $this;
     }
 
-    /**
-     * @param string $header
-     *
-     * @return self
-     */
-    public function addHeader($header)
+    public function addHeader(string $header): self
     {
         $headers = $this->headers;
 
@@ -74,7 +57,7 @@ class Writer extends AbstractCsv
     /**
      * Adds multiple rows of data to the CSV file.
      */
-    public function addRows(array $rows)
+    public function addRows(array $rows): void
     {
         foreach ($rows as $row) {
             $this->addRow($row);
@@ -88,11 +71,11 @@ class Writer extends AbstractCsv
      *
      * @return bool Whether the row was written to the file.
      */
-    public function addRow(array $row)
+    public function addRow(array $row): bool
     {
         $result = $this->getDocument()->fwriteCsv($row);
 
-        if ($result === false) {
+        if ($result === 0) {
             // @todo: handle error
             return false;
         }
@@ -100,14 +83,22 @@ class Writer extends AbstractCsv
         return true;
     }
 
-    /**
-     * @return string
-     */
-    public function getContents()
+    public function getContents(): string
     {
         $this->getDocument()->trimFinalLineEnding();
         $this->getDocument()->fseek(0);
 
-        return $this->getDocument()->fread($this->getDocument()->getSize());
+        $data = $this->getDocument()->fread($this->getDocument()->getSize());
+
+        if ($data === false) {
+            return '';
+        }
+
+        return $data;
+    }
+
+    protected function getOpenMode(): string
+    {
+        return 'w+';
     }
 }

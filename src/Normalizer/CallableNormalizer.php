@@ -14,33 +14,25 @@ class CallableNormalizer extends AbstractNormalizer
         parent::__construct($normalizer);
     }
 
-    /**
-     * @return self
-     */
-    public function setCallback(callable $callback)
+    public function setCallback(callable $callback): self
     {
         $this->callback = $callback;
 
         return $this;
     }
 
-    /**
-     * @return callable
-     */
-    public function getCallback()
+    public function getCallback(): callable
     {
         return $this->callback;
     }
 
     /**
-     * @param $value
-     *
      * @return mixed
      */
-    protected function getNormalizedValue($value)
+    protected function getNormalizedValue(string $value)
     {
-        $value = \call_user_func($this->getCallback(), $value, $this);
+        $callback = $this->callback;
 
-        return $value;
+        return $callback($value, $this);
     }
 }

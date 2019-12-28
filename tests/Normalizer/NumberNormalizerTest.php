@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
 
 class NumberNormalizerTest extends TestCase
 {
-    public function testNormalizerReturnsNumber()
+    public function testNormalizerReturnsNumber(): void
     {
         $normalizer = new NumberNormalizer();
 
@@ -16,7 +16,7 @@ class NumberNormalizerTest extends TestCase
         $this->assertSame(123, $value);
     }
 
-    public function testFloats()
+    public function testFloats(): void
     {
         $normalizer = new NumberNormalizer();
 
@@ -25,7 +25,7 @@ class NumberNormalizerTest extends TestCase
         $this->assertSame(1.234, $value);
     }
 
-    public function testIntegers()
+    public function testIntegers(): void
     {
         $normalizer = new NumberNormalizer();
 
@@ -34,9 +34,10 @@ class NumberNormalizerTest extends TestCase
         $this->assertSame(100, $value);
     }
 
-    public function testRounding()
+    public function testRounding(): void
     {
-        $normalizer = new NumberNormalizer(null, 2);
+        $normalizer = new NumberNormalizer(null);
+        $normalizer->setDecimals(2);
 
         $value = $normalizer->normalize(M_PI);
 

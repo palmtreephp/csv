@@ -9,65 +9,37 @@ namespace Palmtree\Csv\Normalizer;
 class StringNormalizer extends AbstractNormalizer
 {
     /** @var bool */
-    private $trim;
+    private $trim = true;
     /** @var string */
-    private $trimCharMask;
+    private $trimCharMask = " \t\n\r\0\x0B";
 
-    /**
-     * @param bool   $trim
-     * @param string $trimCharMask
-     */
-    public function __construct(NormalizerInterface $normalizer = null, $trim = true, $trimCharMask = " \t\n\r\0\x0B")
+    public function setTrim(bool $trim): self
     {
-        parent::__construct($normalizer);
-
-        $this->setTrim($trim)
-             ->setTrimCharMask($trimCharMask);
-    }
-
-    /**
-     * @param bool $trim
-     *
-     * @return self
-     */
-    public function setTrim($trim)
-    {
-        $this->trim = (bool)$trim;
+        $this->trim = $trim;
 
         return $this;
     }
 
-    /**
-     * @param string|null $trimCharMask
-     *
-     * @return self
-     */
-    public function setTrimCharMask($trimCharMask)
+    public function setTrimCharMask(string $trimCharMask): self
     {
         $this->trimCharMask = $trimCharMask;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getTrimCharMask()
+    public function getTrimCharMask(): string
     {
         return $this->trimCharMask;
     }
 
-    /**
-     * @return bool
-     */
-    public function shouldTrim()
+    public function shouldTrim(): bool
     {
         return $this->trim;
     }
 
-    protected function getNormalizedValue($value)
+    protected function getNormalizedValue(string $value): string
     {
-        if ($this->shouldTrim()) {
+        if ($this->trim) {
             $value = \trim($value, $this->getTrimCharMask());
         }
 

@@ -5,40 +5,22 @@ namespace Palmtree\Csv\Normalizer;
 class DateTimeNormalizer extends AbstractNormalizer
 {
     /** @var string */
-    private $format;
+    private $format = 'Y-m-d';
 
-    /**
-     * @param string $format
-     */
-    public function __construct(NormalizerInterface $normalizer = null, $format = 'Y-m-d')
-    {
-        parent::__construct($normalizer);
-
-        $this->setFormat($format);
-    }
-
-    /**
-     * @param string $format
-     *
-     * @return self
-     */
-    public function setFormat($format)
+    public function setFormat(string $format): self
     {
         $this->format = $format;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getFormat()
+    public function getFormat(): string
     {
         return $this->format;
     }
 
-    protected function getNormalizedValue($value)
+    protected function getNormalizedValue(string $value): ?\DateTime
     {
-        return \DateTime::createFromFormat($this->getFormat(), $value);
+        return \DateTime::createFromFormat($this->getFormat(), $value) ?: null;
     }
 }

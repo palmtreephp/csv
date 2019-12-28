@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
 
 class StringNormalizerTest extends TestCase
 {
-    public function testNormalizerTrimsStrings()
+    public function testNormalizerTrimsStrings(): void
     {
         $normalizer = new StringNormalizer();
         $normalizer->setTrim(true);
@@ -17,7 +17,7 @@ class StringNormalizerTest extends TestCase
         $this->assertSame('foo bar baz', $value);
     }
 
-    public function testNormalizerDoesNotTrimStrings()
+    public function testNormalizerDoesNotTrimStrings(): void
     {
         $normalizer = new StringNormalizer();
         $normalizer->setTrim(false);

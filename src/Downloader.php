@@ -8,7 +8,7 @@ class Downloader extends Writer
      * Default headers used to tell client the response is a downloadable,
      * non-cacheable file.
      *
-     * @var array
+     * @var array<string, string>
      */
     private $responseHeaders = [
         'Content-Type'              => 'text/csv',
@@ -22,29 +22,27 @@ class Downloader extends Writer
     /** @var string */
     private $filename;
 
-    public function __construct($filename, $responseHeaders = [])
+    public function __construct(string $filename, iterable $responseHeaders = [])
     {
         $this->setFilename($filename);
 
-        $this->addResponseHeader('Content-Disposition', \sprintf('attachment; filename="%s"', $this->getFilename()));
         $this->addResponseHeaders($responseHeaders);
+        $this->addResponseHeader('Content-Disposition', \sprintf('attachment; filename="%s"', $this->getFilename()));
 
         parent::__construct('php://temp');
     }
 
-    public static function download($file, $data)
+    public static function download(string $filename, array $data): void
     {
-        $downloader = new static($file);
+        $downloader = new self($filename);
         $downloader->setData($data);
         $downloader->sendResponse();
     }
 
     /**
      * Attempts to send the file as a download to the client.
-     *
-     * @throws \Exception
      */
-    public function sendResponse()
+    public function sendResponse(): void
     {
         $this->getDocument()->trimFinalLineEnding();
 
@@ -52,7 +50,7 @@ class Downloader extends Writer
             \header(\sprintf('Content-Length: %s', $this->getDocument()->getSize()));
 
             foreach ($this->getResponseHeaders() as $key => $value) {
-                \header(\sprintf('%s: %s', $key, $value));
+                \header("$key: $value");
             }
         }
 
@@ -60,12 +58,12 @@ class Downloader extends Writer
         $this->getDocument()->fpassthru();
     }
 
-    public function getResponseHeaders()
+    public function getResponseHeaders(): array
     {
         return $this->responseHeaders;
     }
 
-    public function addResponseHeaders($headers = [])
+    public function addResponseHeaders(iterable $headers = []): self
     {
         foreach ($headers as $key => $value) {
             $this->addResponseHeader($key, $value);
@@ -74,30 +72,22 @@ class Downloader extends Writer
         return $this;
     }
 
-    public function addResponseHeader($key, $value)
+    public function addResponseHeader(string $key, string $value): void
     {
         $this->responseHeaders[$key] = $value;
     }
 
-    public function removeResponseHeader($key)
+    public function removeResponseHeader(string $key): void
     {
         unset($this->responseHeaders[$key]);
     }
 
-    /**
-     * @return string
-     */
-    public function getFilename()
+    public function getFilename(): string
     {
         return $this->filename;
     }
 
-    /**
-     * @param string $filename
-     *
-     * @return Downloader
-     */
-    public function setFilename($filename)
+    public function setFilename(string $filename): self
     {
         $this->filename = $filename;
 
