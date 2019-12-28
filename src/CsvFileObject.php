@@ -2,6 +2,8 @@
 
 namespace Palmtree\Csv;
 
+use Palmtree\Csv\Util\StringUtil;
+
 class CsvFileObject extends \SplFileObject
 {
     /** @var int */
@@ -9,13 +11,9 @@ class CsvFileObject extends \SplFileObject
     /** @var string */
     private $lineEnding = "\r\n";
 
-    public function fwriteCsv(array $row)
+    public function fwriteCsv(array $row): int
     {
         $bytes = $this->fwrite($this->getCsvString($row));
-
-        if ($bytes === false) {
-            return false;
-        }
 
         $this->bytesWritten += $bytes;
 
@@ -83,32 +81,8 @@ class CsvFileObject extends \SplFileObject
         list($delimiter, $enclosure) = $this->getCsvControl();
 
         return $enclosure .
-               \implode($enclosure . $delimiter . $enclosure, self::escapeEnclosure($row, $enclosure)) .
+               \implode($enclosure . $delimiter . $enclosure, StringUtil::escapeEnclosure($row, $enclosure)) .
                $enclosure .
                $this->lineEnding;
-    }
-
-    /**
-     * Escapes the enclosure character recursively.
-     * RFC-4180 states the enclosure character (usually double quotes) should be
-     * escaped by itself, so " becomes "".
-     *
-     * @link https://tools.ietf.org/html/rfc4180#section-2
-     *
-     * @param array|string $data Array or string of data to escape.
-     *
-     * @return array|string Escaped data.
-     */
-    private static function escapeEnclosure($data, string $enclosure)
-    {
-        if (\is_array($data)) {
-            foreach ($data as $key => $value) {
-                $data[$key] = self::escapeEnclosure($value, $enclosure);
-            }
-        } else {
-            $data = \str_replace($enclosure, \str_repeat($enclosure, 2), $data);
-        }
-
-        return $data;
     }
 }
