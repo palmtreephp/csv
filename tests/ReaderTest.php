@@ -12,7 +12,7 @@ class ReaderTest extends TestCase
     {
         $this->expectException('RuntimeException');
         $reader = new Reader('foo.bar');
-        $reader->createDocument();
+        $reader->getDocument();
     }
 
     public function testMultipleIterations(): void
@@ -20,7 +20,7 @@ class ReaderTest extends TestCase
         $reader = new Reader(__DIR__ . '/fixtures/products.csv');
 
         $asserted = false;
-        foreach ($reader as $row) {
+        foreach ($reader as $key => $row) {
             if (!$asserted) {
                 $this->assertArrayHasKey('product_id', $row);
                 $asserted = true;
@@ -90,7 +90,7 @@ class ReaderTest extends TestCase
 
     public function testUsingTabAsDelimiter(): void
     {
-        $reader = new Reader(__DIR__ . '/fixtures/tabs.tsv');
+        $reader = new Reader(__DIR__ . '/fixtures/tab-delimiter.tsv');
         $reader->setHasHeaders(false);
         $reader->setDelimiter("\t");
 
