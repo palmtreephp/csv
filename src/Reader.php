@@ -236,8 +236,8 @@ class Reader extends AbstractCsvDocument implements \Iterator
     public function toArray(): array
     {
         $result = [];
-        foreach ($this as $rowKey => $row) {
-            $result[$rowKey] = $row->toArray();
+        foreach ($this as $row) {
+            $result[] = $row->toArray();
         }
 
         return $result;
