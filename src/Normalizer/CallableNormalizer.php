@@ -2,12 +2,15 @@
 
 namespace Palmtree\Csv\Normalizer;
 
+/**
+ * @method static CallableNormalizer create(callable $callback, ?NormalizerInterface $normalizer = null)
+ */
 class CallableNormalizer extends AbstractNormalizer
 {
     /** @var callable */
     private $callback;
 
-    public function __construct(callable $callback, NormalizerInterface $normalizer = null)
+    public function __construct(callable $callback, ?NormalizerInterface $normalizer = null)
     {
         $this->setCallback($callback);
 

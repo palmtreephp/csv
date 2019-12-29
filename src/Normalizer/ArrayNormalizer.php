@@ -9,7 +9,7 @@ class ArrayNormalizer extends AbstractNormalizer
     /** @var StringNormalizer */
     private $stringNormalizer;
 
-    public function __construct(NormalizerInterface $normalizer = null)
+    public function __construct(?NormalizerInterface $normalizer = null)
     {
         $this->stringNormalizer = new StringNormalizer();
         $this->stringNormalizer->setTrimCharMask($this->stringNormalizer->getTrimCharMask() . $this->delimiter);

@@ -25,7 +25,7 @@ class BooleanNormalizer extends AbstractNormalizer
     /** @var bool */
     private $caseSensitive = false;
 
-    public function __construct(NormalizerInterface $normalizer = null)
+    public function __construct(?NormalizerInterface $normalizer = null)
     {
         $this->setPairs(self::$defaultPairs);
 

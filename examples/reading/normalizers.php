@@ -16,9 +16,9 @@ $csv->addNormalizers([
     'enabled'             => Normalizer\BooleanNormalizer::create()->setPairs(['yes' => 'no']),
     'related_product_ids' => new Normalizer\ArrayNormalizer(new Normalizer\NumberNormalizer()),
     'description'         => new Normalizer\HtmlNormalizer(),
-    'specials'            => new Normalizer\CallableNormalizer(function (string $value) {
+    'specials'            => Normalizer\CallableNormalizer::create(function (string $value) {
         return \json_decode($value);
-    }),
+    }, Normalizer\BooleanNormalizer::create()),
 ]);
 
 /**
