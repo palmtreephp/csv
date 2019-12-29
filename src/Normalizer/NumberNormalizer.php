@@ -10,6 +10,9 @@ class NumberNormalizer extends AbstractNormalizer
     /** @var int|null */
     private $decimals;
 
+    /**
+     * Sets the amount of decimal places to round to. Defaults to null which performs no rounding.
+     */
     public function setDecimals(?int $decimals = null): self
     {
         $this->decimals = $decimals;

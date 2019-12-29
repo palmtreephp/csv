@@ -21,6 +21,6 @@ class DateTimeNormalizer extends AbstractNormalizer
 
     protected function getNormalizedValue(string $value): ?\DateTime
     {
-        return \DateTime::createFromFormat($this->getFormat(), $value) ?: null;
+        return \DateTime::createFromFormat($this->format, $value) ?: null;
     }
 }

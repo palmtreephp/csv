@@ -34,11 +34,13 @@ if (!ini_get('auto_detect_line_endings')) {
 }
 ```
 
-This is because Macs used to use `\r` as a line separator. See [here](http://php.net/manual/en/function.fgetcsv.php#refsect1-function.fgetcsv-returnvalues) for more details
+This is because Macs used to use `\r` as a line separator. See [here](http://php.net/manual/en/function.fgetcsv.php#refsect1-function.fgetcsv-returnvalues) for more details.
 
 ## Usage
 
-#### Read a CSV file
+### Reading
+
+#### Reading from a CSV File
 ```php
 <?php
 use Palmtree\Csv\Reader;
@@ -46,11 +48,14 @@ use Palmtree\Csv\Reader;
 $csv = new Reader('people.csv');
 
 foreach($csv as $row) {
-	echo "{$row['name']} is a {$row['age']} year old {$row['gender']}";
+    $name = $row['name'];
+    if(isset($row['age'])) {
+        echo "age is set!";
+    }
 }
 ```
 
-#### Normalize data types
+#### Normalize Data Types
 
 A number of different normalizers can be used to convert data from strings into certain data types.
 Below is contrived example using all currently bundled normalizers:
@@ -59,45 +64,38 @@ Below is contrived example using all currently bundled normalizers:
 use Palmtree\Csv\Reader;
 use Palmtree\Csv\Normalizer as Normalizer;
 
-$csv = new Reader(__DIR__ . '/../products.csv');
-
-// Create a NumberNormalizer instance which rounds to 0 decimals
-$integerNormalizer = (new Normalizer\NumberNormalizer())->setDecimals(0);
+$csv = new Reader('/path/to/products.csv');
 
 $csv->addNormalizers([
      // Convert to integer
-    'product_id'          => $integerNormalizer,
+    'product_id'          => new Normalizer\NumberNormalizer(),
 
     // Keep data as string but trim it
     'name'                => new Normalizer\StringNormalizer(),
 
-     // Convert to float
-    'price'               => (new Normalizer\NumberNormalizer())->setDecimals(4),
-
-     // Convert to integer
-    'quantity'            => $integerNormalizer,
+     // Convert to float, rounded to 4 decimal places
+    'price'               => Normalizer\NumberNormalizer::create()->setDecimals(4),
 
     // Convert to boolean true or false
     'enabled'             => new Normalizer\BooleanNormalizer(),
 
     // Convert to an array of numbers
-    'related_product_ids' => new Normalizer\ArrayNormalizer($integerNormalizer),
+    'related_product_ids' => new Normalizer\ArrayNormalizer(new Normalizer\NumberNormalizer()),
 
     // Custom conversion with a callback
-    'specials'            => new Normalizer\CallableNormalizer(function ($value) {
-        return json_decode($value, true);
+    'specials'            => new Normalizer\CallableNormalizer(function (string $value) {
+        return \json_decode($value);
     }),
 ]);
 ```
 
 #### No Headers
-If your CSV contains no headers:
+If your CSV contains no headers pass `false` as the second argument to the constructor:
 
 ```php
 <?php
 use Palmtree\Csv\Reader;
 
-// Pass `false` as the second constructor argument to treat the first row as data
 $csv = new Reader('people.csv', false);
 
 // Alternatively, call the setHasHeaders() method after instantiation:
@@ -105,7 +103,19 @@ $csv = new Reader('people.csv', false);
 
 ```
 
-#### Build and Download a CSV file
+#### Inline Reading
+
+You may use the `InlineReader` to parse a CSV string rather than a file, if it was obtained from an API call or some other means:
+
+
+```php
+<?php
+$csv = new \Palmtree\Csv\InlineReader('"header_1","header_2"' . "\r\n" . '"foo","bar"');
+```
+
+### Writing
+
+#### Build and Download a CSV File
 ```php
 <?php
 use Palmtree\Csv\Downloader;
@@ -122,10 +132,10 @@ $people[] = [
     'gender' => 'Male',
 ];
 
-Downloader::download('people.csv', $people);
+Downloader::download('filename.csv', $people);
 ```
 
-#### Write a CSV file
+#### Writing to a CSV File
 
 ```php
 <?php
@@ -144,7 +154,7 @@ $people[] = [
 ];
 
 
-Writer::write('people.csv', $people);
+Writer::write('/path/to/output.csv', $people);
 ```
 
 See the [examples](examples) directory for more usage examples.
@@ -158,7 +168,7 @@ You can access the document object to change the CSV delimiter, enclosure and es
 <?php
 use Palmtree\Csv\Reader;
 
-$csv = new Reader('people.csv');
+$csv = new Reader('/path/to/input.csv');
 
 $csv->setDelimiter("\t");
 $csv->setEnclosure('"');
@@ -172,7 +182,7 @@ CSVs default to `\r\n` line endings. Access the document object if you need to c
 <?php
 use Palmtree\Csv\Writer;
 
-$csv = new Writer('people.csv');
+$csv = new Writer('/path/to/output.csv');
 $csv->getDocument()->setLineEnding("\n");
 ```
 
@@ -184,7 +194,7 @@ The document object extends PHP's [SplFileObject](http://php.net/manual/en/class
 <?php
 use Palmtree\Csv\Reader;
 
-$csv = new Reader('people.csv');
+$csv = new Reader('/path/to/input.csv');
 $csv->getDocument()->setFlags(\SplFileObject::DROP_NEW_LINE);
 ```
 

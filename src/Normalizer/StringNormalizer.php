@@ -13,6 +13,9 @@ class StringNormalizer extends AbstractNormalizer
     /** @var string */
     private $trimCharMask = " \t\n\r\0\x0B";
 
+    /**
+     * Sets whether the string should be trimmed. Defaults to true.
+     */
     public function setTrim(bool $trim): self
     {
         $this->trim = $trim;
@@ -20,6 +23,9 @@ class StringNormalizer extends AbstractNormalizer
         return $this;
     }
 
+    /**
+     * Sets the character mask passed to trim(). Defaults to the mask used by trim itself.
+     */
     public function setTrimCharMask(string $trimCharMask): self
     {
         $this->trimCharMask = $trimCharMask;
@@ -40,7 +46,7 @@ class StringNormalizer extends AbstractNormalizer
     protected function getNormalizedValue(string $value): string
     {
         if ($this->trim) {
-            $value = \trim($value, $this->getTrimCharMask());
+            $value = \trim($value, $this->trimCharMask);
         }
 
         return $value;

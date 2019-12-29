@@ -5,14 +5,12 @@ namespace Palmtree\Csv\Normalizer;
 class ArrayNormalizer extends AbstractNormalizer
 {
     /** @var string */
-    private $delimiter;
+    private $delimiter = ',';
     /** @var StringNormalizer */
     private $stringNormalizer;
 
-    public function __construct(NormalizerInterface $normalizer = null, string $delimiter = ',')
+    public function __construct(NormalizerInterface $normalizer = null)
     {
-        $this->setDelimiter($delimiter);
-
         $this->stringNormalizer = new StringNormalizer();
         $this->stringNormalizer->setTrimCharMask($this->stringNormalizer->getTrimCharMask() . $this->delimiter);
 
@@ -27,7 +25,7 @@ class ArrayNormalizer extends AbstractNormalizer
     protected function getNormalizedValue(string $value)
     {
         $value           = $this->stringNormalizer->normalize($value);
-        $normalizedValue = \explode($this->delimiter, $value) ?: [];
+        $normalizedValue = \explode($this->delimiter, $value) ? : [];
 
         if ($this->normalizer) {
             foreach ($normalizedValue as &$part) {
@@ -38,9 +36,14 @@ class ArrayNormalizer extends AbstractNormalizer
         return $normalizedValue;
     }
 
+    /**
+     * Sets the delimiter to pass to explode(). Defaults to , (comma)
+     */
     public function setDelimiter(string $delimiter): self
     {
         $this->delimiter = $delimiter;
+
+        $this->stringNormalizer->setTrimCharMask($this->stringNormalizer->getTrimCharMask() . $this->delimiter);
 
         return $this;
     }

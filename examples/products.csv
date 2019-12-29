@@ -1,5 +1,5 @@
 "product_id","name","price","quantity","enabled","related_product_ids","specials","description"
-1,"Printer",99.99,2,"yes","3,68,75",,"Words!, Commas! ""quotes"""
+1,"Printer",99.99,2,"yes","3,68,75","{""date_start"":""2019-01-01"",""price"":80}","Words!, Commas! ""quotes"""
 2,"Camera",85,5,"yes",3,,"<b>Test</b>"
 3,"Keyboard",10.49,10,"no","12,43",,
 4,"Phone",599,3,"yes",,,

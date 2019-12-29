@@ -13,6 +13,14 @@ abstract class AbstractNormalizer implements NormalizerInterface
     }
 
     /**
+     * Alternative method of instantiation for chaining.
+     */
+    public static function create(): self
+    {
+        return new static(...\func_get_args());
+    }
+
+    /**
      * @return mixed
      */
     abstract protected function getNormalizedValue(string $value);

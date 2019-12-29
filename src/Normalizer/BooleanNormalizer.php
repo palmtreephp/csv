@@ -74,9 +74,13 @@ class BooleanNormalizer extends AbstractNormalizer
             return $this->values[$value];
         }
 
-        return $this->isNullable() ? null : false;
+        return $this->nullable ? null : false;
     }
 
+    /**
+     * Sets whether a case-sensitive comparison should be made. If this is true, 'Enabled' will not match 'enabled'
+     * and will return false if it is found (or null if isNullable is true). Defaults to false.
+     */
     public function setCaseSensitive(bool $caseSensitive): self
     {
         $this->caseSensitive = $caseSensitive;
@@ -89,6 +93,10 @@ class BooleanNormalizer extends AbstractNormalizer
         return $this->caseSensitive;
     }
 
+    /**
+     * Sets whether the returned value can be null. Defaults to false, meaning any value present that is
+     * not found in the truthy values will return false.
+     */
     public function setNullable(bool $nullable): self
     {
         $this->nullable = $nullable;

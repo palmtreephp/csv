@@ -9,11 +9,17 @@ class HtmlNormalizer extends AbstractNormalizer
     /** @var int */
     private $flags = ENT_QUOTES;
 
+    /**
+     * Returns whether the data will be HTML encoded.
+     */
     public function shouldEncode(): bool
     {
         return $this->encode;
     }
 
+    /**
+     * Sets whether the data should HTML encoded or returned as raw HTML. Defaults to true.
+     */
     public function setEncode(bool $encode): self
     {
         $this->encode = $encode;
@@ -21,6 +27,9 @@ class HtmlNormalizer extends AbstractNormalizer
         return $this;
     }
 
+    /**
+     * Sets the flags that are passed to htmlentities and html_entity_decode. Defaults to ENT_QUOTES.
+     */
     public function setFlags(int $flags): self
     {
         $this->flags = $flags;
@@ -28,6 +37,9 @@ class HtmlNormalizer extends AbstractNormalizer
         return $this;
     }
 
+    /**
+     * Returns the flags that will be passed to htmlentities and html_entity_decode.
+     */
     public function getFlags(): int
     {
         return $this->flags;
@@ -35,10 +47,10 @@ class HtmlNormalizer extends AbstractNormalizer
 
     protected function getNormalizedValue(string $value): string
     {
-        if ($this->shouldEncode()) {
-            $value = \htmlentities($value, $this->getFlags());
+        if ($this->encode) {
+            $value = \htmlentities($value, $this->flags);
         } else {
-            $value = \html_entity_decode($value, $this->getFlags());
+            $value = \html_entity_decode($value, $this->flags);
         }
 
         return $value;
