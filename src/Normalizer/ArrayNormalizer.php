@@ -25,7 +25,7 @@ class ArrayNormalizer extends AbstractNormalizer
     protected function getNormalizedValue(string $value)
     {
         $value           = $this->stringNormalizer->normalize($value);
-        $normalizedValue = \explode($this->delimiter, $value) ? : [];
+        $normalizedValue = \explode($this->delimiter, $value) ?: [];
 
         if ($this->normalizer) {
             foreach ($normalizedValue as &$part) {
@@ -37,7 +37,7 @@ class ArrayNormalizer extends AbstractNormalizer
     }
 
     /**
-     * Sets the delimiter to pass to explode(). Defaults to , (comma)
+     * Sets the delimiter to pass to explode(). Defaults to , (comma).
      */
     public function setDelimiter(string $delimiter): self
     {

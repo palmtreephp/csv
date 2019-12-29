@@ -9,7 +9,7 @@ class MoneyNormalizer extends AbstractNormalizer
 
     /**
      * Sets the format passed to money_format. Defaults to %.2n which formats the number according to the current
-     * locale's national currency format rounded to 2 decimal places. e.g for en_GB: £1,234.56
+     * locale's national currency format rounded to 2 decimal places. e.g for en_GB: £1,234.56.
      */
     public function setMoneyFormat(string $moneyFormat): self
     {
