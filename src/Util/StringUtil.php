@@ -4,11 +4,11 @@ namespace Palmtree\Csv\Util;
 
 class StringUtil
 {
-    const BOM_UTF8     = "\xEF\xBB\xBF";
-    const BOM_UTF16_BE = "\xFE\xFF";
-    const BOM_UTF16_LE = "\xFF\xFE";
-    const BOM_UTF32_BE = "\x00\x00\xFE\xFF";
-    const BOM_UTF32_LE = "\xFF\xFE\x00\x00";
+    public const BOM_UTF8     = "\xEF\xBB\xBF";
+    public const BOM_UTF16_BE = "\xFE\xFF";
+    public const BOM_UTF16_LE = "\xFF\xFE";
+    public const BOM_UTF32_BE = "\x00\x00\xFE\xFF";
+    public const BOM_UTF32_LE = "\xFF\xFE\x00\x00";
 
     /**
      * Returns whether the given string starts with the given Byte Order Mark.
