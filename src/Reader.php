@@ -103,26 +103,47 @@ class Reader extends AbstractCsvDocument implements \Iterator
         return $this->normalizers[$key];
     }
 
-    /**
-     * Reads the next line in the CSV file and returns a Row object from it.
-     */
-    private function getCurrentRow(): ?Row
+    public function setDefaultNormalizer(string $defaultNormalizer): self
     {
-        $cells = $this->getDocument()->current();
+        $this->defaultNormalizer = $defaultNormalizer;
 
-        if (!\is_array($cells) || $cells == [null]) {
-            return null;
-        }
+        return $this;
+    }
 
-        if ($this->key() === 0 && $this->stripBom) {
-            $stripped = StringUtil::stripBom($cells[0], $this->stripBom);
+    public function getDefaultNormalizer(): string
+    {
+        return $this->defaultNormalizer;
+    }
 
-            if ($stripped !== $cells[0]) {
-                $cells[0] = \trim($stripped, $this->enclosure);
-            }
-        }
+    public function setStripBom(?string $stripBom): self
+    {
+        $this->stripBom = $stripBom;
 
-        return new Row($cells, $this);
+        return $this;
+    }
+
+    public function setOffset(int $offset): self
+    {
+        $this->offset = $offset;
+
+        return $this;
+    }
+
+    public function getOffset(): int
+    {
+        return $this->offset;
+    }
+
+    public function setHeaderOffset(int $headerOffset): self
+    {
+        $this->headerOffset = $headerOffset;
+
+        return $this;
+    }
+
+    public function getHeaderOffset(): int
+    {
+        return $this->headerOffset;
     }
 
     /**
@@ -185,49 +206,6 @@ class Reader extends AbstractCsvDocument implements \Iterator
         }
     }
 
-    public function setDefaultNormalizer(string $defaultNormalizer): self
-    {
-        $this->defaultNormalizer = $defaultNormalizer;
-
-        return $this;
-    }
-
-    public function getDefaultNormalizer(): string
-    {
-        return $this->defaultNormalizer;
-    }
-
-    public function setStripBom(?string $stripBom): self
-    {
-        $this->stripBom = $stripBom;
-
-        return $this;
-    }
-
-    public function setOffset(int $offset): self
-    {
-        $this->offset = $offset;
-
-        return $this;
-    }
-
-    public function getOffset(): int
-    {
-        return $this->offset;
-    }
-
-    public function setHeaderOffset(int $headerOffset): self
-    {
-        $this->headerOffset = $headerOffset;
-
-        return $this;
-    }
-
-    public function getHeaderOffset(): int
-    {
-        return $this->headerOffset;
-    }
-
     public function toArray(): array
     {
         $result = [];
@@ -241,5 +219,27 @@ class Reader extends AbstractCsvDocument implements \Iterator
     protected function getOpenMode(): string
     {
         return 'r';
+    }
+
+    /**
+     * Reads the next line in the CSV file and returns a Row object from it.
+     */
+    private function getCurrentRow(): ?Row
+    {
+        $cells = $this->getDocument()->current();
+
+        if (!\is_array($cells) || $cells == [null]) {
+            return null;
+        }
+
+        if ($this->key() === 0 && $this->stripBom) {
+            $stripped = StringUtil::stripBom($cells[0], $this->stripBom);
+
+            if ($stripped !== $cells[0]) {
+                $cells[0] = \trim($stripped, $this->enclosure);
+            }
+        }
+
+        return new Row($cells, $this);
     }
 }
