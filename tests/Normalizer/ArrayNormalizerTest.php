@@ -10,11 +10,20 @@ class ArrayNormalizerTest extends TestCase
 {
     public function testNormalizerReturnsArray(): void
     {
-        $normalizer = new ArrayNormalizer(new NumberNormalizer(), ',');
+        $normalizer = new ArrayNormalizer(new NumberNormalizer());
 
         $value = $normalizer->normalize('1,2,3');
 
-        $this->assertTrue(\is_array($value));
         $this->assertSame([1, 2, 3], $value);
+    }
+
+    public function testDifferentDelimiter(): void
+    {
+        $normalizer = new ArrayNormalizer();
+        $normalizer->setDelimiter('|');
+
+        $value = $normalizer->normalize('1,2,3|4,5,6');
+
+        $this->assertSame(['1,2,3', '4,5,6'], $value);
     }
 }

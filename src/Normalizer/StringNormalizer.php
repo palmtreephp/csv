@@ -10,8 +10,8 @@ class StringNormalizer extends AbstractNormalizer
 {
     /** @var bool */
     private $trim = true;
-    /** @var string */
-    private $trimCharMask = " \t\n\r\0\x0B";
+    /** @var array */
+    private $trimChars = [' ', "\t", "\n", "\r", "\0", "\x0B"];
 
     /**
      * Sets whether the string should be trimmed. Defaults to true.
@@ -26,16 +26,23 @@ class StringNormalizer extends AbstractNormalizer
     /**
      * Sets the character mask passed to trim(). Defaults to the mask used by trim itself.
      */
-    public function setTrimCharMask(string $trimCharMask): self
+    public function setTrimChars(array $trimChars): self
     {
-        $this->trimCharMask = $trimCharMask;
+        $this->trimChars = $trimChars;
 
         return $this;
     }
 
-    public function getTrimCharMask(): string
+    public function addTrimChar(string $char): self
     {
-        return $this->trimCharMask;
+        $this->trimChars[] = $char;
+
+        return $this;
+    }
+
+    public function getTrimChars(): array
+    {
+        return $this->trimChars;
     }
 
     public function shouldTrim(): bool
@@ -46,7 +53,7 @@ class StringNormalizer extends AbstractNormalizer
     protected function getNormalizedValue(string $value): string
     {
         if ($this->trim) {
-            $value = \trim($value, $this->trimCharMask);
+            $value = \trim($value, \implode('', $this->trimChars));
         }
 
         return $value;
