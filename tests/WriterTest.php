@@ -67,4 +67,11 @@ class WriterTest extends TestCase
         $this->assertSame('bar', $row['foo']);
         $this->assertSame('qux', $row['baz']);
     }
+
+    public function testZeroSizeDocumentReturnsEmptyString(): void
+    {
+        $writer = new Writer('php://memory');
+
+        $this->assertEmpty($writer->getContents());
+    }
 }
