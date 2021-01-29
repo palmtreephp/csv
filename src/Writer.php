@@ -86,9 +86,16 @@ class Writer extends AbstractCsvDocument
     public function getContents(): string
     {
         $this->getDocument()->trimFinalLineEnding();
+
+        $size = $this->getDocument()->getSize();
+
+        if ($size === 0) {
+            return '';
+        }
+
         $this->getDocument()->fseek(0);
 
-        $data = $this->getDocument()->fread($this->getDocument()->getSize());
+        $data = $this->getDocument()->fread($size);
 
         if ($data === false) {
             return '';
