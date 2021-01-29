@@ -53,7 +53,7 @@ class StringNormalizer extends AbstractNormalizer
     protected function getNormalizedValue(string $value): string
     {
         if ($this->trim) {
-            $value = \trim($value, \implode('', $this->trimChars));
+            $value = trim($value, implode('', $this->trimChars));
         }
 
         return $value;

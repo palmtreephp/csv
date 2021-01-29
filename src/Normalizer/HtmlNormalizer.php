@@ -7,7 +7,7 @@ class HtmlNormalizer extends AbstractNormalizer
     /** @var bool */
     private $encode = true;
     /** @var int */
-    private $flags = ENT_QUOTES;
+    private $flags = \ENT_QUOTES;
 
     /**
      * Returns whether the data will be HTML encoded.
@@ -48,9 +48,9 @@ class HtmlNormalizer extends AbstractNormalizer
     protected function getNormalizedValue(string $value): string
     {
         if ($this->encode) {
-            $value = \htmlentities($value, $this->flags);
+            $value = htmlentities($value, $this->flags);
         } else {
-            $value = \html_entity_decode($value, $this->flags);
+            $value = html_entity_decode($value, $this->flags);
         }
 
         return $value;

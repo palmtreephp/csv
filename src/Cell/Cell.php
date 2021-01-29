@@ -6,7 +6,7 @@ use Palmtree\Csv\Normalizer\NormalizerInterface;
 
 class Cell
 {
-    /** @var NormalizerInterface $normalizer */
+    /** @var NormalizerInterface */
     private $normalizer;
     /** @var string */
     private $value;
@@ -17,9 +17,6 @@ class Cell
         $this->setNormalizer($normalizer);
     }
 
-    /**
-     * @return mixed
-     */
     public function getValue()
     {
         return $this->normalizer->normalize($this->getRawValue());

@@ -23,7 +23,7 @@ class ArrayNormalizer extends AbstractNormalizer
 
     protected function getNormalizedValue(string $value)
     {
-        $normalizedValue = \explode($this->delimiter, $this->stringNormalizer->normalize($value)) ?: [];
+        $normalizedValue = explode($this->delimiter, $this->stringNormalizer->normalize($value)) ?: [];
 
         if ($this->normalizer) {
             foreach ($normalizedValue as &$part) {

@@ -7,9 +7,9 @@ use Palmtree\Csv\Reader;
 
 class Row implements \ArrayAccess, \Countable, \IteratorAggregate
 {
-    /** @var Reader $reader */
+    /** @var Reader */
     private $reader;
-    /** @var Cell[] $cells */
+    /** @var Cell[] */
     private $cells = [];
 
     public function __construct(array $cells, Reader $reader)
@@ -57,7 +57,7 @@ class Row implements \ArrayAccess, \Countable, \IteratorAggregate
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      *
      * @param string|int $offset
      */
@@ -67,7 +67,7 @@ class Row implements \ArrayAccess, \Countable, \IteratorAggregate
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      *
      * @param string|int $offset
      */
@@ -77,7 +77,7 @@ class Row implements \ArrayAccess, \Countable, \IteratorAggregate
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      *
      * @param string|int $offset
      * @param string     $value
@@ -88,7 +88,7 @@ class Row implements \ArrayAccess, \Countable, \IteratorAggregate
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      *
      * @param string|int $offset
      */
@@ -98,7 +98,7 @@ class Row implements \ArrayAccess, \Countable, \IteratorAggregate
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function count(): int
     {
@@ -106,7 +106,7 @@ class Row implements \ArrayAccess, \Countable, \IteratorAggregate
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function getIterator(): \ArrayIterator
     {

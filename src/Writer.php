@@ -26,7 +26,7 @@ class Writer extends AbstractCsvDocument
     public function setData(array $data): self
     {
         if ($this->hasHeaders) {
-            $this->setHeaders(\array_keys(\reset($data)));
+            $this->setHeaders(array_keys(reset($data)));
         }
 
         $this->addRows($data);

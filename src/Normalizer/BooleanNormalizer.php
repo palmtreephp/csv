@@ -46,8 +46,8 @@ class BooleanNormalizer extends AbstractNormalizer
     public function addPair(string $truthy, string $falsey): void
     {
         if (!$this->caseSensitive) {
-            $truthy = \strtolower($truthy);
-            $falsey = \strtolower($falsey);
+            $truthy = strtolower($truthy);
+            $falsey = strtolower($falsey);
         }
 
         $this->values[$truthy] = true;
@@ -64,10 +64,10 @@ class BooleanNormalizer extends AbstractNormalizer
      */
     protected function getNormalizedValue(string $value)
     {
-        $value = \trim($value);
+        $value = trim($value);
 
         if (!$this->caseSensitive) {
-            $value = \strtolower($value);
+            $value = strtolower($value);
         }
 
         if (isset($this->values[$value])) {

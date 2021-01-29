@@ -147,7 +147,7 @@ class Reader extends AbstractCsvDocument implements \Iterator
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function current(): Row
     {
@@ -155,7 +155,7 @@ class Reader extends AbstractCsvDocument implements \Iterator
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function next(): void
     {
@@ -163,7 +163,7 @@ class Reader extends AbstractCsvDocument implements \Iterator
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function key(): int
     {
@@ -171,7 +171,7 @@ class Reader extends AbstractCsvDocument implements \Iterator
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function valid(): bool
     {
@@ -181,7 +181,7 @@ class Reader extends AbstractCsvDocument implements \Iterator
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function rewind(): void
     {
@@ -236,7 +236,7 @@ class Reader extends AbstractCsvDocument implements \Iterator
             $stripped = StringUtil::stripBom($cells[0], $this->stripBom);
 
             if ($stripped !== $cells[0]) {
-                $cells[0] = \trim($stripped, $this->enclosure);
+                $cells[0] = trim($stripped, $this->enclosure);
             }
         }
 

@@ -65,7 +65,7 @@ class CsvFileObject extends \SplFileObject
             // Only trim the file if it ends with the line ending delimiter.
             $length = \strlen($this->lineEnding);
 
-            $this->fseek(-$length, SEEK_END);
+            $this->fseek(-$length, \SEEK_END);
 
             if ($this->fread($length) === $this->lineEnding) {
                 $this->ftruncate($this->bytesWritten - $length);
@@ -81,7 +81,7 @@ class CsvFileObject extends \SplFileObject
         list($delimiter, $enclosure) = $this->getCsvControl();
 
         return $enclosure .
-               \implode($enclosure . $delimiter . $enclosure, StringUtil::escapeEnclosure($row, $enclosure)) .
+               implode($enclosure . $delimiter . $enclosure, StringUtil::escapeEnclosure($row, $enclosure)) .
                $enclosure .
                $this->lineEnding;
     }

@@ -15,7 +15,7 @@ class StringUtil
      */
     public static function hasBom(string $input, string $bom): bool
     {
-        return \strpos($input, $bom) === 0;
+        return strpos($input, $bom) === 0;
     }
 
     /**
@@ -24,7 +24,7 @@ class StringUtil
     public static function stripBom(string $input, string $bom): string
     {
         if (self::hasBom($input, $bom)) {
-            return \substr($input, \strlen($bom));
+            return substr($input, \strlen($bom));
         }
 
         return $input;
@@ -43,7 +43,7 @@ class StringUtil
             if (\is_array($value)) {
                 $data[$key] = self::escapeEnclosure($value, $enclosure);
             } else {
-                $data[$key] = \str_replace($enclosure, \str_repeat($enclosure, 2), $value);
+                $data[$key] = str_replace($enclosure, str_repeat($enclosure, 2), $value);
             }
         }
 

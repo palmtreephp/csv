@@ -24,13 +24,10 @@ abstract class AbstractNormalizer implements NormalizerInterface
         return new static(...\func_get_args());
     }
 
-    /**
-     * @return mixed
-     */
     abstract protected function getNormalizedValue(string $value);
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function normalize(string $value)
     {

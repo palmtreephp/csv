@@ -27,14 +27,14 @@ class NumberNormalizer extends AbstractNormalizer
 
     protected function getNormalizedValue(string $value)
     {
-        if (!\is_numeric($value)) {
+        if (!is_numeric($value)) {
             return 0;
         }
 
-        $numberValue = \trim($value) * 1;
+        $numberValue = trim($value) * 1;
 
         if ($this->decimals !== null) {
-            $numberValue = \round($numberValue, $this->decimals);
+            $numberValue = round($numberValue, $this->decimals);
         }
 
         return $numberValue;
