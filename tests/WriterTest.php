@@ -42,4 +42,29 @@ class WriterTest extends TestCase
         $this->assertSame('foo', $row['first']);
         $this->assertSame('bar', $row['second']);
     }
+
+    public function testFirstCallToAddRowSetsHeaders(): void
+    {
+        $writer = new Writer('php://memory');
+
+        $writer->addRow([
+            'foo' => 'bar',
+            'baz' => 'qux',
+        ]);
+
+        $writer->addRow([
+            'foo' => 'bar2',
+            'baz' => 'qux2',
+        ]);
+
+        $reader = new InlineReader($writer->getContents());
+        $rows   = $reader->toArray();
+
+        $row = $rows[0];
+
+        $this->assertArrayHasKey('foo', $row);
+        $this->assertArrayHasKey('baz', $row);
+        $this->assertSame('bar', $row['foo']);
+        $this->assertSame('qux', $row['baz']);
+    }
 }

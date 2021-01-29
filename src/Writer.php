@@ -73,6 +73,10 @@ class Writer extends AbstractCsvDocument
      */
     public function addRow(array $row): bool
     {
+        if ($this->hasHeaders && empty($this->headers)) {
+            $this->setHeaders(array_keys($row));
+        }
+
         $result = $this->getDocument()->fwriteCsv($row);
 
         if ($result === 0) {
