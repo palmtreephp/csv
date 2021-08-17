@@ -84,7 +84,7 @@ $csv->addNormalizers([
 
     // Custom conversion with a callback
     'specials'            => new Normalizer\CallableNormalizer(function (string $value) {
-        return \json_decode($value);
+        return json_decode($value);
     }),
 ]);
 ```
@@ -102,6 +102,19 @@ $csv = new Reader('people.csv', false);
 //$csv->setHasHeaders(false);
 
 ```
+
+#### Header Offset
+If your CSV headers are not on the first row you may specify the (zero based) row offset:
+
+```php
+<?php
+use Palmtree\Csv\Reader;
+
+$csv = new Reader('people.csv');
+// Headers are on the second row so let's set the offset to 1
+$csv->setHeaderOffset(1);
+```
+
 
 #### Inline Reading
 
