@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 require_once __DIR__ . '/../../vendor/autoload.php';
 
 use Palmtree\Csv\Cell\Cell;
@@ -12,5 +14,5 @@ $csv = new Reader(__DIR__ . '/../people.csv');
  * @var Cell[] $row
  */
 foreach ($csv as $key => $row) {
-    echo $row['name'] . PHP_EOL;
+    echo $row['name'] . \PHP_EOL;
 }

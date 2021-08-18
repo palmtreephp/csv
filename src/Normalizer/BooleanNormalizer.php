@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Palmtree\Csv\Normalizer;
 
 /**
@@ -37,7 +39,7 @@ class BooleanNormalizer extends AbstractNormalizer
         $this->values = [];
 
         foreach ($pairs as $truthy => $falsey) {
-            $this->addPair($truthy, $falsey);
+            $this->addPair((string)$truthy, $falsey);
         }
 
         return $this;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Palmtree\Csv\Normalizer;
 
 abstract class AbstractNormalizer implements NormalizerInterface
@@ -17,7 +19,7 @@ abstract class AbstractNormalizer implements NormalizerInterface
      *
      * @param NormalizerInterface|null $normalizer
      *
-     * @return self
+     * @return static
      */
     public static function create($normalizer = null)
     {
@@ -26,18 +28,13 @@ abstract class AbstractNormalizer implements NormalizerInterface
 
     abstract protected function getNormalizedValue(string $value);
 
-    /**
-     * {@inheritdoc}
-     */
     public function normalize(string $value)
     {
         if ($this->normalizer) {
             $value = $this->normalizer->normalize($value);
         }
 
-        $value = $this->getNormalizedValue($value);
-
-        return $value;
+        return $this->getNormalizedValue($value);
     }
 
     public function setNormalizer(?NormalizerInterface $normalizer = null): self

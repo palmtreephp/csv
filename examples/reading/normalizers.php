@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 require_once __DIR__ . '/../../vendor/autoload.php';
 
 use Palmtree\Csv\Cell\Cell;
@@ -17,7 +19,7 @@ $csv->addNormalizers([
     'related_product_ids' => new Normalizer\ArrayNormalizer(new Normalizer\NumberNormalizer()),
     'description'         => new Normalizer\HtmlNormalizer(),
     'specials'            => Normalizer\CallableNormalizer::create(function (string $value) {
-        return \json_decode($value);
+        return json_decode($value);
     }, Normalizer\BooleanNormalizer::create()),
 ]);
 
@@ -29,28 +31,26 @@ foreach ($csv as $row) {
     foreach ($row as $key => $value) {
         echo "$key: ";
         echo var_format($row[$key]);
-        echo PHP_EOL;
+        echo \PHP_EOL;
     }
 }
 
 /**
  * Returns a string representation of a variable of different data types.
- *
- * @param mixed $var
  */
 function var_format($var): string
 {
-    if (\is_array($var) || \is_object($var)) {
+    if (is_array($var) || is_object($var)) {
         return print_r($var, true);
     }
 
-    if ($var === null || \is_bool($var)) {
+    if ($var === null || is_bool($var)) {
         return $var === null ? 'null' : $var ? 'true' : 'false';
     }
 
     $output = $var;
 
-    if (\is_string($output)) {
+    if (is_string($output)) {
         $output = "'$output'";
     }
 
