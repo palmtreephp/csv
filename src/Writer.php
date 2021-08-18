@@ -9,8 +9,7 @@ namespace Palmtree\Csv;
  */
 class Writer extends AbstractCsvDocument
 {
-    /** @var array */
-    private $headers = [];
+    private array $headers = [];
 
     public static function write(string $filePath, array $data): void
     {

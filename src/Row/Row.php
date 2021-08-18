@@ -9,10 +9,9 @@ use Palmtree\Csv\Reader;
 
 class Row implements \ArrayAccess, \Countable, \IteratorAggregate
 {
-    /** @var Reader */
-    private $reader;
-    /** @var Cell[] */
-    private $cells = [];
+    private ?Reader $reader = null;
+    /** @var array<Cell> */
+    private array $cells = [];
 
     public function __construct(array $cells, Reader $reader)
     {
@@ -33,7 +32,7 @@ class Row implements \ArrayAccess, \Countable, \IteratorAggregate
     }
 
     /**
-     * @return Cell[]
+     * @return array<Cell>
      */
     public function getCells(): array
     {

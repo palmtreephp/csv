@@ -18,10 +18,10 @@
         }
     ],
     "require": {
-        "php": ">=7.1"
+        "php": ">=7.4"
     },
     "require-dev": {
-        "phpunit/phpunit": "~8.0",
+        "phpunit/phpunit": "^9.5",
         "palmtree/php-cs-fixer-config": "^1.0"
     },
     "autoload": {

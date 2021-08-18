@@ -6,8 +6,7 @@ namespace Palmtree\Csv\Normalizer;
 
 class DateTimeNormalizer extends AbstractNormalizer
 {
-    /** @var string */
-    private $format = 'Y-m-d';
+    private string $format = 'Y-m-d';
 
     public function setFormat(string $format): self
     {

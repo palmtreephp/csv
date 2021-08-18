@@ -10,10 +10,8 @@ namespace Palmtree\Csv\Normalizer;
  */
 class StringNormalizer extends AbstractNormalizer
 {
-    /** @var bool */
-    private $trim = true;
-    /** @var array */
-    private $trimChars = [' ', "\t", "\n", "\r", "\0", "\x0B"];
+    private bool $trim       = true;
+    private array $trimChars = [' ', "\t", "\n", "\r", "\0", "\x0B"];
 
     /**
      * Sets whether the string should be trimmed. Defaults to true.

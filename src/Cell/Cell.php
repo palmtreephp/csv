@@ -8,10 +8,8 @@ use Palmtree\Csv\Normalizer\NormalizerInterface;
 
 class Cell
 {
-    /** @var NormalizerInterface */
-    private $normalizer;
-    /** @var string */
-    private $value;
+    private ?NormalizerInterface $normalizer = null;
+    private ?string $value                   = null;
 
     public function __construct(string $value, NormalizerInterface $normalizer)
     {

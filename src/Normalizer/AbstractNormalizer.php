@@ -6,8 +6,7 @@ namespace Palmtree\Csv\Normalizer;
 
 abstract class AbstractNormalizer implements NormalizerInterface
 {
-    /** @var NormalizerInterface|null */
-    protected $normalizer;
+    protected ?NormalizerInterface $normalizer = null;
 
     public function __construct(?NormalizerInterface $normalizer = null)
     {

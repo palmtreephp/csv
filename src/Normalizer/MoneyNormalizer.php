@@ -6,8 +6,7 @@ namespace Palmtree\Csv\Normalizer;
 
 class MoneyNormalizer extends AbstractNormalizer
 {
-    /** @var string */
-    private $moneyFormat = '%.2n';
+    private string $moneyFormat = '%.2n';
 
     /**
      * Sets the format passed to money_format. Defaults to %.2n which formats the number according to the current
@@ -18,11 +17,6 @@ class MoneyNormalizer extends AbstractNormalizer
         $this->moneyFormat = $moneyFormat;
 
         return $this;
-    }
-
-    public function getMoneyFormat(): string
-    {
-        return $this->moneyFormat;
     }
 
     protected function getNormalizedValue(string $value): string

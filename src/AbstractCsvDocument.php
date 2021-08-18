@@ -6,18 +6,12 @@ namespace Palmtree\Csv;
 
 abstract class AbstractCsvDocument
 {
-    /** @var string Path to CSV file. */
-    protected $filePath;
-    /** @var bool Whether the CSV file contains headers */
-    protected $hasHeaders = true;
-    /** @var string Cell delimiter. Default ',' (comma) */
-    protected $delimiter = ',';
-    /** @var string Cell enclosure. Default '"' (double quote) */
-    protected $enclosure = '"';
-    /** @var string Cell escape character. Default null byte */
-    protected $escapeCharacter = "\0";
-    /** @var CsvFileObject|null */
-    protected $document;
+    protected string $filePath;
+    protected bool $hasHeaders         = true;
+    protected string $delimiter        = ',';
+    protected string $enclosure        = '"';
+    protected string $escapeCharacter  = "\0";
+    protected ?CsvFileObject $document = null;
 
     public function __construct(string $filePath, bool $hasHeaders = true)
     {

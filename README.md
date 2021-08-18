@@ -11,9 +11,7 @@ The `Reader` class implements the `Iterator` interface meaning large files can b
 without hitting any memory limits because only one line is loaded at a time.
 
 ## Requirements
-* PHP >= 7.1
-
-For PHP 5.6 support use the [v1 branch](https://github.com/palmtreephp/csv/tree/v1)
+* PHP >= 7.4
 
 ## Installation
 Use composer to add the package to your dependencies:

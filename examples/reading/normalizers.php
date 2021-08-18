@@ -18,14 +18,12 @@ $csv->addNormalizers([
     'enabled'             => Normalizer\BooleanNormalizer::create()->setPairs(['yes' => 'no']),
     'related_product_ids' => new Normalizer\ArrayNormalizer(new Normalizer\NumberNormalizer()),
     'description'         => new Normalizer\HtmlNormalizer(),
-    'specials'            => Normalizer\CallableNormalizer::create(function (string $value) {
-        return json_decode($value);
-    }, Normalizer\BooleanNormalizer::create()),
+    'specials'            => Normalizer\CallableNormalizer::create(fn (string $value) => json_decode($value), Normalizer\BooleanNormalizer::create()),
 ]);
 
 /**
- * @var mixed  $key
- * @var Cell[] $row
+ * @var mixed       $key
+ * @var array<Cell> $row
  */
 foreach ($csv as $row) {
     foreach ($row as $key => $value) {
@@ -45,7 +43,7 @@ function var_format($var): string
     }
 
     if ($var === null || is_bool($var)) {
-        return $var === null ? 'null' : $var ? 'true' : 'false';
+        return $var === null ? 'null' : ($var ? 'true' : 'false');
     }
 
     $output = $var;

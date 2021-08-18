@@ -21,8 +21,7 @@ class Downloader extends Writer
         'Pragma'                    => 'public',
     ];
 
-    /** @var string */
-    private $filename;
+    private ?string $filename = null;
 
     public function __construct(string $filename, iterable $responseHeaders = [])
     {

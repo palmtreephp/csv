@@ -12,7 +12,7 @@ class BooleanNormalizer extends AbstractNormalizer
     /**
      * @var array Default truthy/falsey pairs.
      */
-    public static $defaultPairs = [
+    public static array $defaultPairs = [
         'true'    => 'false',
         '1'       => '0',
         'on'      => 'off',
@@ -20,12 +20,9 @@ class BooleanNormalizer extends AbstractNormalizer
         'enabled' => 'disabled',
     ];
 
-    /** @var array */
-    private $values = [];
-    /** @var bool */
-    private $nullable = false;
-    /** @var bool */
-    private $caseSensitive = false;
+    private array $values       = [];
+    private bool $nullable      = false;
+    private bool $caseSensitive = false;
 
     public function __construct(?NormalizerInterface $normalizer = null)
     {

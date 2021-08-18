@@ -9,8 +9,7 @@ namespace Palmtree\Csv\Normalizer;
  */
 class NumberNormalizer extends AbstractNormalizer
 {
-    /** @var int|null */
-    private $decimals;
+    private ?int $decimals = null;
 
     /**
      * Sets the amount of decimal places to round to. Defaults to null which performs no rounding.

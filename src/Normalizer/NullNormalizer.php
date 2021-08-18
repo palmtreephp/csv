@@ -9,9 +9,6 @@ namespace Palmtree\Csv\Normalizer;
  */
 class NullNormalizer implements NormalizerInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function normalize(string $value): string
     {
         return $value;
