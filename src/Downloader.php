@@ -13,12 +13,12 @@ class Downloader extends Writer
      * @var array<string, string>
      */
     private $responseHeaders = [
-        'Content-Type'              => 'text/csv',
-        'Content-Description'       => 'File Transfer',
+        'Content-Type' => 'text/csv',
+        'Content-Description' => 'File Transfer',
         'Content-Transfer-Encoding' => 'Binary',
-        'Expires'                   => '0',
-        'Cache-Control'             => 'must-revalidate, post-check=0, pre-check=0',
-        'Pragma'                    => 'public',
+        'Expires' => '0',
+        'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+        'Pragma' => 'public',
     ];
 
     private ?string $filename = null;

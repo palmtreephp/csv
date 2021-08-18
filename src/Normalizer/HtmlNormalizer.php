@@ -7,7 +7,7 @@ namespace Palmtree\Csv\Normalizer;
 class HtmlNormalizer extends AbstractNormalizer
 {
     private bool $encode = true;
-    private int $flags   = \ENT_QUOTES;
+    private int $flags = \ENT_QUOTES;
 
     /**
      * Returns whether the data will be HTML encoded.

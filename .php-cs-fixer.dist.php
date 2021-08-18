@@ -6,15 +6,11 @@ use Palmtree\PhpCsFixerConfig\Config;
 
 $config = new Config();
 
-$rules = $config->getRules();
-
-$rules['no_superfluous_phpdoc_tags'] = true;
-
 $config
-    ->setRules($rules)
     ->getFinder()
     ->in(__DIR__ . '/src')
     ->in(__DIR__ . '/examples')
-    ->append([__FILE__]);
+    ->append([__FILE__])
+;
 
 return $config;

@@ -8,7 +8,7 @@ use Palmtree\Csv\Util\StringUtil;
 
 class CsvFileObject extends \SplFileObject
 {
-    private int $bytesWritten  = 0;
+    private int $bytesWritten = 0;
     private string $lineEnding = "\r\n";
 
     public function fwriteCsv(array $row): int

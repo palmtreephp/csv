@@ -6,7 +6,7 @@ namespace Palmtree\Csv\Normalizer;
 
 class ArrayNormalizer extends AbstractNormalizer
 {
-    private ?string $delimiter                  = null;
+    private ?string $delimiter = null;
     private ?StringNormalizer $stringNormalizer = null;
 
     public function __construct(?NormalizerInterface $normalizer = null)

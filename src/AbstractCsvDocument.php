@@ -7,10 +7,10 @@ namespace Palmtree\Csv;
 abstract class AbstractCsvDocument
 {
     protected string $filePath;
-    protected bool $hasHeaders         = true;
-    protected string $delimiter        = ',';
-    protected string $enclosure        = '"';
-    protected string $escapeCharacter  = "\0";
+    protected bool $hasHeaders = true;
+    protected string $delimiter = ',';
+    protected string $enclosure = '"';
+    protected string $escapeCharacter = "\0";
     protected ?CsvFileObject $document = null;
 
     public function __construct(string $filePath, bool $hasHeaders = true)

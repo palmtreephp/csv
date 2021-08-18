@@ -6,15 +6,15 @@ require_once dirname(__DIR__) . '/../vendor/autoload.php';
 
 use Palmtree\Csv\Downloader;
 
-$people   = [];
+$people = [];
 $people[] = [
-    'name'   => 'Alice',
-    'age'    => '24',
+    'name' => 'Alice',
+    'age' => '24',
     'gender' => 'Female',
 ];
 $people[] = [
-    'name'   => 'Bob',
-    'age'    => '28',
+    'name' => 'Bob',
+    'age' => '28',
     'gender' => 'Male',
 ];
 

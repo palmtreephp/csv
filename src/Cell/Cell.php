@@ -9,7 +9,7 @@ use Palmtree\Csv\Normalizer\NormalizerInterface;
 class Cell
 {
     private ?NormalizerInterface $normalizer = null;
-    private ?string $value                   = null;
+    private ?string $value = null;
 
     public function __construct(string $value, NormalizerInterface $normalizer)
     {

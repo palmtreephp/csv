@@ -6,7 +6,5 @@
 /.gitignore        export-ignore
 /.scrutinizer.yml  export-ignore
 /phpunit.xml.dist  export-ignore
-/README.md         export-ignore
-/docs              export-ignore
 /tests             export-ignore
 /examples          export-ignore

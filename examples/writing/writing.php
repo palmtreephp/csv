@@ -7,15 +7,15 @@ require_once dirname(__DIR__) . '/../vendor/autoload.php';
 use Palmtree\Csv\Reader;
 use Palmtree\Csv\Writer;
 
-$people   = [];
+$people = [];
 $people[] = [
-    'name'   => 'Alice DJ',
-    'age'    => '24 \\\\\", words',
+    'name' => 'Alice DJ',
+    'age' => '24 \\\\\", words',
     'gender' => 'Female',
 ];
 $people[] = [
-    'name'   => 'Bob "Cat" Bobbington',
-    'age'    => '28',
+    'name' => 'Bob "Cat" Bobbington',
+    'age' => '28',
     'gender' => 'Male',
 ];
 

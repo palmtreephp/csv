@@ -13,15 +13,15 @@ class BooleanNormalizer extends AbstractNormalizer
      * @var array Default truthy/falsey pairs.
      */
     public static array $defaultPairs = [
-        'true'    => 'false',
-        '1'       => '0',
-        'on'      => 'off',
-        'yes'     => 'no',
+        'true' => 'false',
+        '1' => '0',
+        'on' => 'off',
+        'yes' => 'no',
         'enabled' => 'disabled',
     ];
 
-    private array $values       = [];
-    private bool $nullable      = false;
+    private array $values = [];
+    private bool $nullable = false;
     private bool $caseSensitive = false;
 
     public function __construct(?NormalizerInterface $normalizer = null)
