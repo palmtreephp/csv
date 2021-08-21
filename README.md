@@ -7,8 +7,8 @@
 
 A CSV reader and writer for PHP.
 
-The `Reader` class implements the `Iterator` interface meaning large files can be parsed
-without hitting any memory limits because only one line is loaded at a time.
+The `Reader` class implements the `Iterator` interface, loading one line into memory at a time. This means large files can be parsed
+without hitting any memory limits.
 
 ## Requirements
 * PHP >= 7.4
