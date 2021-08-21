@@ -39,34 +39,29 @@ foreach($csv as $row) {
 
 #### Normalize Data Types
 A number of different normalizers can be used to convert data from strings into certain data types.
-Below is contrived example using all currently bundled normalizers:
+Below is contrived example using some of the currently bundled normalizers:
 
 ```php
-use Palmtree\Csv\Reader;
-use Palmtree\Csv\Normalizer as Normalizer;
-
 $csv = new Reader('/path/to/products.csv');
 
 $csv->addNormalizers([
-     // Convert to integer
-    'product_id'          => new Normalizer\NumberNormalizer(),
+    // Convert to integer
+    'product_id' => new NumberNormalizer(),
 
     // Keep data as string but trim it
-    'name'                => new Normalizer\StringNormalizer(),
+    'name' => new StringNormalizer(),
 
-     // Convert to float, rounded to 4 decimal places
-    'price'               => Normalizer\NumberNormalizer::create()->setDecimals(4),
+    // Convert to float, rounded to 4 decimal places
+    'price' => NumberNormalizer::create()->setDecimals(4),
 
     // Convert to boolean true or false
-    'enabled'             => new Normalizer\BooleanNormalizer(),
+    'enabled' => new BooleanNormalizer(),
 
-    // Convert to an array of numbers
-    'related_product_ids' => new Normalizer\ArrayNormalizer(new Normalizer\NumberNormalizer()),
+    // Convert to an array of integers
+    'related_product_ids' => new ArrayNormalizer(new NumberNormalizer()),
 
     // Custom conversion with a callback
-    'specials'            => new Normalizer\CallableNormalizer(function (string $value) {
-        return json_decode($value);
-    }),
+    'specials' => new CallableNormalizer(fn ($value) => json_decode($value)),
 ]);
 ```
 
