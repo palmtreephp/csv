@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Palmtree\Csv\Test;
 
 use Palmtree\Csv\InlineReader;
@@ -33,7 +35,7 @@ class WriterTest extends TestCase
         $writer->addRow(['foo', 'bar']);
 
         $reader = new InlineReader($writer->getContents());
-        $rows   = $reader->toArray();
+        $rows = $reader->toArray();
 
         $row = $rows[0];
 
@@ -58,7 +60,7 @@ class WriterTest extends TestCase
         ]);
 
         $reader = new InlineReader($writer->getContents());
-        $rows   = $reader->toArray();
+        $rows = $reader->toArray();
 
         $row = $rows[0];
 

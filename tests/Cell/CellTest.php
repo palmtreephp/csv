@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Palmtree\Csv\Test\Cell;
 
 use Palmtree\Csv\Cell\Cell;

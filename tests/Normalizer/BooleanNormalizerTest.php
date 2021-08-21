@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Palmtree\Csv\Test\Normalizer;
 
 use Palmtree\Csv\Normalizer\BooleanNormalizer;
@@ -44,10 +46,10 @@ class BooleanNormalizerTest extends TestCase
         return [
             [
                 [
-                    'true'    => 'false',
+                    'true' => 'false',
                     'enabled' => 'disabled',
-                    '1'       => '0',
-                    'on'      => 'off',
+                    '1' => '0',
+                    'on' => 'off',
                 ],
             ],
         ];

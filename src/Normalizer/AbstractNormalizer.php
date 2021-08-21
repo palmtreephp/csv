@@ -16,15 +16,16 @@ abstract class AbstractNormalizer implements NormalizerInterface
     /**
      * Alternative method of instantiation for chaining.
      *
-     * @param NormalizerInterface|null $normalizer
+     * @psalm-suppress UnsafeInstantiation
      *
      * @return static
      */
-    public static function create($normalizer = null)
+    public static function create(?NormalizerInterface $normalizer = null)
     {
-        return new static(...\func_get_args());
+        return new static($normalizer);
     }
 
+    /** @return mixed */
     abstract protected function getNormalizedValue(string $value);
 
     public function normalize(string $value)

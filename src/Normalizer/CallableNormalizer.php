@@ -4,26 +4,21 @@ declare(strict_types=1);
 
 namespace Palmtree\Csv\Normalizer;
 
-/**
- * @method static CallableNormalizer create(callable $callback, ?NormalizerInterface $normalizer = null)
- */
-class CallableNormalizer extends AbstractNormalizer
+class CallableNormalizer implements NormalizerInterface
 {
-    /** @var callable */
-    private $callback;
+    private \Closure $callback;
+    private ?NormalizerInterface $normalizer;
 
     public function __construct(callable $callback, ?NormalizerInterface $normalizer = null)
     {
-        $this->setCallback($callback);
-
-        parent::__construct($normalizer);
+        $this->callback = \Closure::fromCallable($callback);
+        $this->normalizer = $normalizer;
     }
 
-    public function setCallback(callable $callback): self
+    /** @psalm-suppress UnsafeInstantiation */
+    public static function create(callable $callback, ?NormalizerInterface $normalizer = null): self
     {
-        $this->callback = $callback;
-
-        return $this;
+        return new static($callback, $normalizer);
     }
 
     public function getCallback(): callable
@@ -31,8 +26,13 @@ class CallableNormalizer extends AbstractNormalizer
         return $this->callback;
     }
 
-    protected function getNormalizedValue(string $value)
+    /** @return mixed */
+    public function normalize(string $value)
     {
+        if ($this->normalizer) {
+            $value = $this->normalizer->normalize($value);
+        }
+
         $callback = $this->callback;
 
         return $callback($value, $this);

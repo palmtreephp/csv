@@ -11,13 +11,12 @@ abstract class AbstractCsvDocument
     protected string $delimiter = ',';
     protected string $enclosure = '"';
     protected string $escapeCharacter = "\0";
-    protected ?CsvFileObject $document = null;
+    private ?CsvFileObject $document = null;
 
     public function __construct(string $filePath, bool $hasHeaders = true)
     {
-        $this
-            ->setHasHeaders($hasHeaders)
-            ->setFilePath($filePath);
+        $this->filePath = $filePath;
+        $this->setHasHeaders($hasHeaders);
     }
 
     public function __destruct()
@@ -46,11 +45,7 @@ abstract class AbstractCsvDocument
 
     public function getDocument(): CsvFileObject
     {
-        if ($this->document === null) {
-            $this->createDocument();
-        }
-
-        return $this->document;
+        return $this->document ??= $this->createDocument();
     }
 
     public function getFilePath(): string
@@ -119,15 +114,17 @@ abstract class AbstractCsvDocument
         return $this;
     }
 
-    private function createDocument(): void
+    private function createDocument(): CsvFileObject
     {
         $this->closeDocument();
 
         $document = new CsvFileObject($this->filePath, $this->getOpenMode());
 
-        $document->setFlags(CsvFileObject::READ_CSV);
+        $document->setFlags(\SplFileObject::READ_CSV);
         $document->setCsvControl($this->delimiter, $this->enclosure, $this->escapeCharacter);
 
         $this->document = $document;
+
+        return $document;
     }
 }

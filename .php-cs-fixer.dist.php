@@ -9,6 +9,7 @@ $config = new Config();
 $config
     ->getFinder()
     ->in(__DIR__ . '/src')
+    ->in(__DIR__ . '/tests')
     ->in(__DIR__ . '/examples')
     ->append([__FILE__])
 ;

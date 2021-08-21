@@ -21,11 +21,11 @@ class Downloader extends Writer
         'Pragma' => 'public',
     ];
 
-    private ?string $filename = null;
+    private string $filename;
 
     public function __construct(string $filename, iterable $responseHeaders = [])
     {
-        $this->setFilename($filename);
+        $this->filename = $filename;
 
         $this->addResponseHeaders($responseHeaders);
         $this->addResponseHeader('Content-Disposition', sprintf('attachment; filename="%s"', $this->getFilename()));
@@ -86,12 +86,5 @@ class Downloader extends Writer
     public function getFilename(): string
     {
         return $this->filename;
-    }
-
-    public function setFilename(string $filename): self
-    {
-        $this->filename = $filename;
-
-        return $this;
     }
 }

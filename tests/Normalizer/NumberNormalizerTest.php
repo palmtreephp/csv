@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Palmtree\Csv\Test\Normalizer;
 
 use Palmtree\Csv\Normalizer\NumberNormalizer;
@@ -39,7 +41,7 @@ class NumberNormalizerTest extends TestCase
         $normalizer = new NumberNormalizer(null);
         $normalizer->setDecimals(2);
 
-        $value = $normalizer->normalize(M_PI);
+        $value = $normalizer->normalize((string)\M_PI);
 
         $this->assertSame(3.14, $value);
     }

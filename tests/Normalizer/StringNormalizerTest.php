@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Palmtree\Csv\Test\Normalizer;
 
 use Palmtree\Csv\Normalizer\StringNormalizer;

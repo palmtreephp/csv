@@ -14,9 +14,10 @@ use Palmtree\Csv\Util\StringUtil;
  */
 class Reader extends AbstractCsvDocument implements \Iterator
 {
+    /** @var class-string<NormalizerInterface> */
     private string $defaultNormalizer = NullNormalizer::class;
     private ?NormalizerInterface $headerNormalizer = null;
-    /** @var NormalizerInterface[] */
+    /** @var array<NormalizerInterface> */
     private array $normalizers = [];
     private ?Row $headers = null;
     private ?Row $row = null;
@@ -57,11 +58,7 @@ class Reader extends AbstractCsvDocument implements \Iterator
 
     public function getHeaderNormalizer(): NormalizerInterface
     {
-        if ($this->headerNormalizer === null) {
-            $this->headerNormalizer = new NullNormalizer();
-        }
-
-        return $this->headerNormalizer;
+        return $this->headerNormalizer ??= new NullNormalizer();
     }
 
     public function addNormalizer(string $key, NormalizerInterface $normalizer): self
@@ -71,6 +68,9 @@ class Reader extends AbstractCsvDocument implements \Iterator
         return $this;
     }
 
+    /**
+     * @param iterable<NormalizerInterface> $normalizers
+     */
     public function addNormalizers(iterable $normalizers): self
     {
         foreach ($normalizers as $key => $normalizer) {
@@ -98,6 +98,9 @@ class Reader extends AbstractCsvDocument implements \Iterator
         return $this->normalizers[$key];
     }
 
+    /**
+     * @param class-string<NormalizerInterface> $defaultNormalizer
+     */
     public function setDefaultNormalizer(string $defaultNormalizer): self
     {
         $this->defaultNormalizer = $defaultNormalizer;
@@ -105,6 +108,9 @@ class Reader extends AbstractCsvDocument implements \Iterator
         return $this;
     }
 
+    /**
+     * @return class-string<NormalizerInterface>
+     */
     public function getDefaultNormalizer(): string
     {
         return $this->defaultNormalizer;
@@ -141,33 +147,23 @@ class Reader extends AbstractCsvDocument implements \Iterator
         return $this->headerOffset;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function current(): Row
     {
+        \assert($this->row instanceof Row);
+
         return $this->row;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function next(): void
     {
         $this->getDocument()->next();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function key(): int
     {
         return $this->getDocument()->key();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function valid(): bool
     {
         $this->row = $this->getCurrentRow();
@@ -175,9 +171,6 @@ class Reader extends AbstractCsvDocument implements \Iterator
         return $this->row instanceof Row;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function rewind(): void
     {
         $this->getDocument()->rewind();

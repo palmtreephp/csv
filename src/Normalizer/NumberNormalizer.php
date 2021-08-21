@@ -26,13 +26,19 @@ class NumberNormalizer extends AbstractNormalizer
         return $this->decimals;
     }
 
+    /**
+     * @return float|int
+     */
     protected function getNormalizedValue(string $value)
     {
         if (!is_numeric($value)) {
             return 0;
         }
 
-        $numberValue = trim($value) * 1;
+        $value = trim($value);
+        $value = ltrim($value, '0');
+
+        $numberValue = json_decode($value);
 
         if ($this->decimals !== null) {
             $numberValue = round($numberValue, $this->decimals);
