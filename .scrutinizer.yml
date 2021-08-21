@@ -7,7 +7,7 @@ filter:
 tools:
     php_loc:
         enabled: true
-        excluded_dirs: [tests, vendor]
+        excluded_dirs: [ tests, vendor ]
     php_cpd:
         enabled: true
     php_sim:
@@ -23,11 +23,10 @@ build:
             - '~/.composer/cache/files'
     tests:
         override:
-            -
-                command: 'vendor/bin/phpunit --coverage-clover=coverage'
+            -   command: 'vendor/bin/php-cs-fixer fix -v --dry-run --stop-on-violation --using-cache=no --diff'
+            -   command: 'vendor/bin/psalm --no-cache'
+            -   command: 'vendor/bin/phpunit --coverage-clover=coverage'
                 coverage:
                     file: 'coverage'
                     format: 'clover'
             - php-scrutinizer-run
-            -
-                command: 'vendor/bin/php-cs-fixer fix -v --dry-run --stop-on-violation --using-cache=no --diff --diff-format=udiff'
