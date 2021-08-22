@@ -6,11 +6,11 @@ namespace Palmtree\Csv\Normalizer;
 
 abstract class AbstractNormalizer implements NormalizerInterface
 {
-    protected ?NormalizerInterface $normalizer = null;
+    protected NormalizerInterface $normalizer;
 
     public function __construct(?NormalizerInterface $normalizer = null)
     {
-        $this->setNormalizer($normalizer);
+        $this->normalizer = $normalizer ?? new NullNormalizer();
     }
 
     /**
@@ -30,18 +30,9 @@ abstract class AbstractNormalizer implements NormalizerInterface
 
     public function normalize(string $value)
     {
-        if ($this->normalizer) {
-            $value = $this->normalizer->normalize($value);
-        }
+        $value = $this->normalizer->normalize($value);
 
         return $this->getNormalizedValue($value);
-    }
-
-    public function setNormalizer(?NormalizerInterface $normalizer = null): self
-    {
-        $this->normalizer = $normalizer;
-
-        return $this;
     }
 
     public function getNormalizer(): ?NormalizerInterface

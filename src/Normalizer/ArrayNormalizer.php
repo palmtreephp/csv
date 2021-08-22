@@ -26,10 +26,8 @@ class ArrayNormalizer extends AbstractNormalizer
     {
         $normalizedValue = explode($this->delimiter, $this->stringNormalizer->normalize($value)) ?: [];
 
-        if ($this->normalizer) {
-            foreach ($normalizedValue as &$part) {
-                $part = $this->normalizer->normalize($part);
-            }
+        foreach ($normalizedValue as &$part) {
+            $part = $this->normalizer->normalize($part);
         }
 
         return $normalizedValue;

@@ -7,12 +7,12 @@ namespace Palmtree\Csv\Normalizer;
 class CallableNormalizer implements NormalizerInterface
 {
     private \Closure $callback;
-    private ?NormalizerInterface $normalizer;
+    private NormalizerInterface $normalizer;
 
     public function __construct(callable $callback, ?NormalizerInterface $normalizer = null)
     {
         $this->callback = \Closure::fromCallable($callback);
-        $this->normalizer = $normalizer;
+        $this->normalizer = $normalizer ?? new NullNormalizer();
     }
 
     /** @psalm-suppress UnsafeInstantiation */
@@ -29,12 +29,8 @@ class CallableNormalizer implements NormalizerInterface
     /** @return mixed */
     public function normalize(string $value)
     {
-        if ($this->normalizer) {
-            $value = $this->normalizer->normalize($value);
-        }
-
         $callback = $this->callback;
 
-        return $callback($value, $this);
+        return $callback($this->normalizer->normalize($value), $this);
     }
 }

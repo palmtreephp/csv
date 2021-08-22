@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Palmtree\Csv\Normalizer;
 
 /**
- * BooleanNormalizer formats a CSV cell as a boolean.
+ * BooleanNormalizer converts a string to boolean true or false, or null.
  */
 class BooleanNormalizer extends AbstractNormalizer
 {
@@ -58,10 +58,7 @@ class BooleanNormalizer extends AbstractNormalizer
         return $this->values;
     }
 
-    /**
-     * @return bool|null
-     */
-    protected function getNormalizedValue(string $value)
+    protected function getNormalizedValue(string $value): ?bool
     {
         $value = trim($value);
 
