@@ -21,11 +21,6 @@ class NumberNormalizer extends AbstractNormalizer
         return $this;
     }
 
-    public function getDecimals(): ?int
-    {
-        return $this->decimals;
-    }
-
     /**
      * @return float|int
      */

@@ -22,9 +22,4 @@ abstract class AbstractNormalizer implements NormalizerInterface
 
         return $this->getNormalizedValue($value);
     }
-
-    public function getNormalizer(): ?NormalizerInterface
-    {
-        return $this->normalizer;
-    }
 }

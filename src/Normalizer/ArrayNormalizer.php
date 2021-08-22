@@ -45,9 +45,4 @@ class ArrayNormalizer extends AbstractNormalizer
 
         return $this;
     }
-
-    public function getDelimiter(): string
-    {
-        return $this->delimiter;
-    }
 }

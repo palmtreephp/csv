@@ -53,11 +53,6 @@ class BooleanNormalizer extends AbstractNormalizer
         $this->values[$falsey] = false;
     }
 
-    public function getValues(): array
-    {
-        return $this->values;
-    }
-
     protected function getNormalizedValue(string $value): ?bool
     {
         $value = trim($value);
@@ -84,11 +79,6 @@ class BooleanNormalizer extends AbstractNormalizer
         return $this;
     }
 
-    public function isCaseSensitive(): bool
-    {
-        return $this->caseSensitive;
-    }
-
     /**
      * Sets whether the returned value can be null. Defaults to false, meaning any value present that is
      * not found in the truthy values will return false.
@@ -98,10 +88,5 @@ class BooleanNormalizer extends AbstractNormalizer
         $this->nullable = $nullable;
 
         return $this;
-    }
-
-    public function isNullable(): bool
-    {
-        return $this->nullable;
     }
 }

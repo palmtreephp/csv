@@ -40,16 +40,6 @@ class StringNormalizer extends AbstractNormalizer
         return $this;
     }
 
-    public function getTrimChars(): array
-    {
-        return $this->trimChars;
-    }
-
-    public function shouldTrim(): bool
-    {
-        return $this->trim;
-    }
-
     protected function getNormalizedValue(string $value): string
     {
         if ($this->trim) {
