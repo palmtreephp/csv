@@ -15,7 +15,7 @@ class BooleanNormalizerTest extends TestCase
     public function testTruthyValues(array $pairs): void
     {
         $normalizer = new BooleanNormalizer();
-        $normalizer->setPairs($pairs);
+        $normalizer->pairs($pairs);
 
         $this->assertTrue($normalizer->normalize('true'));
         $this->assertTrue($normalizer->normalize('enabled'));
@@ -30,8 +30,8 @@ class BooleanNormalizerTest extends TestCase
     public function testFalseyValues(array $pairs): void
     {
         $normalizer = new BooleanNormalizer();
-        $normalizer->setNullable(true);
-        $normalizer->setPairs($pairs);
+        $normalizer->nullable(true);
+        $normalizer->pairs($pairs);
 
         $this->assertFalse($normalizer->normalize('false'));
         $this->assertFalse($normalizer->normalize('disabled'));

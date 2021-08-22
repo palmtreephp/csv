@@ -22,7 +22,7 @@ class ArrayNormalizerTest extends TestCase
     public function testDifferentDelimiter(): void
     {
         $normalizer = new ArrayNormalizer();
-        $normalizer->setDelimiter('|');
+        $normalizer->delimiter('|');
 
         $value = $normalizer->normalize('1,2,3|4,5,6');
 

@@ -36,7 +36,7 @@ class ArrayNormalizer extends AbstractNormalizer
     /**
      * Sets the delimiter to pass to explode(). Defaults to , (comma).
      */
-    public function setDelimiter(string $delimiter): self
+    public function delimiter(string $delimiter): self
     {
         $this->delimiter = $delimiter;
 

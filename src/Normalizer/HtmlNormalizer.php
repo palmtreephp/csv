@@ -12,7 +12,7 @@ class HtmlNormalizer extends AbstractNormalizer
     /**
      * Sets whether the data should HTML encoded or returned as raw HTML. Defaults to true.
      */
-    public function setEncode(bool $encode): self
+    public function encode(bool $encode): self
     {
         $this->encode = $encode;
 
@@ -22,7 +22,7 @@ class HtmlNormalizer extends AbstractNormalizer
     /**
      * Sets the flags that are passed to htmlentities and html_entity_decode. Defaults to ENT_QUOTES.
      */
-    public function setFlags(int $flags): self
+    public function flags(int $flags): self
     {
         $this->flags = $flags;
 

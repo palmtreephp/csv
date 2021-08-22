@@ -12,7 +12,7 @@ class StringNormalizerTest extends TestCase
     public function testNormalizerTrimsStrings(): void
     {
         $normalizer = new StringNormalizer();
-        $normalizer->setTrim(true);
+        $normalizer->trim(true);
 
         $value = $normalizer->normalize(' foo bar baz ');
 
@@ -22,7 +22,7 @@ class StringNormalizerTest extends TestCase
     public function testNormalizerDoesNotTrimStrings(): void
     {
         $normalizer = new StringNormalizer();
-        $normalizer->setTrim(false);
+        $normalizer->trim(false);
 
         $value = $normalizer->normalize(' foo bar baz ');
 

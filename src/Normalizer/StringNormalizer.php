@@ -16,7 +16,7 @@ class StringNormalizer extends AbstractNormalizer
     /**
      * Sets whether the string should be trimmed. Defaults to true.
      */
-    public function setTrim(bool $trim): self
+    public function trim(bool $trim): self
     {
         $this->trim = $trim;
 
@@ -26,7 +26,7 @@ class StringNormalizer extends AbstractNormalizer
     /**
      * Sets the character mask passed to trim(). Defaults to the mask used by trim itself.
      */
-    public function setTrimChars(array $trimChars): self
+    public function trimChars(array $trimChars): self
     {
         $this->trimChars = $trimChars;
 

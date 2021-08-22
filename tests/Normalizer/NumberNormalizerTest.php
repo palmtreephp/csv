@@ -39,7 +39,7 @@ class NumberNormalizerTest extends TestCase
     public function testRounding(): void
     {
         $normalizer = new NumberNormalizer(null);
-        $normalizer->setScale(2);
+        $normalizer->scale(2);
 
         $value = $normalizer->normalize((string)\M_PI);
 

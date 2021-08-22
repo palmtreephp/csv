@@ -8,7 +8,7 @@ class DateTimeNormalizer extends AbstractNormalizer
 {
     private string $format = 'Y-m-d';
 
-    public function setFormat(string $format): self
+    public function format(string $format): self
     {
         $this->format = $format;
 

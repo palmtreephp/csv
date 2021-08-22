@@ -14,7 +14,7 @@ class NumberNormalizer extends AbstractNormalizer
     /**
      * Sets the amount of decimal places to round to. Defaults to null which performs no rounding.
      */
-    public function setScale(?int $scale = null): self
+    public function scale(?int $scale = null): self
     {
         $this->scale = $scale;
 

@@ -26,12 +26,12 @@ class BooleanNormalizer extends AbstractNormalizer
 
     public function __construct(?NormalizerInterface $normalizer = null)
     {
-        $this->setPairs(self::$defaultPairs);
+        $this->pairs(self::$defaultPairs);
 
         parent::__construct($normalizer);
     }
 
-    public function setPairs(array $pairs): self
+    public function pairs(array $pairs): self
     {
         $this->values = [];
 
@@ -72,7 +72,7 @@ class BooleanNormalizer extends AbstractNormalizer
      * Sets whether a case-sensitive comparison should be made. If this is true, 'Enabled' will not match 'enabled'
      * and will return false if it is found (or null if isNullable is true). Defaults to false.
      */
-    public function setCaseSensitive(bool $caseSensitive): self
+    public function caseSensitive(bool $caseSensitive): self
     {
         $this->caseSensitive = $caseSensitive;
 
@@ -83,7 +83,7 @@ class BooleanNormalizer extends AbstractNormalizer
      * Sets whether the returned value can be null. Defaults to false, meaning any value present that is
      * not found in the truthy values will return false.
      */
-    public function setNullable(bool $nullable): self
+    public function nullable(bool $nullable): self
     {
         $this->nullable = $nullable;
 
