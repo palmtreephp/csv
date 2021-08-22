@@ -13,12 +13,12 @@ $csv = new Reader(__DIR__ . '/../products.csv');
 $csv->addNormalizers([
     'product_id' => new Normalizer\NumberNormalizer(),
     'name' => new Normalizer\StringNormalizer(),
-    'price' => Normalizer\NumberNormalizer::create()->setDecimals(4),
+    'price' => (new Normalizer\NumberNormalizer())->setDecimals(4),
     'quantity' => new Normalizer\NumberNormalizer(),
-    'enabled' => Normalizer\BooleanNormalizer::create()->setPairs(['yes' => 'no']),
+    'enabled' => (new Normalizer\BooleanNormalizer())->setPairs(['yes' => 'no']),
     'related_product_ids' => new Normalizer\ArrayNormalizer(new Normalizer\NumberNormalizer()),
     'description' => new Normalizer\HtmlNormalizer(),
-    'specials' => Normalizer\CallableNormalizer::create(fn (string $value) => json_decode($value), Normalizer\BooleanNormalizer::create()),
+    'specials' => new Normalizer\CallableNormalizer(fn (string $value) => json_decode($value), new Normalizer\BooleanNormalizer()),
 ]);
 
 /**

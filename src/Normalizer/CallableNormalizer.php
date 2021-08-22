@@ -15,12 +15,6 @@ class CallableNormalizer implements NormalizerInterface
         $this->normalizer = $normalizer ?? new NullNormalizer();
     }
 
-    /** @psalm-suppress UnsafeInstantiation */
-    public static function create(callable $callback, ?NormalizerInterface $normalizer = null): self
-    {
-        return new static($callback, $normalizer);
-    }
-
     public function getCallback(): callable
     {
         return $this->callback;
