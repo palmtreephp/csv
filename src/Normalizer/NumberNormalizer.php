@@ -9,14 +9,14 @@ namespace Palmtree\Csv\Normalizer;
  */
 class NumberNormalizer extends AbstractNormalizer
 {
-    private ?int $decimals = null;
+    private ?int $scale = null;
 
     /**
      * Sets the amount of decimal places to round to. Defaults to null which performs no rounding.
      */
-    public function setDecimals(?int $decimals = null): self
+    public function setScale(?int $scale = null): self
     {
-        $this->decimals = $decimals;
+        $this->scale = $scale;
 
         return $this;
     }
@@ -35,8 +35,8 @@ class NumberNormalizer extends AbstractNormalizer
 
         $numberValue = json_decode($value);
 
-        if ($this->decimals !== null) {
-            $numberValue = round($numberValue, $this->decimals);
+        if ($this->scale !== null) {
+            $numberValue = round($numberValue, $this->scale);
         }
 
         return $numberValue;
