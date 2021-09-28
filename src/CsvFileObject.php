@@ -46,7 +46,7 @@ class CsvFileObject extends \SplFileObject
     {
         try {
             $size = parent::getSize();
-        } catch (\RuntimeException $exception) {
+        } catch (\RuntimeException) {
             $size = $this->fstat()['size'];
         }
 

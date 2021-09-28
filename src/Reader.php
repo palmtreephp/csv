@@ -40,16 +40,16 @@ class Reader extends AbstractCsvDocument implements \Iterator
     }
 
     /**
-     * @param string|int $key
+     * @param int|string $key
      *
      * @return string|int
      */
-    public function getHeader($key)
+    public function getHeader(int|string $key): int|string
     {
         return $this->headers[$key] ?? $key;
     }
 
-    public function setHeaderNormalizer(NormalizerInterface $headerNormalizer): self
+    public function setHeaderNormalizer(NormalizerInterface $headerNormalizer): static
     {
         $this->headerNormalizer = $headerNormalizer;
 
@@ -61,7 +61,7 @@ class Reader extends AbstractCsvDocument implements \Iterator
         return $this->headerNormalizer ??= new NullNormalizer();
     }
 
-    public function addNormalizer(string $key, NormalizerInterface $normalizer): self
+    public function addNormalizer(string $key, NormalizerInterface $normalizer): static
     {
         $this->normalizers[$key] = $normalizer;
 
@@ -71,7 +71,7 @@ class Reader extends AbstractCsvDocument implements \Iterator
     /**
      * @param iterable<NormalizerInterface> $normalizers
      */
-    public function addNormalizers(iterable $normalizers): self
+    public function addNormalizers(iterable $normalizers): static
     {
         foreach ($normalizers as $key => $normalizer) {
             $this->addNormalizer($key, $normalizer);
@@ -80,10 +80,7 @@ class Reader extends AbstractCsvDocument implements \Iterator
         return $this;
     }
 
-    /**
-     * @param string|int $key
-     */
-    public function getNormalizer($key): NormalizerInterface
+    public function getNormalizer(int|string $key): NormalizerInterface
     {
         if ($this->hasHeaders && \is_int($key)) {
             $this->normalizers[$key] = $this->getHeaderNormalizer();
@@ -101,7 +98,7 @@ class Reader extends AbstractCsvDocument implements \Iterator
     /**
      * @param class-string<NormalizerInterface> $defaultNormalizer
      */
-    public function setDefaultNormalizer(string $defaultNormalizer): self
+    public function setDefaultNormalizer(string $defaultNormalizer): static
     {
         $this->defaultNormalizer = $defaultNormalizer;
 
@@ -116,14 +113,14 @@ class Reader extends AbstractCsvDocument implements \Iterator
         return $this->defaultNormalizer;
     }
 
-    public function setStripBom(?string $stripBom): self
+    public function setStripBom(?string $stripBom): static
     {
         $this->stripBom = $stripBom;
 
         return $this;
     }
 
-    public function setOffset(int $offset): self
+    public function setOffset(int $offset): static
     {
         $this->offset = $offset;
 
@@ -135,7 +132,7 @@ class Reader extends AbstractCsvDocument implements \Iterator
         return $this->offset;
     }
 
-    public function setHeaderOffset(int $headerOffset): self
+    public function setHeaderOffset(int $headerOffset): static
     {
         $this->headerOffset = $headerOffset;
 

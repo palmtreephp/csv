@@ -17,8 +17,7 @@ class Cell
         $this->normalizer = $normalizer;
     }
 
-    /** @return mixed */
-    public function getValue()
+    public function getValue(): mixed
     {
         return $this->normalizer->normalize($this->getRawValue());
     }
@@ -37,7 +36,7 @@ class Cell
     {
         try {
             $value = (string)$this->getValue();
-        } catch (\Exception $exception) {
+        } catch (\Exception) {
             $value = '';
         }
 

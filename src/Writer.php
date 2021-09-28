@@ -24,7 +24,7 @@ class Writer extends AbstractCsvDocument
      *
      * Uses the first row's keys as headers.
      */
-    public function setData(array $data): self
+    public function setData(array $data): static
     {
         if ($this->hasHeaders) {
             $this->setHeaders(array_keys(reset($data)));
@@ -35,7 +35,7 @@ class Writer extends AbstractCsvDocument
         return $this;
     }
 
-    public function setHeaders(array $headers): self
+    public function setHeaders(array $headers): static
     {
         $this->headers = $headers;
 
@@ -44,7 +44,7 @@ class Writer extends AbstractCsvDocument
         return $this;
     }
 
-    public function addHeader(string $header): self
+    public function addHeader(string $header): static
     {
         $headers = $this->headers;
 

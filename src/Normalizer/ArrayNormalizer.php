@@ -17,7 +17,7 @@ class ArrayNormalizer extends AbstractNormalizer
         parent::__construct($normalizer);
     }
 
-    public function normalize(string $value)
+    public function normalize(string $value): array
     {
         return $this->getNormalizedValue($value);
     }
@@ -36,7 +36,7 @@ class ArrayNormalizer extends AbstractNormalizer
     /**
      * Sets the delimiter to pass to explode(). Defaults to , (comma).
      */
-    public function delimiter(string $delimiter): self
+    public function delimiter(string $delimiter): static
     {
         $this->delimiter = $delimiter;
 

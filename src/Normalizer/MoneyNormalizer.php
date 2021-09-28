@@ -6,21 +6,44 @@ namespace Palmtree\Csv\Normalizer;
 
 class MoneyNormalizer extends AbstractNormalizer
 {
-    private string $moneyFormat = '%.2n';
+    private \NumberFormatter $formatter;
+    private string $locale = 'en_GB';
+    private string $currency = 'GBP';
 
-    /**
-     * Sets the format passed to money_format. Defaults to %.2n which formats the number according to the current
-     * locale's national currency format rounded to 2 decimal places. e.g for en_GB: £1,234.56.
-     */
-    public function format(string $moneyFormat): self
+    public function __construct(?NormalizerInterface $normalizer = null)
     {
-        $this->moneyFormat = $moneyFormat;
+        if (!class_exists('NumberFormatter')) {
+            throw new \LogicException('NumberFormatter class does not exist. Is the PHP intl extension installed?');
+        }
+
+        $this->createFormatter();
+
+        parent::__construct($normalizer);
+    }
+
+    public function locale(string $locale): static
+    {
+        $this->locale = $locale;
+
+        $this->createFormatter();
+
+        return $this;
+    }
+
+    public function currency(string $currency): static
+    {
+        $this->currency = $currency;
 
         return $this;
     }
 
     protected function getNormalizedValue(string $value): string
     {
-        return money_format($this->moneyFormat, (float)$value);
+        return $this->formatter->formatCurrency((float)$value, $this->currency);
+    }
+
+    private function createFormatter(): void
+    {
+        $this->formatter = new \NumberFormatter($this->locale, \NumberFormatter::CURRENCY);
     }
 }

@@ -18,7 +18,7 @@
         }
     ],
     "require": {
-        "php": ">=7.4",
+        "php": "^8.0",
         "ext-json": "*"
     },
     "autoload": {
@@ -36,10 +36,13 @@
             "Palmtree\\Csv\\Test\\": "tests"
         }
     },
+    "suggest": {
+        "ext-intl": "For MoneyNormalizer support"
+    },
     "scripts": {
         "test": "./vendor/bin/phpunit -v",
         "sniff": "vendor/bin/php-cs-fixer fix -v --dry-run --stop-on-violation --using-cache=no --diff --diff-format=udiff",
         "fix": "vendor/bin/php-cs-fixer fix --diff",
-        "lint": "find -L .  -path ./vendor -prune -o -type f -name '*.php' -print0 | xargs -0 -n 1 -P 4 php -l"
+        "lint": "find -L . -path ./vendor -prune -o -type f -name '*.php' -print0 | xargs -0 -n 1 -P 4 php -l"
     }
 }

@@ -40,8 +40,7 @@ class Row implements \ArrayAccess, \Countable, \IteratorAggregate
         }
     }
 
-    /** @param string|int $key */
-    public function addCell($key, string $value): void
+    public function addCell(int|string $key, string $value): void
     {
         $normalizer = $this->reader->getNormalizer($key);
 
