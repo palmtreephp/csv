@@ -52,7 +52,7 @@ $csv->addNormalizers([
     'name' => new StringNormalizer(),
 
     // Convert to float, rounded to 4 decimal places
-    'price' => NumberNormalizer::create()->setDecimals(4),
+    'price' => NumberNormalizer::create()->scale(4),
 
     // Convert to boolean true or false
     'enabled' => new BooleanNormalizer(),
