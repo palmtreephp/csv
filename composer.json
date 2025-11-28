@@ -38,8 +38,9 @@
     },
     "scripts": {
         "test": "./vendor/bin/phpunit -v",
-        "sniff": "vendor/bin/php-cs-fixer fix -v --dry-run --stop-on-violation --using-cache=no --diff --diff-format=udiff",
-        "fix": "vendor/bin/php-cs-fixer fix --diff",
+        "sniff": "@php vendor/bin/php-cs-fixer fix -v --dry-run --stop-on-violation --using-cache=no --diff --diff-format=udiff",
+        "fix": "@php vendor/bin/php-cs-fixer fix --diff",
+        "sa": "@php vendor/bin/phpstan analyse",
         "lint": "find -L .  -path ./vendor -prune -o -type f -name '*.php' -print0 | xargs -0 -n 1 -P 4 php -l"
     }
 }
