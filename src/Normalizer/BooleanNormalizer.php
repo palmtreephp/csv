@@ -61,7 +61,7 @@ class BooleanNormalizer extends AbstractNormalizer
             $value = strtolower($value);
         }
 
-        return $this->values[$value] ?? $this->nullable ? null : false;
+        return $this->values[$value] ?? ($this->nullable ? null : false);
     }
 
     /**
