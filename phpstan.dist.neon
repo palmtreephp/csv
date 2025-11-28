@@ -5,7 +5,6 @@ parameters:
         - tests/
     ignoreErrors:
         - identifier: missingType.iterableValue
-        - identifier: missingType.generics
 
 includes:
     - vendor/phpstan/phpstan-phpunit/extension.neon

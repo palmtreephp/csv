@@ -89,6 +89,9 @@ class Row implements \ArrayAccess, \Countable, \IteratorAggregate
         return \count($this->cells);
     }
 
+    /**
+     * @return \ArrayIterator<int|string, Cell>
+     */
     public function getIterator(): \ArrayIterator
     {
         return new \ArrayIterator($this->cells);

@@ -11,6 +11,8 @@ use Palmtree\Csv\Util\StringUtil;
 
 /**
  * Reads a CSV file by loading each line into memory one at a time.
+ *
+ * @implements \Iterator<int, Row>
  */
 class Reader extends AbstractCsvDocument implements \Iterator
 {
