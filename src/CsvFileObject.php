@@ -15,6 +15,10 @@ class CsvFileObject extends \SplFileObject
     {
         $bytes = $this->fwrite($this->getCsvString($row));
 
+        if ($bytes === false) {
+            throw new \RuntimeException('Failed to write CSV row to file.');
+        }
+
         $this->bytesWritten += $bytes;
 
         return $bytes;

@@ -29,6 +29,11 @@ class ExternalReader extends Reader
 
         $tempFileResource = fopen($tempFile, 'w');
 
+        if ($tempFileResource === false) {
+            fclose($remoteStream);
+            throw new \RuntimeException('Failed to open temporary file for writing');
+        }
+
         // Stream the remote data to the temporary file without loading it all into memory
         if (stream_copy_to_stream($remoteStream, $tempFileResource) === false) {
             fclose($remoteStream);
