@@ -23,7 +23,6 @@ class RowTest extends TestCase
 
         $cells = $row->getCells();
 
-        $this->assertInstanceOf(Cell::class, $cells[2]);
         $this->assertSame('baz', $cells[2]->getValue());
 
         unset($row[2]);
@@ -48,8 +47,6 @@ class RowTest extends TestCase
 
         $row = new Row(['foo', 'bar'], $reader);
 
-        $this->assertInstanceOf('Traversable', $row);
-
         foreach ($row as $i => $cell) {
             $this->assertSame($i ? 'bar' : 'foo', $cell->getValue());
         }
@@ -60,8 +57,6 @@ class RowTest extends TestCase
         $reader = new Reader('php://memory');
 
         $row = new Row(['foo', 'bar'], $reader);
-
-        $this->assertInstanceOf(Reader::class, $row->getReader());
         $this->assertSame($reader, $row->getReader());
     }
 }

@@ -12,7 +12,7 @@ class Downloader extends Writer
      *
      * @var array<string, string>
      */
-    private $responseHeaders = [
+    private array $responseHeaders = [
         'Content-Type' => 'text/csv',
         'Content-Description' => 'File Transfer',
         'Content-Transfer-Encoding' => 'Binary',

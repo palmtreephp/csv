@@ -24,7 +24,7 @@ class ExternalReader extends Reader
         // Open stream to the URL
         $remoteStream = fopen($url, 'r');
         if ($remoteStream === false) {
-            throw new \RuntimeException("Failed to open URL: {$url}");
+            throw new \RuntimeException("Failed to open URL: $url");
         }
 
         $tempFileResource = fopen($tempFile, 'w');

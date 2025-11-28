@@ -7,6 +7,10 @@ namespace Palmtree\Csv\Row;
 use Palmtree\Csv\Cell\Cell;
 use Palmtree\Csv\Reader;
 
+/**
+ * @implements \ArrayAccess<string|int, mixed>
+ * @implements \IteratorAggregate<int|string, Cell>
+ */
 class Row implements \ArrayAccess, \Countable, \IteratorAggregate
 {
     /** @var array<Cell> */
@@ -38,8 +42,7 @@ class Row implements \ArrayAccess, \Countable, \IteratorAggregate
         }
     }
 
-    /** @param string|int $key */
-    public function addCell($key, string $value): void
+    public function addCell(int|string $key, string $value): void
     {
         $normalizer = $this->reader->getNormalizer($key);
 
@@ -51,7 +54,7 @@ class Row implements \ArrayAccess, \Countable, \IteratorAggregate
     /**
      * @param string|int $offset
      */
-    public function offsetExists($offset): bool
+    public function offsetExists(mixed $offset): bool
     {
         return isset($this->cells[$offset]) || \array_key_exists($offset, $this->cells);
     }
@@ -59,8 +62,7 @@ class Row implements \ArrayAccess, \Countable, \IteratorAggregate
     /**
      * @param string|int $offset
      */
-    #[\ReturnTypeWillChange]
-    public function offsetGet($offset)
+    public function offsetGet(mixed $offset): mixed
     {
         return $this->cells[$offset]->getValue();
     }
@@ -69,7 +71,7 @@ class Row implements \ArrayAccess, \Countable, \IteratorAggregate
      * @param string|int $offset
      * @param string     $value
      */
-    public function offsetSet($offset, $value): void
+    public function offsetSet(mixed $offset, mixed $value): void
     {
         $this->addCell($offset, $value);
     }
@@ -77,7 +79,7 @@ class Row implements \ArrayAccess, \Countable, \IteratorAggregate
     /**
      * @param string|int $offset
      */
-    public function offsetUnset($offset): void
+    public function offsetUnset(mixed $offset): void
     {
         unset($this->cells[$offset]);
     }
@@ -94,12 +96,6 @@ class Row implements \ArrayAccess, \Countable, \IteratorAggregate
 
     public function toArray(): array
     {
-        $result = [];
-
-        foreach ($this->cells as $key => $cell) {
-            $result[$key] = $cell->getValue();
-        }
-
-        return $result;
+        return array_map(fn ($cell) => $cell->getValue(), $this->cells);
     }
 }

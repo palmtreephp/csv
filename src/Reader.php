@@ -39,12 +39,7 @@ class Reader extends AbstractCsvDocument implements \Iterator
         return $this->headers;
     }
 
-    /**
-     * @param string|int $key
-     *
-     * @return string|int
-     */
-    public function getHeader($key)
+    public function getHeader(int|string $key): int|string
     {
         return $this->headers[$key] ?? $key;
     }
@@ -80,10 +75,7 @@ class Reader extends AbstractCsvDocument implements \Iterator
         return $this;
     }
 
-    /**
-     * @param string|int $key
-     */
-    public function getNormalizer($key): NormalizerInterface
+    public function getNormalizer(int|string $key): NormalizerInterface
     {
         if ($this->hasHeaders && \is_int($key)) {
             $this->normalizers[$key] = $this->getHeaderNormalizer();

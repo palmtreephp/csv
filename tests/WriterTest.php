@@ -10,13 +10,6 @@ use PHPUnit\Framework\TestCase;
 
 class WriterTest extends TestCase
 {
-    public function testInvalidFile(): void
-    {
-        $this->expectException('TypeError');
-        $writer = new Writer(null);
-        $writer->getDocument();
-    }
-
     public function testGetContents(): void
     {
         $writer = new Writer('php://memory');

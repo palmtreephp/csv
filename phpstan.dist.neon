@@ -2,6 +2,11 @@ parameters:
     level: 7
     paths:
         - src/
+        - tests/
     ignoreErrors:
         - identifier: missingType.iterableValue
         - identifier: missingType.generics
+
+includes:
+    - vendor/phpstan/phpstan-phpunit/extension.neon
+    - vendor/phpstan/phpstan-phpunit/rules.neon
