@@ -19,14 +19,14 @@ $people[] = [
     'gender' => 'Male',
 ];
 
-//$writer = new Writer('../people.csv');
-//$writer->setData($people);
+// $writer = new Writer('../people.csv');
+// $writer->setData($people);
 
 Writer::write('../people.csv', $people);
 
 $reader = new Reader('../people.csv');
 
 foreach ($reader as $row) {
-    //var_dump($row['age']);
+    // var_dump($row['age']);
     var_export($row['name']);
 }

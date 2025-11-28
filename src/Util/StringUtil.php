@@ -17,7 +17,7 @@ class StringUtil
      */
     public static function hasBom(string $input, string $bom): bool
     {
-        return strpos($input, $bom) === 0;
+        return str_starts_with($input, $bom);
     }
 
     /**

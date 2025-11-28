@@ -17,7 +17,7 @@ class WriterTest extends TestCase
         $writer->getDocument();
     }
 
-    public function testGetContents()
+    public function testGetContents(): void
     {
         $writer = new Writer('php://memory');
         $writer->setHeaders(['first', 'second']);

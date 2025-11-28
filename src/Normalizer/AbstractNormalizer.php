@@ -13,7 +13,6 @@ abstract class AbstractNormalizer implements NormalizerInterface
         $this->normalizer = $normalizer ?? new NullNormalizer();
     }
 
-    /** @return mixed */
     abstract protected function getNormalizedValue(string $value);
 
     public function normalize(string $value)

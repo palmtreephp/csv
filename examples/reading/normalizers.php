@@ -5,7 +5,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/../../vendor/autoload.php';
 
 use Palmtree\Csv\Cell\Cell;
-use Palmtree\Csv\Normalizer as Normalizer;
+use Palmtree\Csv\Normalizer;
 use Palmtree\Csv\Reader;
 
 $csv = new Reader(__DIR__ . '/../products.csv');

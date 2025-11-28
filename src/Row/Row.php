@@ -51,8 +51,6 @@ class Row implements \ArrayAccess, \Countable, \IteratorAggregate
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @param string|int $offset
      */
     public function offsetExists($offset): bool
@@ -61,8 +59,6 @@ class Row implements \ArrayAccess, \Countable, \IteratorAggregate
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @param string|int $offset
      */
     #[\ReturnTypeWillChange]
@@ -72,8 +68,6 @@ class Row implements \ArrayAccess, \Countable, \IteratorAggregate
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @param string|int $offset
      * @param string     $value
      */
@@ -83,8 +77,6 @@ class Row implements \ArrayAccess, \Countable, \IteratorAggregate
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @param string|int $offset
      */
     public function offsetUnset($offset): void
@@ -92,17 +84,11 @@ class Row implements \ArrayAccess, \Countable, \IteratorAggregate
         unset($this->cells[$offset]);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function count(): int
     {
         return \count($this->cells);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function getIterator(): \ArrayIterator
     {
         return new \ArrayIterator($this->cells);

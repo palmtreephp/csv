@@ -15,7 +15,6 @@ class CallableNormalizer implements NormalizerInterface
         $this->normalizer = $normalizer ?? new NullNormalizer();
     }
 
-    /** @return mixed */
     public function normalize(string $value)
     {
         $callback = $this->callback;
