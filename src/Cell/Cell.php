@@ -17,7 +17,7 @@ class Cell
         $this->normalizer = $normalizer;
     }
 
-    public function getValue()
+    public function getValue(): mixed
     {
         return $this->normalizer->normalize($this->getRawValue());
     }

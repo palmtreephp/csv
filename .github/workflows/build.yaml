@@ -1,0 +1,48 @@
+name: Build
+
+on: push
+
+jobs:
+  run:
+    runs-on: 'ubuntu-24.04'
+    strategy:
+      matrix:
+        php-versions: [ '8.3', '8.4' ]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+          coverage: none
+          tools: cs2pr
+
+      - name: Declare variables
+        id: vars
+        run: echo "composer_cache_dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache composer
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.vars.outputs.composer_cache_dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+
+      - name: Lint PHP
+        run: find -L src -type f -name '*.php' -print0 | xargs -0 -n 500 -P $(nproc) php -l
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-interaction --no-ansi
+
+      - name: PHP-CS-Fixer
+        run: php vendor/bin/php-cs-fixer fix -vvv --dry-run --using-cache=no --format=checkstyle | cs2pr
+        if: matrix.php-versions == 8.4
+
+      - name: Static Analysis
+        run: php vendor/bin/phpstan analyse
+
+      - name: Tests
+        run: php vendor/bin/phpunit -v --do-not-cache-result

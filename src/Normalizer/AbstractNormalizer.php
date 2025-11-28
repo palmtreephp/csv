@@ -13,9 +13,9 @@ abstract class AbstractNormalizer implements NormalizerInterface
         $this->normalizer = $normalizer ?? new NullNormalizer();
     }
 
-    abstract protected function getNormalizedValue(string $value);
+    abstract protected function getNormalizedValue(string $value): mixed;
 
-    public function normalize(string $value)
+    public function normalize(string $value): mixed
     {
         $value = $this->normalizer->normalize($value);
 

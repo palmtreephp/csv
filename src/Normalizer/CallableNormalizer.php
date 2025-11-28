@@ -11,11 +11,11 @@ class CallableNormalizer implements NormalizerInterface
 
     public function __construct(callable $callback, ?NormalizerInterface $normalizer = null)
     {
-        $this->callback = \Closure::fromCallable($callback);
+        $this->callback = $callback(...);
         $this->normalizer = $normalizer ?? new NullNormalizer();
     }
 
-    public function normalize(string $value)
+    public function normalize(string $value): mixed
     {
         $callback = $this->callback;
 

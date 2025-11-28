@@ -6,5 +6,5 @@ namespace Palmtree\Csv\Normalizer;
 
 interface NormalizerInterface
 {
-    public function normalize(string $value);
+    public function normalize(string $value): mixed;
 }

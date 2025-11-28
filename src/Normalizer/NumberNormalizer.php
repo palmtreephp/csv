@@ -21,10 +21,7 @@ class NumberNormalizer extends AbstractNormalizer
         return $this;
     }
 
-    /**
-     * @return float|int
-     */
-    protected function getNormalizedValue(string $value)
+    protected function getNormalizedValue(string $value): float|int
     {
         if (!is_numeric($value)) {
             return 0;
