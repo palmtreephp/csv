@@ -65,6 +65,7 @@ class Row implements \ArrayAccess, \Countable, \IteratorAggregate
      *
      * @param string|int $offset
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         return $this->cells[$offset]->getValue();
