@@ -9,13 +9,11 @@ use Palmtree\Csv\Reader;
 
 class Row implements \ArrayAccess, \Countable, \IteratorAggregate
 {
-    private Reader $reader;
     /** @var array<Cell> */
     private array $cells = [];
 
-    public function __construct(array $cells, Reader $reader)
+    public function __construct(array $cells, private readonly Reader $reader)
     {
-        $this->reader = $reader;
         $this->addCells($cells);
     }
 

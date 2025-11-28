@@ -6,15 +6,10 @@ namespace Palmtree\Csv\Cell;
 
 use Palmtree\Csv\Normalizer\NormalizerInterface;
 
-class Cell
+class Cell implements \Stringable
 {
-    private NormalizerInterface $normalizer;
-    private string $value;
-
-    public function __construct(string $value, NormalizerInterface $normalizer)
+    public function __construct(private readonly string $value, private readonly NormalizerInterface $normalizer)
     {
-        $this->value = $value;
-        $this->normalizer = $normalizer;
     }
 
     public function getValue(): mixed
@@ -36,7 +31,7 @@ class Cell
     {
         try {
             $value = (string)$this->getValue();
-        } catch (\Exception $exception) {
+        } catch (\Exception) {
             $value = '';
         }
 

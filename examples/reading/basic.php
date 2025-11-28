@@ -10,9 +10,8 @@ use Palmtree\Csv\Reader;
 $csv = new Reader(__DIR__ . '/../people.csv');
 
 /**
- * @var mixed       $key
  * @var array<Cell> $row
  */
-foreach ($csv as $key => $row) {
+foreach ($csv as $row) {
     echo $row['name'] . \PHP_EOL;
 }

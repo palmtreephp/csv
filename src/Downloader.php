@@ -21,12 +21,8 @@ class Downloader extends Writer
         'Pragma' => 'public',
     ];
 
-    private string $filename;
-
-    public function __construct(string $filename, iterable $responseHeaders = [])
+    public function __construct(private readonly string $filename, iterable $responseHeaders = [])
     {
-        $this->filename = $filename;
-
         $this->addResponseHeaders($responseHeaders);
         $this->addResponseHeader('Content-Disposition', \sprintf('attachment; filename="%s"', $this->getFilename()));
 

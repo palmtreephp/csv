@@ -22,7 +22,7 @@ class ReaderTest extends TestCase
         $reader = new Reader(__DIR__ . '/fixtures/products.csv');
 
         $asserted = false;
-        foreach ($reader as $key => $row) {
+        foreach ($reader as $row) {
             if (!$asserted) {
                 $this->assertArrayHasKey('product_id', $row);
                 $asserted = true;

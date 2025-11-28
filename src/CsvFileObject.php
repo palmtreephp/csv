@@ -50,7 +50,7 @@ class CsvFileObject extends \SplFileObject
     {
         try {
             $size = parent::getSize();
-        } catch (\RuntimeException $exception) {
+        } catch (\RuntimeException) {
             $size = $this->fstat()['size'];
         }
 
@@ -82,7 +82,7 @@ class CsvFileObject extends \SplFileObject
      */
     private function getCsvString(array $row): string
     {
-        list($delimiter, $enclosure) = $this->getCsvControl();
+        [$delimiter, $enclosure] = $this->getCsvControl();
 
         return $enclosure .
                implode($enclosure . $delimiter . $enclosure, StringUtil::escapeEnclosure($row, $enclosure)) .

@@ -6,16 +6,14 @@ namespace Palmtree\Csv;
 
 abstract class AbstractCsvDocument
 {
-    protected string $filePath;
     protected bool $hasHeaders = true;
     protected string $delimiter = ',';
     protected string $enclosure = '"';
     protected string $escapeCharacter = "\0";
     private ?CsvFileObject $document = null;
 
-    public function __construct(string $filePath, bool $hasHeaders = true)
+    public function __construct(protected string $filePath, bool $hasHeaders = true)
     {
-        $this->filePath = $filePath;
         $this->setHasHeaders($hasHeaders);
     }
 

@@ -18,6 +18,7 @@ class ArrayNormalizer extends AbstractNormalizer
         parent::__construct($normalizer);
     }
 
+    #[\Override]
     public function normalize(string $value): array
     {
         return $this->getNormalizedValue($value);
@@ -25,7 +26,7 @@ class ArrayNormalizer extends AbstractNormalizer
 
     protected function getNormalizedValue(string $value): array
     {
-        $normalizedValue = explode($this->delimiter, $this->stringNormalizer->normalize($value));
+        $normalizedValue = explode($this->delimiter, (string)$this->stringNormalizer->normalize($value));
 
         foreach ($normalizedValue as &$part) {
             $part = $this->normalizer->normalize($part);

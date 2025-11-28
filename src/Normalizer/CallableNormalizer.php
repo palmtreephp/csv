@@ -6,13 +6,11 @@ namespace Palmtree\Csv\Normalizer;
 
 class CallableNormalizer implements NormalizerInterface
 {
-    private \Closure $callback;
-    private NormalizerInterface $normalizer;
+    private readonly \Closure $callback;
 
-    public function __construct(callable $callback, ?NormalizerInterface $normalizer = null)
+    public function __construct(callable $callback, private readonly ?NormalizerInterface $normalizer = new NullNormalizer())
     {
         $this->callback = $callback(...);
-        $this->normalizer = $normalizer ?? new NullNormalizer();
     }
 
     public function normalize(string $value): mixed
