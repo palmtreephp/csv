@@ -19,15 +19,20 @@ class Writer extends AbstractCsvDocument
     }
 
     /**
-     * Sets headers and all rows on the CSV file and
-     * then closes the file handle.
+     * Sets headers and adds all rows to the CSV file.
      *
      * Uses the first row's keys as headers.
      */
     public function setData(array $data): self
     {
-        if ($this->hasHeaders) {
-            $this->setHeaders(array_keys(reset($data)));
+        if ($data === []) {
+            return $this;
+        }
+
+        $firstRow = reset($data);
+
+        if ($this->hasHeaders && \is_array($firstRow)) {
+            $this->setHeaders(array_keys($firstRow));
         }
 
         $this->addRows($data);

@@ -266,4 +266,12 @@ class WriterTest extends TestCase
 
         $this->assertSame("\"a\"\r\n\"b\"", $writer->getContents());
     }
+
+    public function testSetDataWithEmptyArray(): void
+    {
+        $writer = new Writer('php://memory');
+        $writer->setData([]);
+
+        $this->assertSame('', $writer->getContents());
+    }
 }
