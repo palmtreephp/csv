@@ -6,10 +6,14 @@ namespace Palmtree\Csv;
 
 /**
  * Writes an array to a CSV file.
+ *
+ * Headers are written to the file just before the first row, or when the contents are read
+ * or the document is closed, so they can be changed until then.
  */
 class Writer extends AbstractCsvDocument
 {
     private array $headers = [];
+    private bool $headersWritten = false;
 
     public static function write(string $filePath, array $data): void
     {
@@ -42,9 +46,11 @@ class Writer extends AbstractCsvDocument
 
     public function setHeaders(array $headers): self
     {
-        $this->headers = $headers;
+        if ($this->headersWritten) {
+            throw new \LogicException('Headers cannot be changed after they have been written to the document.');
+        }
 
-        $this->addRow($this->headers);
+        $this->headers = array_values($headers);
 
         return $this;
     }
@@ -79,22 +85,19 @@ class Writer extends AbstractCsvDocument
      */
     public function addRow(array $row): bool
     {
-        if ($this->hasHeaders && empty($this->headers)) {
+        if ($this->hasHeaders && $this->headers === [] && !$this->headersWritten) {
             $this->setHeaders(array_keys($row));
         }
 
-        $result = $this->getDocument()->fwriteCsv($row);
+        $this->writeHeaders();
 
-        if ($result === 0) {
-            // @todo: handle error
-            return false;
-        }
-
-        return true;
+        return $this->getDocument()->fwriteCsv($row) > 0;
     }
 
     public function getContents(): string
     {
+        $this->writeHeaders();
+
         if (($size = $this->getDocument()->getSize()) === 0) {
             return '';
         }
@@ -108,8 +111,37 @@ class Writer extends AbstractCsvDocument
         return $data === false ? '' : $data;
     }
 
+    #[\Override]
+    public function closeDocument(): void
+    {
+        if ($this->hasDocument()) {
+            $this->writeHeaders();
+        }
+
+        parent::closeDocument();
+    }
+
+    #[\Override]
+    public function __destruct()
+    {
+        $this->writeHeaders();
+
+        parent::__destruct();
+    }
+
     protected function getOpenMode(): string
     {
         return 'w+';
+    }
+
+    protected function writeHeaders(): void
+    {
+        if ($this->headersWritten || $this->headers === []) {
+            return;
+        }
+
+        $this->headersWritten = true;
+
+        $this->getDocument()->fwriteCsv($this->headers);
     }
 }

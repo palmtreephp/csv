@@ -41,6 +41,8 @@ class Downloader extends Writer
      */
     public function sendResponse(): void
     {
+        $this->writeHeaders();
+
         if (!headers_sent()) {
             header(\sprintf('Content-Length: %s', $this->getDocument()->getSize()));
 

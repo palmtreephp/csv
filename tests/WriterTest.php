@@ -267,11 +267,52 @@ class WriterTest extends TestCase
         $this->assertSame("\"a\"\r\n\"b\"", $writer->getContents());
     }
 
+    public function testAddHeaderWritesSingleHeaderRow(): void
+    {
+        $writer = new Writer('php://memory');
+        $writer->addHeader('a');
+        $writer->addHeader('b');
+        $writer->addRow(['1', '2']);
+
+        $this->assertSame("\"a\",\"b\"\r\n\"1\",\"2\"", $writer->getContents());
+    }
+
+    public function testSetHeadersAfterWriteThrows(): void
+    {
+        $writer = new Writer('php://memory');
+        $writer->addRow(['a' => '1']);
+
+        $this->expectException(\LogicException::class);
+
+        $writer->addHeader('b');
+    }
+
     public function testSetDataWithEmptyArray(): void
     {
         $writer = new Writer('php://memory');
         $writer->setData([]);
 
         $this->assertSame('', $writer->getContents());
+    }
+
+    public function testAddEmptyRow(): void
+    {
+        $writer = new Writer('php://memory');
+
+        $this->assertTrue($writer->addRow([]));
+    }
+
+    public function testHeadersAreWrittenOnClose(): void
+    {
+        $file = tempnam(sys_get_temp_dir(), 'phpunit_csv_');
+        \assert(\is_string($file));
+
+        $writer = new Writer($file);
+        $writer->setHeaders(['a', 'b']);
+        unset($writer);
+
+        $this->assertSame('"a","b"', file_get_contents($file));
+
+        unlink($file);
     }
 }

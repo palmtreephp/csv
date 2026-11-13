@@ -34,8 +34,6 @@ abstract class AbstractCsvDocument
 
     public function setDocument(?CsvFileObject $document = null): self
     {
-        $this->closeDocument();
-
         $this->document = $document;
 
         return $this;
@@ -44,6 +42,11 @@ abstract class AbstractCsvDocument
     public function getDocument(): CsvFileObject
     {
         return $this->document ??= $this->createDocument();
+    }
+
+    public function hasDocument(): bool
+    {
+        return $this->document !== null;
     }
 
     public function getFilePath(): string
@@ -114,14 +117,10 @@ abstract class AbstractCsvDocument
 
     private function createDocument(): CsvFileObject
     {
-        $this->closeDocument();
-
         $document = new CsvFileObject($this->filePath, $this->getOpenMode());
 
         $document->setFlags(\SplFileObject::READ_CSV);
         $document->setCsvControl($this->delimiter, $this->enclosure, $this->escapeCharacter);
-
-        $this->document = $document;
 
         return $document;
     }
