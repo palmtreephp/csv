@@ -78,4 +78,17 @@ class DateTimeNormalizerTest extends TestCase
             $this->assertSame($expected, $result->format('Y-m-d'));
         }
     }
+
+    public function testUnspecifiedFieldsAreReset(): void
+    {
+        $result = (new DateTimeNormalizer())->normalize('2024-01-01');
+
+        $this->assertInstanceOf(\DateTime::class, $result);
+        $this->assertSame('00:00:00', $result->format('H:i:s'));
+    }
+
+    public function testInvalidDateReturnsNull(): void
+    {
+        $this->assertNull((new DateTimeNormalizer())->normalize('2024-02-30'));
+    }
 }
