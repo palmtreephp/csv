@@ -220,4 +220,19 @@ class BooleanNormalizerTest extends TestCase
         $this->assertFalse($normalizer->normalize('no'));
         $this->assertFalse($normalizer->normalize('0'));
     }
+
+    public function testCaseSensitiveAfterPairs(): void
+    {
+        $normalizer = (new BooleanNormalizer())->pairs(['Y' => 'N'])->caseSensitive(true);
+
+        $this->assertTrue($normalizer->normalize('Y'));
+        $this->assertFalse($normalizer->normalize('y'));
+    }
+
+    public function testCaseInsensitiveMatchesMixedCasePairs(): void
+    {
+        $normalizer = (new BooleanNormalizer())->pairs(['Y' => 'N']);
+
+        $this->assertTrue($normalizer->normalize('y'));
+    }
 }
