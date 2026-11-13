@@ -4,8 +4,8 @@
 /tests                  export-ignore
 /.editorconfig          export-ignore
 /.gitattributes         export-ignore
+/.github                export-ignore
 /.gitignore             export-ignore
 /.php-cs-fixer.dist.php export-ignore
-/.scrutinizer.yml       export-ignore
+/phpstan.dist.neon      export-ignore
 /phpunit.xml.dist       export-ignore
-/psalm.xml              export-ignore

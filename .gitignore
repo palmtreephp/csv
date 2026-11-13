@@ -2,6 +2,5 @@
 /composer.lock
 .~lock*
 /phpunit.xml
-/.php_cs.cache
 /.phpunit.result.cache
 /.php-cs-fixer.cache
