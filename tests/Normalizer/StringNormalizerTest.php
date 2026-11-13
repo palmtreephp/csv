@@ -217,4 +217,13 @@ class StringNormalizerTest extends TestCase
         $value2 = $normalizer->normalize('-hello-');
         $this->assertSame('hello', $value2);
     }
+
+    public function testNonStringInnerNormalizerThrows(): void
+    {
+        $normalizer = new StringNormalizer(new \Palmtree\Csv\Normalizer\NumberNormalizer());
+
+        $this->expectException(\UnexpectedValueException::class);
+
+        $normalizer->normalize('1');
+    }
 }
