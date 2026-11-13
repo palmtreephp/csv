@@ -239,4 +239,129 @@ class WriterTest extends TestCase
         $this->assertStringContainsString('John', $contents);
         $this->assertStringContainsString('Jane', $contents);
     }
+
+    public function testAddRowWithNonStringValues(): void
+    {
+        $writer = new Writer('php://memory', false);
+        $writer->addRow([1, 1.5, true, null]);
+
+        $this->assertSame('"1","1.5","1",""', $writer->getContents());
+    }
+
+    public function testAddRowWithUnconvertibleValueThrows(): void
+    {
+        $writer = new Writer('php://memory', false);
+
+        $this->expectException(\InvalidArgumentException::class);
+
+        $writer->addRow([new \stdClass()]);
+    }
+
+    public function testRowsAreWrittenInHeaderOrder(): void
+    {
+        $writer = new Writer('php://memory');
+        $writer->setData([
+            ['a' => '1', 'b' => '2'],
+            ['b' => '3', 'a' => '4'],
+            ['b' => '5'],
+        ]);
+
+        $this->assertSame("\"a\",\"b\"\r\n\"1\",\"2\"\r\n\"4\",\"3\"\r\n\"\",\"5\"", $writer->getContents());
+    }
+
+    public function testRowWithUnknownKeyThrows(): void
+    {
+        $writer = new Writer('php://memory');
+        $writer->setHeaders(['a']);
+
+        $this->expectException(\InvalidArgumentException::class);
+
+        $writer->addRow(['b' => '1']);
+    }
+
+    public function testAddRowAfterGetContents(): void
+    {
+        $writer = new Writer('php://memory', false);
+        $writer->addRow(['a']);
+        $writer->getContents();
+        $writer->addRow(['b']);
+
+        $this->assertSame("\"a\"\r\n\"b\"", $writer->getContents());
+    }
+
+    public function testAddHeaderWritesSingleHeaderRow(): void
+    {
+        $writer = new Writer('php://memory');
+        $writer->addHeader('a');
+        $writer->addHeader('b');
+        $writer->addRow(['1', '2']);
+
+        $this->assertSame("\"a\",\"b\"\r\n\"1\",\"2\"", $writer->getContents());
+    }
+
+    public function testSetHeadersAfterWriteThrows(): void
+    {
+        $writer = new Writer('php://memory');
+        $writer->addRow(['a' => '1']);
+
+        $this->expectException(\LogicException::class);
+
+        $writer->addHeader('b');
+    }
+
+    public function testSetDataWithEmptyArray(): void
+    {
+        $writer = new Writer('php://memory');
+        $writer->setData([]);
+
+        $this->assertSame('', $writer->getContents());
+    }
+
+    public function testAddEmptyRow(): void
+    {
+        $writer = new Writer('php://memory');
+
+        $this->assertTrue($writer->addRow([]));
+    }
+
+    public function testHeadersAreWrittenOnClose(): void
+    {
+        $file = tempnam(sys_get_temp_dir(), 'phpunit_csv_');
+        \assert(\is_string($file));
+
+        $writer = new Writer($file);
+        $writer->setHeaders(['a', 'b']);
+        unset($writer);
+
+        $this->assertSame('"a","b"', file_get_contents($file));
+
+        unlink($file);
+    }
+
+    public function testSetFilePathReopensDocument(): void
+    {
+        $first = tempnam(sys_get_temp_dir(), 'phpunit_csv_');
+        $second = tempnam(sys_get_temp_dir(), 'phpunit_csv_');
+        \assert(\is_string($first) && \is_string($second));
+
+        $writer = new Writer($first, false);
+        $writer->getDocument();
+        $writer->setFilePath($second);
+        $writer->addRow(['a']);
+        $writer->closeDocument();
+
+        $this->assertSame('', file_get_contents($first));
+        $this->assertSame('"a"', file_get_contents($second));
+
+        unlink($first);
+        unlink($second);
+    }
+
+    public function testSettingCsvControlDoesNotOpenDocument(): void
+    {
+        $writer = new Writer('php://memory');
+        $writer->setDelimiter(';');
+
+        $this->assertFalse($writer->hasDocument());
+    }
 }

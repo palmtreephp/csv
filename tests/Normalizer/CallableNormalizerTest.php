@@ -12,7 +12,7 @@ class CallableNormalizerTest extends TestCase
 {
     public function testCallableNormalizerWithSimpleCallback(): void
     {
-        $normalizer = new CallableNormalizer(fn ($value) => strtoupper($value));
+        $normalizer = new CallableNormalizer(static fn ($value) => strtoupper($value));
 
         $result = $normalizer->normalize('hello');
 
@@ -22,7 +22,7 @@ class CallableNormalizerTest extends TestCase
     public function testCallableNormalizerWithChainedNormalizers(): void
     {
         $innerNormalizer = new NullNormalizer();
-        $normalizer = new CallableNormalizer(fn ($value) => trim($value), $innerNormalizer);
+        $normalizer = new CallableNormalizer(static fn ($value) => trim($value), $innerNormalizer);
 
         $result = $normalizer->normalize('  hello  ');
 
@@ -38,7 +38,7 @@ class CallableNormalizerTest extends TestCase
             }
         };
 
-        $normalizer = new CallableNormalizer(fn ($value) => strtoupper($value), $mockNormalizer);
+        $normalizer = new CallableNormalizer(static fn ($value) => strtoupper($value), $mockNormalizer);
 
         $result = $normalizer->normalize('test');
 
@@ -48,7 +48,7 @@ class CallableNormalizerTest extends TestCase
     public function testCallableNormalizerPassesNormalizerInstance(): void
     {
         $callbackNormalizer = null;
-        $normalizer = new CallableNormalizer(function ($value, $norm) use (&$callbackNormalizer) {
+        $normalizer = new CallableNormalizer(static function ($value, $norm) use (&$callbackNormalizer) {
             $callbackNormalizer = $norm;
 
             return $value;
@@ -61,10 +61,17 @@ class CallableNormalizerTest extends TestCase
 
     public function testCallableNormalizerWithNumericValue(): void
     {
-        $normalizer = new CallableNormalizer(fn ($value) => $value * 2);
+        $normalizer = new CallableNormalizer(static fn ($value) => $value * 2);
 
         $result = $normalizer->normalize('5');
 
         $this->assertSame(10, $result);
+    }
+
+    public function testNullInnerNormalizer(): void
+    {
+        $normalizer = new CallableNormalizer(static fn (string $value) => strtoupper($value), null);
+
+        $this->assertSame('X', $normalizer->normalize('x'));
     }
 }

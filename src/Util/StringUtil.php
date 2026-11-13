@@ -38,14 +38,20 @@ class StringUtil
      * escaped by itself, so " becomes "".
      *
      * @see https://tools.ietf.org/html/rfc4180#section-2
+     *
+     * @param array<mixed> $data
+     *
+     * @return array<mixed>
      */
     public static function escapeEnclosure(array $data, string $enclosure): array
     {
         foreach ($data as $key => $value) {
             if (\is_array($value)) {
                 $data[$key] = self::escapeEnclosure($value, $enclosure);
+            } elseif ($value === null || \is_scalar($value) || $value instanceof \Stringable) {
+                $data[$key] = str_replace($enclosure, str_repeat($enclosure, 2), (string)$value);
             } else {
-                $data[$key] = str_replace($enclosure, str_repeat($enclosure, 2), $value);
+                throw new \InvalidArgumentException(\sprintf('Cannot convert value of type %s to a string.', get_debug_type($value)));
             }
         }
 

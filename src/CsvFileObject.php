@@ -11,9 +11,23 @@ class CsvFileObject extends \SplFileObject
     private int $bytesWritten = 0;
     private string $lineEnding = "\r\n";
 
+    /**
+     * Writes a row to the file. The line ending is written before every row except the first,
+     * so the file never ends with a trailing new line, as RFC-4180 recommends.
+     *
+     * @see https://tools.ietf.org/html/rfc4180#section-2
+     *
+     * @param array<array-key, mixed> $row
+     */
     public function fwriteCsv(array $row): int
     {
-        $bytes = $this->fwrite($this->getCsvString($row));
+        $line = $this->getCsvString($row);
+
+        if ($this->bytesWritten > 0) {
+            $line = $this->lineEnding . $line;
+        }
+
+        $bytes = $this->fwrite($line);
 
         if ($bytes === false) {
             throw new \RuntimeException('Failed to write CSV row to file.');
@@ -22,11 +36,6 @@ class CsvFileObject extends \SplFileObject
         $this->bytesWritten += $bytes;
 
         return $bytes;
-    }
-
-    public function __destruct()
-    {
-        $this->trimFinalLineEnding();
     }
 
     public function getBytesWritten(): int
@@ -58,27 +67,9 @@ class CsvFileObject extends \SplFileObject
     }
 
     /**
-     * Trims the line ending delimiter from the end of the CSV file.
-     * RFC-4180 states CSV files should not contain a trailing new line.
-     *
-     * @see https://tools.ietf.org/html/rfc4180#section-2
-     */
-    public function trimFinalLineEnding(): void
-    {
-        if ($this->bytesWritten > 0) {
-            // Only trim the file if it ends with the line ending delimiter.
-            $length = \strlen($this->lineEnding);
-
-            $this->fseek(-$length, \SEEK_END);
-
-            if ($this->fread($length) === $this->lineEnding) {
-                $this->ftruncate($this->bytesWritten - $length);
-            }
-        }
-    }
-
-    /**
      * Returns a string representation of a row to be written as a line in a CSV file.
+     *
+     * @param array<array-key, mixed> $row
      */
     private function getCsvString(array $row): string
     {
@@ -86,7 +77,6 @@ class CsvFileObject extends \SplFileObject
 
         return $enclosure .
                implode($enclosure . $delimiter . $enclosure, StringUtil::escapeEnclosure($row, $enclosure)) .
-               $enclosure .
-               $this->lineEnding;
+               $enclosure;
     }
 }

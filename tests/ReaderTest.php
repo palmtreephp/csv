@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Palmtree\Csv\Test;
 
+use Palmtree\Csv\InlineReader;
 use Palmtree\Csv\Normalizer\NumberNormalizer;
 use Palmtree\Csv\Reader;
 use Palmtree\Csv\Util\StringUtil;
@@ -44,7 +45,10 @@ class ReaderTest extends TestCase
         // Load our BOM prefixed file.
         $reader = new Reader(__DIR__ . '/fixtures/products-bom.csv');
 
-        $header = $reader->getHeaders()[0];
+        $headers = $reader->getHeaders();
+        $this->assertNotNull($headers);
+
+        $header = $headers[0];
 
         $this->assertFalse(StringUtil::hasBom($header, StringUtil::BOM_UTF8), 'UTF-8 BOM was stripped');
     }
@@ -55,7 +59,10 @@ class ReaderTest extends TestCase
         $reader = new Reader(__DIR__ . '/fixtures/products-bom.csv');
         $reader->setStripBom(null);
 
-        $header = $reader->getHeaders()[0];
+        $headers = $reader->getHeaders();
+        $this->assertNotNull($headers);
+
+        $header = $headers[0];
 
         $this->assertTrue(StringUtil::hasBom($header, StringUtil::BOM_UTF8), 'UTF-8 BOM was not stripped');
     }
@@ -67,7 +74,9 @@ class ReaderTest extends TestCase
             ->setHeaderOffset(1)
             ->setOffset(1);
 
-        $headers = $reader->getHeaders()->toArray();
+        $headers = $reader->getHeaders();
+        $this->assertNotNull($headers);
+        $headers = $headers->toArray();
 
         $this->assertContains('product_id', $headers);
 
@@ -135,6 +144,7 @@ class ReaderTest extends TestCase
         $reader = new Reader(__DIR__ . '/fixtures/products.csv');
         $headers = $reader->getHeaders();
 
+        $this->assertNotNull($headers);
         $this->assertNotEmpty($headers->toArray());
     }
 
@@ -347,5 +357,27 @@ class ReaderTest extends TestCase
 
         // Should not throw exception when accessing after close
         $this->assertSame('php://memory', $reader->getFilePath());
+    }
+
+    public function testBlankLinesAreSkipped(): void
+    {
+        $reader = new InlineReader("a,b\n1,2\n\n3,4\n");
+
+        $this->assertSame([['a' => '1', 'b' => '2'], ['a' => '3', 'b' => '4']], $reader->toArray());
+    }
+
+    public function testEmptyQuotedCellDoesNotEndIteration(): void
+    {
+        $reader = new InlineReader("name\nx\n\"\"\ny\n");
+
+        $this->assertSame([['name' => 'x'], ['name' => ''], ['name' => 'y']], $reader->toArray());
+    }
+
+    public function testIntegerKeyNormalizerIsNotReplacedByHeaderNormalizer(): void
+    {
+        $reader = new InlineReader("a\n0012,0034\n");
+        $reader->addNormalizer(1, new NumberNormalizer());
+
+        $this->assertSame([['a' => '0012', 1 => 34]], $reader->toArray());
     }
 }

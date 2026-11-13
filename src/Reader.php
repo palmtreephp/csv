@@ -26,6 +26,7 @@ class Reader extends AbstractCsvDocument implements \Iterator
     private ?string $stripBom = StringUtil::BOM_UTF8;
     private int $offset = 0;
     private int $headerOffset = 0;
+    private bool $readingHeaders = false;
 
     public static function read(string $filePath, bool $hasHeaders = true): self
     {
@@ -58,7 +59,7 @@ class Reader extends AbstractCsvDocument implements \Iterator
         return $this->headerNormalizer ??= new NullNormalizer();
     }
 
-    public function addNormalizer(string $key, NormalizerInterface $normalizer): self
+    public function addNormalizer(int|string $key, NormalizerInterface $normalizer): self
     {
         $this->normalizers[$key] = $normalizer;
 
@@ -79,8 +80,8 @@ class Reader extends AbstractCsvDocument implements \Iterator
 
     public function getNormalizer(int|string $key): NormalizerInterface
     {
-        if ($this->hasHeaders && \is_int($key)) {
-            $this->normalizers[$key] = $this->getHeaderNormalizer();
+        if ($this->readingHeaders) {
+            return $this->getHeaderNormalizer();
         }
 
         if (!isset($this->normalizers[$key])) {
@@ -178,7 +179,13 @@ class Reader extends AbstractCsvDocument implements \Iterator
             // Set headers to null first so the header row is a zero-based array and can be used
             // to set the array keys of all other rows.
             $this->headers = null;
-            $this->headers = $this->getCurrentRow();
+            $this->readingHeaders = true;
+
+            try {
+                $this->headers = $this->getCurrentRow();
+            } finally {
+                $this->readingHeaders = false;
+            }
 
             ++$dataOffset;
         }
@@ -188,6 +195,9 @@ class Reader extends AbstractCsvDocument implements \Iterator
         }
     }
 
+    /**
+     * @return list<array<array-key, mixed>>
+     */
     public function toArray(): array
     {
         $result = [];
@@ -210,7 +220,7 @@ class Reader extends AbstractCsvDocument implements \Iterator
     {
         $cells = $this->getDocument()->current();
 
-        if (!\is_array($cells) || $cells == [null]) {
+        if (!\is_array($cells) || $cells === [null]) {
             return null;
         }
 

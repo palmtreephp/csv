@@ -338,4 +338,28 @@ class NumberNormalizerTest extends TestCase
 
         $this->assertSame(1.23456789, $value);
     }
+
+    /**
+     * @dataProvider numericStringProvider
+     */
+    public function testNumericStrings(string $input, int|float $expected): void
+    {
+        $this->assertSame($expected, (new NumberNormalizer())->normalize($input));
+    }
+
+    /**
+     * @return list<array{string, int|float}>
+     */
+    public static function numericStringProvider(): array
+    {
+        return [
+            ['-05', -5],
+            ['+5', 5],
+            ['.5', 0.5],
+            ['5.', 5.0],
+            ['00.5', 0.5],
+            [' 12 ', 12],
+            ['1e3', 1000.0],
+        ];
+    }
 }

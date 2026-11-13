@@ -34,8 +34,6 @@ abstract class AbstractCsvDocument
 
     public function setDocument(?CsvFileObject $document = null): self
     {
-        $this->closeDocument();
-
         $this->document = $document;
 
         return $this;
@@ -46,14 +44,23 @@ abstract class AbstractCsvDocument
         return $this->document ??= $this->createDocument();
     }
 
+    public function hasDocument(): bool
+    {
+        return $this->document !== null;
+    }
+
     public function getFilePath(): string
     {
         return $this->filePath;
     }
 
+    /**
+     * Sets the file path. Any open document is released so the new path is used on next access.
+     */
     public function setFilePath(string $filePath): self
     {
         $this->filePath = $filePath;
+        $this->document = null;
 
         return $this;
     }
@@ -79,7 +86,7 @@ abstract class AbstractCsvDocument
     {
         $this->delimiter = $delimiter;
 
-        $this->getDocument()->setCsvControl($this->delimiter, $this->enclosure, $this->escapeCharacter);
+        $this->document?->setCsvControl($this->delimiter, $this->enclosure, $this->escapeCharacter);
 
         return $this;
     }
@@ -93,7 +100,7 @@ abstract class AbstractCsvDocument
     {
         $this->enclosure = $enclosure;
 
-        $this->getDocument()->setCsvControl($this->delimiter, $this->enclosure, $this->escapeCharacter);
+        $this->document?->setCsvControl($this->delimiter, $this->enclosure, $this->escapeCharacter);
 
         return $this;
     }
@@ -107,21 +114,17 @@ abstract class AbstractCsvDocument
     {
         $this->escapeCharacter = $escapeCharacter;
 
-        $this->getDocument()->setCsvControl($this->delimiter, $this->enclosure, $this->escapeCharacter);
+        $this->document?->setCsvControl($this->delimiter, $this->enclosure, $this->escapeCharacter);
 
         return $this;
     }
 
     private function createDocument(): CsvFileObject
     {
-        $this->closeDocument();
-
         $document = new CsvFileObject($this->filePath, $this->getOpenMode());
 
-        $document->setFlags(\SplFileObject::READ_CSV);
+        $document->setFlags(\SplFileObject::READ_CSV | \SplFileObject::READ_AHEAD | \SplFileObject::SKIP_EMPTY | \SplFileObject::DROP_NEW_LINE);
         $document->setCsvControl($this->delimiter, $this->enclosure, $this->escapeCharacter);
-
-        $this->document = $document;
 
         return $document;
     }

@@ -19,6 +19,10 @@ abstract class AbstractNormalizer implements NormalizerInterface
     {
         $value = $this->normalizer->normalize($value);
 
+        if (!\is_string($value)) {
+            throw new \UnexpectedValueException(\sprintf('%s must be given a normalizer that returns a string, %s returned %s.', static::class, $this->normalizer::class, get_debug_type($value)));
+        }
+
         return $this->getNormalizedValue($value);
     }
 }

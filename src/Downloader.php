@@ -21,14 +21,20 @@ class Downloader extends Writer
         'Pragma' => 'public',
     ];
 
+    /**
+     * @param iterable<string, string> $responseHeaders
+     */
     public function __construct(private readonly string $filename, iterable $responseHeaders = [])
     {
         $this->addResponseHeaders($responseHeaders);
-        $this->addResponseHeader('Content-Disposition', \sprintf('attachment; filename="%s"', $this->getFilename()));
+        $this->addResponseHeader('Content-Disposition', $this->getContentDisposition());
 
         parent::__construct('php://temp');
     }
 
+    /**
+     * @param array<array<array-key, mixed>> $data
+     */
     public static function download(string $filename, array $data): void
     {
         $downloader = new self($filename);
@@ -41,7 +47,7 @@ class Downloader extends Writer
      */
     public function sendResponse(): void
     {
-        $this->getDocument()->trimFinalLineEnding();
+        $this->writeHeaders();
 
         if (!headers_sent()) {
             header(\sprintf('Content-Length: %s', $this->getDocument()->getSize()));
@@ -55,11 +61,17 @@ class Downloader extends Writer
         $this->getDocument()->fpassthru();
     }
 
+    /**
+     * @return array<string, string>
+     */
     public function getResponseHeaders(): array
     {
         return $this->responseHeaders;
     }
 
+    /**
+     * @param iterable<string, string> $headers
+     */
     public function addResponseHeaders(iterable $headers = []): self
     {
         foreach ($headers as $key => $value) {
@@ -82,5 +94,23 @@ class Downloader extends Writer
     public function getFilename(): string
     {
         return $this->filename;
+    }
+
+    /**
+     * Builds a Content-Disposition header value with an ASCII-only filename for older clients
+     * and an RFC 5987 encoded filename* for clients that support it.
+     *
+     * @see https://datatracker.ietf.org/doc/html/rfc6266#section-4.3
+     */
+    private function getContentDisposition(): string
+    {
+        $fallback = preg_replace('/[^\x20-\x7E]|["\\\\]/u', '_', $this->filename)
+            ?? (string)preg_replace('/[^\x20-\x7E]|["\\\\]/', '_', $this->filename);
+
+        if ($fallback === $this->filename) {
+            return \sprintf('attachment; filename="%s"', $fallback);
+        }
+
+        return \sprintf('attachment; filename="%s"; filename*=UTF-8\'\'%s', $fallback, rawurlencode($this->filename));
     }
 }

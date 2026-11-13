@@ -11,6 +11,8 @@ class BooleanNormalizerTest extends TestCase
 {
     /**
      * @dataProvider configProvider
+     *
+     * @param array<array-key, string> $pairs
      */
     public function testTruthyValues(array $pairs): void
     {
@@ -26,6 +28,8 @@ class BooleanNormalizerTest extends TestCase
 
     /**
      * @dataProvider configProvider
+     *
+     * @param array<array-key, string> $pairs
      */
     public function testFalseyValues(array $pairs): void
     {
@@ -41,6 +45,9 @@ class BooleanNormalizerTest extends TestCase
         $this->assertNull($normalizer->normalize('bar'));
     }
 
+    /**
+     * @return list<array{array<array-key, string>}>
+     */
     public function configProvider(): array
     {
         return [
@@ -219,5 +226,20 @@ class BooleanNormalizerTest extends TestCase
         $this->assertFalse($normalizer->normalize('false'));
         $this->assertFalse($normalizer->normalize('no'));
         $this->assertFalse($normalizer->normalize('0'));
+    }
+
+    public function testCaseSensitiveAfterPairs(): void
+    {
+        $normalizer = (new BooleanNormalizer())->pairs(['Y' => 'N'])->caseSensitive(true);
+
+        $this->assertTrue($normalizer->normalize('Y'));
+        $this->assertFalse($normalizer->normalize('y'));
+    }
+
+    public function testCaseInsensitiveMatchesMixedCasePairs(): void
+    {
+        $normalizer = (new BooleanNormalizer())->pairs(['Y' => 'N']);
+
+        $this->assertTrue($normalizer->normalize('y'));
     }
 }

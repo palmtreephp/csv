@@ -7,6 +7,7 @@ namespace Palmtree\Csv\Test\Cell;
 use Palmtree\Csv\Cell\Cell;
 use Palmtree\Csv\Normalizer\ArrayNormalizer;
 use Palmtree\Csv\Normalizer\BooleanNormalizer;
+use Palmtree\Csv\Normalizer\DateTimeNormalizer;
 use Palmtree\Csv\Normalizer\NullNormalizer;
 use Palmtree\Csv\Normalizer\NumberNormalizer;
 use Palmtree\Csv\Normalizer\StringNormalizer;
@@ -101,11 +102,16 @@ class CellTest extends TestCase
         $this->assertSame('hello', (string)$cell);
     }
 
-    public function testToStringWithArray(): void
+    public function testToStringWithArrayReturnsRawValue(): void
     {
         $cell = new Cell('a,b,c', new ArrayNormalizer());
-        // Converting array to string will trigger exception, caught in __toString
-        $this->assertSame('', (string)$cell);
+        $this->assertSame('a,b,c', (string)$cell);
+    }
+
+    public function testToStringWithDateTimeReturnsRawValue(): void
+    {
+        $cell = new Cell('2024-01-01', new DateTimeNormalizer());
+        $this->assertSame('2024-01-01', (string)$cell);
     }
 
     public function testMultipleGetValueCalls(): void

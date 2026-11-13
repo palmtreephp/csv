@@ -16,6 +16,9 @@ class Row implements \ArrayAccess, \Countable, \IteratorAggregate
     /** @var array<Cell> */
     private array $cells = [];
 
+    /**
+     * @param array<array-key, string> $cells
+     */
     public function __construct(array $cells, private readonly Reader $reader)
     {
         $this->addCells($cells);
@@ -34,6 +37,9 @@ class Row implements \ArrayAccess, \Countable, \IteratorAggregate
         return $this->cells;
     }
 
+    /**
+     * @param array<array-key, string> $cells
+     */
     public function addCells(array $cells): void
     {
         foreach ($cells as $key => $value) {
@@ -97,8 +103,11 @@ class Row implements \ArrayAccess, \Countable, \IteratorAggregate
         return new \ArrayIterator($this->cells);
     }
 
+    /**
+     * @return array<array-key, mixed>
+     */
     public function toArray(): array
     {
-        return array_map(fn ($cell) => $cell->getValue(), $this->cells);
+        return array_map(static fn ($cell) => $cell->getValue(), $this->cells);
     }
 }
