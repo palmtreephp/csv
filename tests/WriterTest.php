@@ -337,4 +337,31 @@ class WriterTest extends TestCase
 
         unlink($file);
     }
+
+    public function testSetFilePathReopensDocument(): void
+    {
+        $first = tempnam(sys_get_temp_dir(), 'phpunit_csv_');
+        $second = tempnam(sys_get_temp_dir(), 'phpunit_csv_');
+        \assert(\is_string($first) && \is_string($second));
+
+        $writer = new Writer($first, false);
+        $writer->getDocument();
+        $writer->setFilePath($second);
+        $writer->addRow(['a']);
+        $writer->closeDocument();
+
+        $this->assertSame('', file_get_contents($first));
+        $this->assertSame('"a"', file_get_contents($second));
+
+        unlink($first);
+        unlink($second);
+    }
+
+    public function testSettingCsvControlDoesNotOpenDocument(): void
+    {
+        $writer = new Writer('php://memory');
+        $writer->setDelimiter(';');
+
+        $this->assertFalse($writer->hasDocument());
+    }
 }

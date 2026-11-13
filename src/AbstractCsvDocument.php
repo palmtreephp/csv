@@ -54,9 +54,13 @@ abstract class AbstractCsvDocument
         return $this->filePath;
     }
 
+    /**
+     * Sets the file path. Any open document is released so the new path is used on next access.
+     */
     public function setFilePath(string $filePath): self
     {
         $this->filePath = $filePath;
+        $this->document = null;
 
         return $this;
     }
@@ -82,7 +86,7 @@ abstract class AbstractCsvDocument
     {
         $this->delimiter = $delimiter;
 
-        $this->getDocument()->setCsvControl($this->delimiter, $this->enclosure, $this->escapeCharacter);
+        $this->document?->setCsvControl($this->delimiter, $this->enclosure, $this->escapeCharacter);
 
         return $this;
     }
@@ -96,7 +100,7 @@ abstract class AbstractCsvDocument
     {
         $this->enclosure = $enclosure;
 
-        $this->getDocument()->setCsvControl($this->delimiter, $this->enclosure, $this->escapeCharacter);
+        $this->document?->setCsvControl($this->delimiter, $this->enclosure, $this->escapeCharacter);
 
         return $this;
     }
@@ -110,7 +114,7 @@ abstract class AbstractCsvDocument
     {
         $this->escapeCharacter = $escapeCharacter;
 
-        $this->getDocument()->setCsvControl($this->delimiter, $this->enclosure, $this->escapeCharacter);
+        $this->document?->setCsvControl($this->delimiter, $this->enclosure, $this->escapeCharacter);
 
         return $this;
     }
