@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Palmtree\Csv\Test;
 
+use Palmtree\Csv\InlineReader;
 use Palmtree\Csv\Normalizer\NumberNormalizer;
 use Palmtree\Csv\Reader;
 use Palmtree\Csv\Util\StringUtil;
@@ -347,5 +348,19 @@ class ReaderTest extends TestCase
 
         // Should not throw exception when accessing after close
         $this->assertSame('php://memory', $reader->getFilePath());
+    }
+
+    public function testBlankLinesAreSkipped(): void
+    {
+        $reader = new InlineReader("a,b\n1,2\n\n3,4\n");
+
+        $this->assertSame([['a' => '1', 'b' => '2'], ['a' => '3', 'b' => '4']], $reader->toArray());
+    }
+
+    public function testEmptyQuotedCellDoesNotEndIteration(): void
+    {
+        $reader = new InlineReader("name\nx\n\"\"\ny\n");
+
+        $this->assertSame([['name' => 'x'], ['name' => ''], ['name' => 'y']], $reader->toArray());
     }
 }

@@ -210,7 +210,7 @@ class Reader extends AbstractCsvDocument implements \Iterator
     {
         $cells = $this->getDocument()->current();
 
-        if (!\is_array($cells) || $cells == [null]) {
+        if (!\is_array($cells) || $cells === [null]) {
             return null;
         }
 

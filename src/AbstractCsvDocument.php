@@ -123,7 +123,7 @@ abstract class AbstractCsvDocument
     {
         $document = new CsvFileObject($this->filePath, $this->getOpenMode());
 
-        $document->setFlags(\SplFileObject::READ_CSV);
+        $document->setFlags(\SplFileObject::READ_CSV | \SplFileObject::READ_AHEAD | \SplFileObject::SKIP_EMPTY | \SplFileObject::DROP_NEW_LINE);
         $document->setCsvControl($this->delimiter, $this->enclosure, $this->escapeCharacter);
 
         return $document;
