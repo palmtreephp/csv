@@ -30,11 +30,15 @@ class Cell implements \Stringable
     public function __toString(): string
     {
         try {
-            $value = (string)$this->getValue();
-        } catch (\Exception) {
-            $value = '';
+            $value = $this->getValue();
+        } catch (\Throwable) {
+            return '';
         }
 
-        return $value;
+        if ($value === null || \is_scalar($value) || $value instanceof \Stringable) {
+            return (string)$value;
+        }
+
+        return $this->getRawValue();
     }
 }
