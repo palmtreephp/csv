@@ -27,10 +27,10 @@
         }
     },
     "require-dev": {
-        "phpunit/phpunit": "^9.5",
-        "palmtree/php-cs-fixer-config": "^2.0",
-        "phpstan/phpstan": "^2.1",
-        "phpstan/phpstan-phpunit": "^2.0"
+        "phpunit/phpunit": "^12.5||^13.4",
+        "palmtree/php-cs-fixer-config": "^2.1",
+        "phpstan/phpstan": "^2.3",
+        "phpstan/phpstan-phpunit": "^2.1"
     },
     "autoload-dev": {
         "psr-4": {
@@ -38,7 +38,7 @@
         }
     },
     "scripts": {
-        "test": "./vendor/bin/phpunit -v",
+        "test": "./vendor/bin/phpunit",
         "sniff": "@php vendor/bin/php-cs-fixer fix -v --dry-run --stop-on-violation --using-cache=no --diff",
         "fix": "@php vendor/bin/php-cs-fixer fix --diff",
         "sa": "@php vendor/bin/phpstan analyse --memory-limit=1G",

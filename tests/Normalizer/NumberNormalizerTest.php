@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Palmtree\Csv\Test\Normalizer;
 
 use Palmtree\Csv\Normalizer\NumberNormalizer;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class NumberNormalizerTest extends TestCase
@@ -339,9 +340,7 @@ class NumberNormalizerTest extends TestCase
         $this->assertSame(1.23456789, $value);
     }
 
-    /**
-     * @dataProvider numericStringProvider
-     */
+    #[DataProvider('numericStringProvider')]
     public function testNumericStrings(string $input, int|float $expected): void
     {
         $this->assertSame($expected, (new NumberNormalizer())->normalize($input));
