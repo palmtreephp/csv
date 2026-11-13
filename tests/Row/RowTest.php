@@ -277,4 +277,61 @@ class RowTest extends TestCase
         $this->assertSame($count1, $count2);
         $this->assertSame(2, $count1);
     }
+
+    public function testIntegerOffsetFallsBackToPosition(): void
+    {
+        $reader = new Reader('php://memory');
+        $row = new Row(['name' => 'John', 'age' => '30'], $reader);
+
+        $this->assertTrue(isset($row[1]));
+        $this->assertSame('30', $row[1]);
+        $this->assertSame('John', $row->getCell(0)?->getValue());
+
+        [$name, $age] = $row;
+
+        $this->assertSame('John', $name);
+        $this->assertSame('30', $age);
+    }
+
+    public function testRowWithIntegerKeysDoesNotFallBackToPosition(): void
+    {
+        $reader = new Reader('php://memory');
+        $row = new Row(['a' => 'first', 1 => 'second', 'c' => 'third'], $reader);
+
+        $this->assertSame('second', $row[1]);
+        $this->assertFalse(isset($row[0]));
+        $this->assertFalse(isset($row[2]));
+    }
+
+    public function testPositionsFollowModifications(): void
+    {
+        $reader = new Reader('php://memory');
+        $row = new Row(['a' => 'first', 'b' => 'second'], $reader);
+
+        $this->assertSame('first', $row[0]);
+
+        unset($row['a']);
+
+        $this->assertSame('second', $row[0]);
+        $this->assertFalse(isset($row[1]));
+    }
+
+    public function testUnknownStringOffsetDoesNotFallBackToPosition(): void
+    {
+        $reader = new Reader('php://memory');
+        $row = new Row(['name' => 'John'], $reader);
+
+        $this->assertFalse(isset($row['0x']));
+        $this->assertNull($row->getCell('missing'));
+    }
+
+    public function testOffsetGetThrowsForMissingCell(): void
+    {
+        $reader = new Reader('php://memory');
+        $row = new Row(['name' => 'John'], $reader);
+
+        $this->expectException(\OutOfBoundsException::class);
+
+        $row->offsetGet(5);
+    }
 }

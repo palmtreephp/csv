@@ -15,6 +15,8 @@ class Row implements \ArrayAccess, \Countable, \IteratorAggregate
 {
     /** @var array<Cell> */
     private array $cells = [];
+    /** @var list<Cell>|null */
+    private ?array $positionalCells = null;
 
     /**
      * @param array<array-key, string> $cells
@@ -55,6 +57,25 @@ class Row implements \ArrayAccess, \Countable, \IteratorAggregate
         $cell = new Cell($value, $normalizer);
 
         $this->cells[$key] = $cell;
+        $this->positionalCells = null;
+    }
+
+    /**
+     * Returns the cell for the given key. In a row with no integer keys (i.e. keyed by header),
+     * an integer offset is the cell's zero-based position, so the row can be destructured
+     * positionally, e.g. foreach ($reader as [$name, $price]).
+     */
+    public function getCell(int|string $offset): ?Cell
+    {
+        if (isset($this->cells[$offset])) {
+            return $this->cells[$offset];
+        }
+
+        if (!\is_int($offset)) {
+            return null;
+        }
+
+        return $this->getPositionalCells()[$offset] ?? null;
     }
 
     /**
@@ -62,7 +83,7 @@ class Row implements \ArrayAccess, \Countable, \IteratorAggregate
      */
     public function offsetExists(mixed $offset): bool
     {
-        return isset($this->cells[$offset]) || \array_key_exists($offset, $this->cells);
+        return $this->getCell($offset) !== null;
     }
 
     /**
@@ -70,7 +91,13 @@ class Row implements \ArrayAccess, \Countable, \IteratorAggregate
      */
     public function offsetGet(mixed $offset): mixed
     {
-        return $this->cells[$offset]->getValue();
+        $cell = $this->getCell($offset);
+
+        if ($cell === null) {
+            throw new \OutOfBoundsException(\sprintf('Row has no cell with key or position "%s".', $offset));
+        }
+
+        return $cell->getValue();
     }
 
     /**
@@ -88,6 +115,7 @@ class Row implements \ArrayAccess, \Countable, \IteratorAggregate
     public function offsetUnset(mixed $offset): void
     {
         unset($this->cells[$offset]);
+        $this->positionalCells = null;
     }
 
     public function count(): int
@@ -101,6 +129,19 @@ class Row implements \ArrayAccess, \Countable, \IteratorAggregate
     public function getIterator(): \ArrayIterator
     {
         return new \ArrayIterator($this->cells);
+    }
+
+    /**
+     * @return list<Cell>
+     */
+    private function getPositionalCells(): array
+    {
+        if ($this->positionalCells === null) {
+            $hasIntKeys = array_filter(array_keys($this->cells), is_int(...)) !== [];
+            $this->positionalCells = $hasIntKeys ? [] : array_values($this->cells);
+        }
+
+        return $this->positionalCells;
     }
 
     /**
