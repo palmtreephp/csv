@@ -79,6 +79,9 @@ class Writer extends AbstractCsvDocument
     /**
      * Adds a row of data to the CSV file.
      *
+     * If the row has string keys and headers are set, its values are written in header order.
+     * Missing keys are written as empty cells.
+     *
      * @param array $row Row of data to add to the file.
      *
      * @return bool Whether the row was written to the file.
@@ -91,7 +94,7 @@ class Writer extends AbstractCsvDocument
 
         $this->writeHeaders();
 
-        return $this->getDocument()->fwriteCsv($row) > 0;
+        return $this->getDocument()->fwriteCsv($this->orderByHeaders($row)) > 0;
     }
 
     public function getContents(): string
@@ -143,5 +146,25 @@ class Writer extends AbstractCsvDocument
         $this->headersWritten = true;
 
         $this->getDocument()->fwriteCsv($this->headers);
+    }
+
+    private function orderByHeaders(array $row): array
+    {
+        if ($this->headers === [] || array_is_list($row)) {
+            return $row;
+        }
+
+        $unknownKeys = array_diff(array_keys($row), $this->headers);
+
+        if ($unknownKeys !== []) {
+            throw new \InvalidArgumentException(\sprintf('Row contains keys that are not in the headers: %s', implode(', ', $unknownKeys)));
+        }
+
+        $ordered = [];
+        foreach ($this->headers as $header) {
+            $ordered[] = $row[$header] ?? '';
+        }
+
+        return $ordered;
     }
 }

@@ -257,6 +257,28 @@ class WriterTest extends TestCase
         $writer->addRow([new \stdClass()]);
     }
 
+    public function testRowsAreWrittenInHeaderOrder(): void
+    {
+        $writer = new Writer('php://memory');
+        $writer->setData([
+            ['a' => '1', 'b' => '2'],
+            ['b' => '3', 'a' => '4'],
+            ['b' => '5'],
+        ]);
+
+        $this->assertSame("\"a\",\"b\"\r\n\"1\",\"2\"\r\n\"4\",\"3\"\r\n\"\",\"5\"", $writer->getContents());
+    }
+
+    public function testRowWithUnknownKeyThrows(): void
+    {
+        $writer = new Writer('php://memory');
+        $writer->setHeaders(['a']);
+
+        $this->expectException(\InvalidArgumentException::class);
+
+        $writer->addRow(['b' => '1']);
+    }
+
     public function testAddRowAfterGetContents(): void
     {
         $writer = new Writer('php://memory', false);
