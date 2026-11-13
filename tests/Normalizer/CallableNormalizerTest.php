@@ -67,4 +67,11 @@ class CallableNormalizerTest extends TestCase
 
         $this->assertSame(10, $result);
     }
+
+    public function testNullInnerNormalizer(): void
+    {
+        $normalizer = new CallableNormalizer(static fn (string $value) => strtoupper($value), null);
+
+        $this->assertSame('X', $normalizer->normalize('x'));
+    }
 }
