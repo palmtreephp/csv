@@ -239,4 +239,21 @@ class WriterTest extends TestCase
         $this->assertStringContainsString('John', $contents);
         $this->assertStringContainsString('Jane', $contents);
     }
+
+    public function testAddRowWithNonStringValues(): void
+    {
+        $writer = new Writer('php://memory', false);
+        $writer->addRow([1, 1.5, true, null]);
+
+        $this->assertSame('"1","1.5","1",""', $writer->getContents());
+    }
+
+    public function testAddRowWithUnconvertibleValueThrows(): void
+    {
+        $writer = new Writer('php://memory', false);
+
+        $this->expectException(\InvalidArgumentException::class);
+
+        $writer->addRow([new \stdClass()]);
+    }
 }

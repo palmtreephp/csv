@@ -44,8 +44,10 @@ class StringUtil
         foreach ($data as $key => $value) {
             if (\is_array($value)) {
                 $data[$key] = self::escapeEnclosure($value, $enclosure);
+            } elseif ($value === null || \is_scalar($value) || $value instanceof \Stringable) {
+                $data[$key] = str_replace($enclosure, str_repeat($enclosure, 2), (string)$value);
             } else {
-                $data[$key] = str_replace($enclosure, str_repeat($enclosure, 2), $value);
+                throw new \InvalidArgumentException(\sprintf('Cannot convert value of type %s to a string.', get_debug_type($value)));
             }
         }
 
