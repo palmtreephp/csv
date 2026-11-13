@@ -38,6 +38,10 @@ class StringUtil
      * escaped by itself, so " becomes "".
      *
      * @see https://tools.ietf.org/html/rfc4180#section-2
+     *
+     * @param array<mixed> $data
+     *
+     * @return array<mixed>
      */
     public static function escapeEnclosure(array $data, string $enclosure): array
     {

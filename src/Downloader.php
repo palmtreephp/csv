@@ -21,6 +21,9 @@ class Downloader extends Writer
         'Pragma' => 'public',
     ];
 
+    /**
+     * @param iterable<string, string> $responseHeaders
+     */
     public function __construct(private readonly string $filename, iterable $responseHeaders = [])
     {
         $this->addResponseHeaders($responseHeaders);
@@ -29,6 +32,9 @@ class Downloader extends Writer
         parent::__construct('php://temp');
     }
 
+    /**
+     * @param array<array<array-key, mixed>> $data
+     */
     public static function download(string $filename, array $data): void
     {
         $downloader = new self($filename);
@@ -55,11 +61,17 @@ class Downloader extends Writer
         $this->getDocument()->fpassthru();
     }
 
+    /**
+     * @return array<string, string>
+     */
     public function getResponseHeaders(): array
     {
         return $this->responseHeaders;
     }
 
+    /**
+     * @param iterable<string, string> $headers
+     */
     public function addResponseHeaders(iterable $headers = []): self
     {
         foreach ($headers as $key => $value) {

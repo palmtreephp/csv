@@ -11,6 +11,8 @@ class BooleanNormalizerTest extends TestCase
 {
     /**
      * @dataProvider configProvider
+     *
+     * @param array<array-key, string> $pairs
      */
     public function testTruthyValues(array $pairs): void
     {
@@ -26,6 +28,8 @@ class BooleanNormalizerTest extends TestCase
 
     /**
      * @dataProvider configProvider
+     *
+     * @param array<array-key, string> $pairs
      */
     public function testFalseyValues(array $pairs): void
     {
@@ -41,6 +45,9 @@ class BooleanNormalizerTest extends TestCase
         $this->assertNull($normalizer->normalize('bar'));
     }
 
+    /**
+     * @return list<array{array<array-key, string>}>
+     */
     public function configProvider(): array
     {
         return [

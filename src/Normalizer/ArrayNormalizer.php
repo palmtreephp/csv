@@ -18,12 +18,18 @@ class ArrayNormalizer extends AbstractNormalizer
         parent::__construct($normalizer);
     }
 
+    /**
+     * @return array<int, mixed>
+     */
     #[\Override]
     public function normalize(string $value): array
     {
         return $this->getNormalizedValue($value);
     }
 
+    /**
+     * @return array<int, mixed>
+     */
     protected function getNormalizedValue(string $value): array
     {
         $normalizedValue = explode($this->delimiter, (string)$this->stringNormalizer->normalize($value));

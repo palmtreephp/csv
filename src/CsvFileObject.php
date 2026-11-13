@@ -16,6 +16,8 @@ class CsvFileObject extends \SplFileObject
      * so the file never ends with a trailing new line, as RFC-4180 recommends.
      *
      * @see https://tools.ietf.org/html/rfc4180#section-2
+     *
+     * @param array<array-key, mixed> $row
      */
     public function fwriteCsv(array $row): int
     {
@@ -66,6 +68,8 @@ class CsvFileObject extends \SplFileObject
 
     /**
      * Returns a string representation of a row to be written as a line in a CSV file.
+     *
+     * @param array<array-key, mixed> $row
      */
     private function getCsvString(array $row): string
     {

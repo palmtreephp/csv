@@ -11,6 +11,7 @@ namespace Palmtree\Csv\Normalizer;
 class StringNormalizer extends AbstractNormalizer
 {
     private bool $trim = true;
+    /** @var array<string> */
     private array $trimChars = [' ', "\t", "\n", "\r", "\0", "\x0B"];
 
     /**
@@ -25,6 +26,8 @@ class StringNormalizer extends AbstractNormalizer
 
     /**
      * Sets the character mask passed to trim(). Defaults to the mask used by trim itself.
+     *
+     * @param array<string> $trimChars
      */
     public function trimChars(array $trimChars): self
     {

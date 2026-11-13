@@ -195,6 +195,9 @@ class Reader extends AbstractCsvDocument implements \Iterator
         }
     }
 
+    /**
+     * @return list<array<array-key, mixed>>
+     */
     public function toArray(): array
     {
         $result = [];

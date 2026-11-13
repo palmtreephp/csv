@@ -347,6 +347,9 @@ class NumberNormalizerTest extends TestCase
         $this->assertSame($expected, (new NumberNormalizer())->normalize($input));
     }
 
+    /**
+     * @return list<array{string, int|float}>
+     */
     public static function numericStringProvider(): array
     {
         return [

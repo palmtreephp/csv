@@ -45,7 +45,10 @@ class ReaderTest extends TestCase
         // Load our BOM prefixed file.
         $reader = new Reader(__DIR__ . '/fixtures/products-bom.csv');
 
-        $header = $reader->getHeaders()[0];
+        $headers = $reader->getHeaders();
+        $this->assertNotNull($headers);
+
+        $header = $headers[0];
 
         $this->assertFalse(StringUtil::hasBom($header, StringUtil::BOM_UTF8), 'UTF-8 BOM was stripped');
     }
@@ -56,7 +59,10 @@ class ReaderTest extends TestCase
         $reader = new Reader(__DIR__ . '/fixtures/products-bom.csv');
         $reader->setStripBom(null);
 
-        $header = $reader->getHeaders()[0];
+        $headers = $reader->getHeaders();
+        $this->assertNotNull($headers);
+
+        $header = $headers[0];
 
         $this->assertTrue(StringUtil::hasBom($header, StringUtil::BOM_UTF8), 'UTF-8 BOM was not stripped');
     }
@@ -68,7 +74,9 @@ class ReaderTest extends TestCase
             ->setHeaderOffset(1)
             ->setOffset(1);
 
-        $headers = $reader->getHeaders()->toArray();
+        $headers = $reader->getHeaders();
+        $this->assertNotNull($headers);
+        $headers = $headers->toArray();
 
         $this->assertContains('product_id', $headers);
 
@@ -136,6 +144,7 @@ class ReaderTest extends TestCase
         $reader = new Reader(__DIR__ . '/fixtures/products.csv');
         $headers = $reader->getHeaders();
 
+        $this->assertNotNull($headers);
         $this->assertNotEmpty($headers->toArray());
     }
 

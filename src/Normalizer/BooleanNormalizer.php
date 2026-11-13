@@ -10,7 +10,7 @@ namespace Palmtree\Csv\Normalizer;
 class BooleanNormalizer extends AbstractNormalizer
 {
     /**
-     * @var array Default truthy/falsey pairs.
+     * @var array<array-key, string> Default truthy/falsey pairs.
      */
     public static array $defaultPairs = [
         'true' => 'false',
@@ -20,6 +20,7 @@ class BooleanNormalizer extends AbstractNormalizer
         'enabled' => 'disabled',
     ];
 
+    /** @var array<array-key, bool> */
     private array $values = [];
     private bool $nullable = false;
     private bool $caseSensitive = false;
@@ -31,6 +32,9 @@ class BooleanNormalizer extends AbstractNormalizer
         parent::__construct($normalizer);
     }
 
+    /**
+     * @param array<array-key, string> $pairs Truthy values as keys, falsey values as values.
+     */
     public function pairs(array $pairs): self
     {
         $this->values = [];

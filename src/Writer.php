@@ -12,9 +12,13 @@ namespace Palmtree\Csv;
  */
 class Writer extends AbstractCsvDocument
 {
+    /** @var list<array-key> */
     private array $headers = [];
     private bool $headersWritten = false;
 
+    /**
+     * @param array<array<array-key, mixed>> $data
+     */
     public static function write(string $filePath, array $data): void
     {
         $writer = new self($filePath);
@@ -26,6 +30,8 @@ class Writer extends AbstractCsvDocument
      * Sets headers and adds all rows to the CSV file.
      *
      * Uses the first row's keys as headers.
+     *
+     * @param array<array<array-key, mixed>> $data
      */
     public function setData(array $data): self
     {
@@ -35,7 +41,7 @@ class Writer extends AbstractCsvDocument
 
         $firstRow = reset($data);
 
-        if ($this->hasHeaders && \is_array($firstRow)) {
+        if ($this->hasHeaders) {
             $this->setHeaders(array_keys($firstRow));
         }
 
@@ -44,6 +50,9 @@ class Writer extends AbstractCsvDocument
         return $this;
     }
 
+    /**
+     * @param array<array-key> $headers
+     */
     public function setHeaders(array $headers): self
     {
         if ($this->headersWritten) {
@@ -68,6 +77,8 @@ class Writer extends AbstractCsvDocument
 
     /**
      * Adds multiple rows of data to the CSV file.
+     *
+     * @param array<array<array-key, mixed>> $rows
      */
     public function addRows(array $rows): void
     {
@@ -82,7 +93,7 @@ class Writer extends AbstractCsvDocument
      * If the row has string keys and headers are set, its values are written in header order.
      * Missing keys are written as empty cells.
      *
-     * @param array $row Row of data to add to the file.
+     * @param array<array-key, mixed> $row Row of data to add to the file.
      *
      * @return bool Whether the row was written to the file.
      */
@@ -148,6 +159,11 @@ class Writer extends AbstractCsvDocument
         $this->getDocument()->fwriteCsv($this->headers);
     }
 
+    /**
+     * @param array<array-key, mixed> $row
+     *
+     * @return array<array-key, mixed>
+     */
     private function orderByHeaders(array $row): array
     {
         if ($this->headers === [] || array_is_list($row)) {
