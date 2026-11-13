@@ -5,15 +5,15 @@ declare(strict_types=1);
 namespace Palmtree\Csv\Test\Normalizer;
 
 use Palmtree\Csv\Normalizer\BooleanNormalizer;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class BooleanNormalizerTest extends TestCase
 {
     /**
-     * @dataProvider configProvider
-     *
      * @param array<array-key, string> $pairs
      */
+    #[DataProvider('configProvider')]
     public function testTruthyValues(array $pairs): void
     {
         $normalizer = new BooleanNormalizer();
@@ -27,10 +27,9 @@ class BooleanNormalizerTest extends TestCase
     }
 
     /**
-     * @dataProvider configProvider
-     *
      * @param array<array-key, string> $pairs
      */
+    #[DataProvider('configProvider')]
     public function testFalseyValues(array $pairs): void
     {
         $normalizer = new BooleanNormalizer();
@@ -48,7 +47,7 @@ class BooleanNormalizerTest extends TestCase
     /**
      * @return list<array{array<array-key, string>}>
      */
-    public function configProvider(): array
+    public static function configProvider(): array
     {
         return [
             [
