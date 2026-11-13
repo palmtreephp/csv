@@ -363,4 +363,12 @@ class ReaderTest extends TestCase
 
         $this->assertSame([['name' => 'x'], ['name' => ''], ['name' => 'y']], $reader->toArray());
     }
+
+    public function testIntegerKeyNormalizerIsNotReplacedByHeaderNormalizer(): void
+    {
+        $reader = new InlineReader("a\n0012,0034\n");
+        $reader->addNormalizer(1, new NumberNormalizer());
+
+        $this->assertSame([['a' => '0012', 1 => 34]], $reader->toArray());
+    }
 }
