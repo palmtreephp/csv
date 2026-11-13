@@ -99,6 +99,6 @@ class Row implements \ArrayAccess, \Countable, \IteratorAggregate
 
     public function toArray(): array
     {
-        return array_map(fn ($cell) => $cell->getValue(), $this->cells);
+        return array_map(static fn ($cell) => $cell->getValue(), $this->cells);
     }
 }
