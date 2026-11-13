@@ -24,7 +24,7 @@ class Downloader extends Writer
     public function __construct(private readonly string $filename, iterable $responseHeaders = [])
     {
         $this->addResponseHeaders($responseHeaders);
-        $this->addResponseHeader('Content-Disposition', \sprintf('attachment; filename="%s"', $this->getFilename()));
+        $this->addResponseHeader('Content-Disposition', $this->getContentDisposition());
 
         parent::__construct('php://temp');
     }
@@ -82,5 +82,23 @@ class Downloader extends Writer
     public function getFilename(): string
     {
         return $this->filename;
+    }
+
+    /**
+     * Builds a Content-Disposition header value with an ASCII-only filename for older clients
+     * and an RFC 5987 encoded filename* for clients that support it.
+     *
+     * @see https://datatracker.ietf.org/doc/html/rfc6266#section-4.3
+     */
+    private function getContentDisposition(): string
+    {
+        $fallback = preg_replace('/[^\x20-\x7E]|["\\\\]/u', '_', $this->filename)
+            ?? (string)preg_replace('/[^\x20-\x7E]|["\\\\]/', '_', $this->filename);
+
+        if ($fallback === $this->filename) {
+            return \sprintf('attachment; filename="%s"', $fallback);
+        }
+
+        return \sprintf('attachment; filename="%s"; filename*=UTF-8\'\'%s', $fallback, rawurlencode($this->filename));
     }
 }

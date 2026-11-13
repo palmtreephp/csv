@@ -212,4 +212,14 @@ class DownloaderTest extends TestCase
 
         $this->assertSame($expectedFilename, $downloader->getFilename());
     }
+
+    public function testContentDispositionEscapesFilename(): void
+    {
+        $headers = (new Downloader('rapport "été".csv'))->getResponseHeaders();
+
+        $this->assertSame(
+            'attachment; filename="rapport __t__.csv"; filename*=UTF-8\'\'rapport%20%22%C3%A9t%C3%A9%22.csv',
+            $headers['Content-Disposition'],
+        );
+    }
 }
