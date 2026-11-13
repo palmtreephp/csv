@@ -17,7 +17,7 @@ without hitting any memory limits.
 ## Installation
 Use composer to add the package to your dependencies:
 
-```bash
+```console
 composer require palmtree/csv
 ```
 
