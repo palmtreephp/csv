@@ -256,4 +256,14 @@ class WriterTest extends TestCase
 
         $writer->addRow([new \stdClass()]);
     }
+
+    public function testAddRowAfterGetContents(): void
+    {
+        $writer = new Writer('php://memory', false);
+        $writer->addRow(['a']);
+        $writer->getContents();
+        $writer->addRow(['b']);
+
+        $this->assertSame("\"a\"\r\n\"b\"", $writer->getContents());
+    }
 }
