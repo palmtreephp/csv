@@ -380,4 +380,30 @@ class ReaderTest extends TestCase
 
         $this->assertSame([['a' => '0012', 1 => 34]], $reader->toArray());
     }
+
+    public function testRowsWithHeadersCanBeDestructuredPositionally(): void
+    {
+        $reader = new Reader(__DIR__ . '/fixtures/products.csv');
+        $reader->addNormalizer('product_id', new NumberNormalizer());
+
+        foreach ($reader as [$productId, $name, $price]) {
+            $this->assertSame(1, $productId);
+            $this->assertSame('Printer', $name);
+            $this->assertSame('99.99', $price);
+
+            break;
+        }
+    }
+
+    public function testRowsWithHeadersCanBeDestructuredByKey(): void
+    {
+        $reader = new Reader(__DIR__ . '/fixtures/products.csv');
+
+        foreach ($reader as ['name' => $name, 'price' => $price]) {
+            $this->assertSame('Printer', $name);
+            $this->assertSame('99.99', $price);
+
+            break;
+        }
+    }
 }

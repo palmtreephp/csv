@@ -38,6 +38,20 @@ foreach($csv as $row) {
 }
 ```
 
+Rows can also be destructured by position:
+
+> [!NOTE]
+> Positional destructuring depends on column order, so prefer `$row['name']` for files you don't
+> control.
+
+```php
+foreach($csv as [$name, $age]) {
+    // ...
+}
+```
+
+This doesn't work if any header is an integer (e.g. a column named `1`).
+
 #### Normalize Data Types
 A number of different normalizers can be used to convert data from strings into certain data types.
 Below is contrived example using some of the currently bundled normalizers:
