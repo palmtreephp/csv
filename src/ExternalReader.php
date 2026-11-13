@@ -13,6 +13,8 @@ namespace Palmtree\Csv;
  */
 class ExternalReader extends Reader
 {
+    private ?string $tempFile = null;
+
     public function __construct(string $url, bool $hasHeaders = true)
     {
         // Create a temporary file to store the streamed data
@@ -21,9 +23,12 @@ class ExternalReader extends Reader
             throw new \RuntimeException('Failed to create temporary file');
         }
 
+        $this->tempFile = $tempFile;
+
         // Open stream to the URL
         $remoteStream = fopen($url, 'r');
         if ($remoteStream === false) {
+            $this->removeTempFile();
             throw new \RuntimeException("Failed to open URL: $url");
         }
 
@@ -31,6 +36,7 @@ class ExternalReader extends Reader
 
         if ($tempFileResource === false) {
             fclose($remoteStream);
+            $this->removeTempFile();
             throw new \RuntimeException('Failed to open temporary file for writing');
         }
 
@@ -38,6 +44,7 @@ class ExternalReader extends Reader
         if (stream_copy_to_stream($remoteStream, $tempFileResource) === false) {
             fclose($remoteStream);
             fclose($tempFileResource);
+            $this->removeTempFile();
             throw new \RuntimeException('Failed to copy stream to temporary file');
         }
 
@@ -45,5 +52,20 @@ class ExternalReader extends Reader
         fclose($tempFileResource);
 
         parent::__construct($tempFile, $hasHeaders);
+    }
+
+    #[\Override]
+    public function __destruct()
+    {
+        parent::__destruct();
+
+        $this->removeTempFile();
+    }
+
+    private function removeTempFile(): void
+    {
+        if ($this->tempFile !== null && is_file($this->tempFile)) {
+            unlink($this->tempFile);
+        }
     }
 }
