@@ -1,13 +1,22 @@
 name: Build
 
-on: push
+on:
+  push:
+    branches: [ master ]
+  pull_request:
 
 jobs:
   run:
+    name: PHP ${{ matrix.php-versions }} (${{ matrix.dependencies }} dependencies)
     runs-on: 'ubuntu-24.04'
     strategy:
+      fail-fast: false
       matrix:
         php-versions: [ '8.3', '8.4', '8.5' ]
+        dependencies: [ 'highest' ]
+        include:
+          - php-versions: '8.3'
+            dependencies: 'lowest'
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -27,19 +36,22 @@ jobs:
         uses: actions/cache@v6
         with:
           path: ${{ steps.vars.outputs.composer_cache_dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          key: ${{ runner.os }}-composer-${{ matrix.dependencies }}-${{ hashFiles('composer.json') }}
           restore-keys: |
-            ${{ runner.os }}-composer-
+            ${{ runner.os }}-composer-${{ matrix.dependencies }}-
+
+      - name: Validate composer.json
+        run: composer validate --strict --no-check-lock
 
       - name: Lint PHP
         run: find -L src -type f -name '*.php' -print0 | xargs -0 -n 500 -P $(nproc) php -l
 
       - name: Install dependencies
-        run: composer install --prefer-dist --no-interaction --no-ansi
+        run: composer update --prefer-dist --no-interaction --no-ansi ${{ matrix.dependencies == 'lowest' && '--prefer-lowest --prefer-stable' || '' }}
 
       - name: PHP-CS-Fixer
         run: php vendor/bin/php-cs-fixer fix -vvv --dry-run --using-cache=no --format=checkstyle | cs2pr
-        if: matrix.php-versions == 8.4
+        if: matrix.php-versions == '8.4' && matrix.dependencies == 'highest'
 
       - name: Static Analysis
         run: php vendor/bin/phpstan analyse --memory-limit=1G
