@@ -33,22 +33,22 @@ class StringUtil
     }
 
     /**
-     * Escapes the enclosure character recursively.
+     * Converts each value to a string and escapes the enclosure character.
      * RFC-4180 states the enclosure character (usually double quotes) should be
      * escaped by itself, so " becomes "".
      *
      * @see https://tools.ietf.org/html/rfc4180#section-2
      *
-     * @param array<mixed> $data
+     * @template TKey of array-key
      *
-     * @return array<mixed>
+     * @param array<TKey, mixed> $data
+     *
+     * @return array<TKey, string>
      */
     public static function escapeEnclosure(array $data, string $enclosure): array
     {
         foreach ($data as $key => $value) {
-            if (\is_array($value)) {
-                $data[$key] = self::escapeEnclosure($value, $enclosure);
-            } elseif ($value === null || \is_scalar($value) || $value instanceof \Stringable) {
+            if ($value === null || \is_scalar($value) || $value instanceof \Stringable) {
                 $data[$key] = str_replace($enclosure, str_repeat($enclosure, 2), (string)$value);
             } else {
                 throw new \InvalidArgumentException(\sprintf('Cannot convert value of type %s to a string.', get_debug_type($value)));

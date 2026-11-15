@@ -76,18 +76,12 @@ class StringUtilTest extends TestCase
         $this->assertSame(['say ""hello""', 'say ""goodbye""'], $result);
     }
 
-    public function testEscapeEnclosureWithNestedArrays(): void
+    public function testEscapeEnclosureRejectsNestedArrays(): void
     {
-        $data = [
-            'field1' => 'value1',
-            'nested' => [
-                'inner' => 'value with "quotes"',
-            ],
-        ];
-        $result = StringUtil::escapeEnclosure($data, '"');
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Cannot convert value of type array to a string.');
 
-        $this->assertSame('value1', $result['field1']);
-        $this->assertSame('value with ""quotes""', $result['nested']['inner']);
+        StringUtil::escapeEnclosure(['field1' => 'value1', 'nested' => ['inner' => 'value']], '"');
     }
 
     public function testEscapeEnclosureWithSingleQuote(): void

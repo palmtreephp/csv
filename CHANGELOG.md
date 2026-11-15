@@ -5,6 +5,24 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+
+- Writing a nested array as a cell value throws `InvalidArgumentException`
+  instead of writing `Array` and raising a warning. `StringUtil::escapeEnclosure()`
+  no longer accepts nested arrays.
+- Reading a file with duplicate headers throws `UnexpectedValueException`
+  instead of silently overwriting the earlier column's values.
+- `ExternalReader` only accepts `http` and `https` URLs, so a user-supplied URL
+  can't be used to read local files through `file://`, `php://`, `phar://` or a
+  plain path. Use `Reader` for local files.
+
+### Added
+
+- `ExternalReader` accepts a stream context as its third argument, e.g. to set
+  a timeout or request headers.
+
 ## [5.0.0] - 2026-11-13
 
 ### Breaking changes
@@ -57,4 +75,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `Content-Disposition` header. An ASCII fallback is sent alongside an
   RFC 5987 `filename*`.
 
+[Unreleased]: https://github.com/palmtreephp/csv/compare/v5.0.0...HEAD
 [5.0.0]: https://github.com/palmtreephp/csv/compare/v4.0.1...v5.0.0

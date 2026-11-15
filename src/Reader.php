@@ -182,10 +182,16 @@ class Reader extends AbstractCsvDocument implements \Iterator
             $this->readingHeaders = true;
 
             try {
-                $this->headers = $this->getCurrentRow();
+                $headers = $this->getCurrentRow();
             } finally {
                 $this->readingHeaders = false;
             }
+
+            if ($headers !== null) {
+                $this->assertUniqueHeaders($headers);
+            }
+
+            $this->headers = $headers;
 
             ++$dataOffset;
         }
@@ -211,6 +217,29 @@ class Reader extends AbstractCsvDocument implements \Iterator
     protected function getOpenMode(): string
     {
         return 'r';
+    }
+
+    /**
+     * Header values become the keys of every data row, so a repeated header would make one
+     * column overwrite another.
+     */
+    private function assertUniqueHeaders(Row $headers): void
+    {
+        $seen = [];
+        $duplicates = [];
+        foreach ($headers->toArray() as $header) {
+            $key = \is_scalar($header) || $header === null ? (string)$header : get_debug_type($header);
+
+            if (isset($seen[$key])) {
+                $duplicates[$key] = $key;
+            }
+
+            $seen[$key] = true;
+        }
+
+        if ($duplicates !== []) {
+            throw new \UnexpectedValueException(\sprintf('CSV contains duplicate headers: "%s". Use setHasHeaders(false) to read rows by position.', implode('", "', $duplicates)));
+        }
     }
 
     /**

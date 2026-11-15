@@ -257,6 +257,16 @@ class WriterTest extends TestCase
         $writer->addRow([new \stdClass()]);
     }
 
+    public function testAddRowWithNestedArrayThrows(): void
+    {
+        $writer = new Writer('php://memory', false);
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Cannot convert value of type array to a string.');
+
+        $writer->addRow(['a', ['b', 'c']]);
+    }
+
     public function testRowsAreWrittenInHeaderOrder(): void
     {
         $writer = new Writer('php://memory');
