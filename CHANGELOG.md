@@ -5,23 +5,7 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
-
-### Fixed
-
-- Writing a nested array as a cell value throws `InvalidArgumentException`
-  instead of writing `Array` and raising a warning. `StringUtil::escapeEnclosure()`
-  no longer accepts nested arrays.
-- Reading a file with duplicate headers throws `UnexpectedValueException`
-  instead of silently overwriting the earlier column's values.
-- `ExternalReader` only accepts `http` and `https` URLs, so a user-supplied URL
-  can't be used to read local files through `file://`, `php://`, `phar://` or a
-  plain path. Use `Reader` for local files.
-
-### Changed
-
-- `Downloader` sends `Content-Type: text/csv; charset=utf-8` instead of
-  `text/csv`.
+## [5.1.0] - 2026-11-15
 
 ### Added
 
@@ -38,6 +22,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   including empty cells, instead of `0`.
 - `Writer::writeTo()` copies the CSV to a stream in chunks, e.g. to build a
   Symfony or PSR-7 response from a `Downloader`.
+- Documentation for the whole API in [`docs/`](docs/index.md), linked from the
+  README.
+
+### Changed
+
+- `Downloader` sends `Content-Type: text/csv; charset=utf-8` instead of
+  `text/csv`.
+
+### Fixed
+
+- Writing a nested array as a cell value throws `InvalidArgumentException`
+  instead of writing `Array` and raising a warning. `StringUtil::escapeEnclosure()`
+  no longer accepts nested arrays.
+- Reading a file with duplicate headers throws `UnexpectedValueException`
+  instead of silently overwriting the earlier column's values.
+
+### Security
+
+- `ExternalReader` only accepts `http` and `https` URLs, so a user-supplied URL
+  can't be used to read local files through `file://`, `php://`, `phar://` or a
+  plain path. Use `Reader` for local files.
 
 ## [5.0.0] - 2026-11-13
 
@@ -91,5 +96,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `Content-Disposition` header. An ASCII fallback is sent alongside an
   RFC 5987 `filename*`.
 
-[Unreleased]: https://github.com/palmtreephp/csv/compare/v5.0.0...HEAD
+[5.1.0]: https://github.com/palmtreephp/csv/compare/v5.0.0...v5.1.0
 [5.0.0]: https://github.com/palmtreephp/csv/compare/v4.0.1...v5.0.0
