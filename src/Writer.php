@@ -147,6 +147,48 @@ class Writer extends AbstractCsvDocument
         return $data === false ? '' : $data;
     }
 
+    /**
+     * Copies the CSV contents to a stream in chunks, so large files aren't loaded into memory.
+     * Useful for building framework responses, e.g. writing to php://output in a Symfony
+     * StreamedResponse or to a php://temp stream for a PSR-7 response body.
+     *
+     * @param resource $stream A stream opened for writing.
+     *
+     * @return int The number of bytes written.
+     */
+    public function writeTo($stream): int
+    {
+        if (!\is_resource($stream) || get_resource_type($stream) !== 'stream') {
+            throw new \InvalidArgumentException(\sprintf('Expected a stream resource, got %s.', get_debug_type($stream)));
+        }
+
+        $this->writeHeaders();
+
+        $document = $this->getDocument();
+        $document->fseek(0);
+
+        $bytes = 0;
+        try {
+            while (!$document->eof()) {
+                $chunk = $document->fread(8192);
+
+                if ($chunk === false || $chunk === '') {
+                    break;
+                }
+
+                if (fwrite($stream, $chunk) !== \strlen($chunk)) {
+                    throw new \RuntimeException('Failed to write CSV contents to stream.');
+                }
+
+                $bytes += \strlen($chunk);
+            }
+        } finally {
+            $document->fseek(0, \SEEK_END);
+        }
+
+        return $bytes;
+    }
+
     #[\Override]
     public function closeDocument(): void
     {

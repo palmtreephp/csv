@@ -18,6 +18,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   can't be used to read local files through `file://`, `php://`, `phar://` or a
   plain path. Use `Reader` for local files.
 
+### Changed
+
+- `Downloader` sends `Content-Type: text/csv; charset=utf-8` instead of
+  `text/csv`.
+
 ### Added
 
 - `ExternalReader` accepts a stream context as its third argument, e.g. to set
@@ -31,6 +36,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `StringUtil::escapeFormulas()`.
 - `NumberNormalizer::nullable()` returns `null` for non-numeric values,
   including empty cells, instead of `0`.
+- `Writer::writeTo()` copies the CSV to a stream in chunks, e.g. to build a
+  Symfony or PSR-7 response from a `Downloader`.
 
 ## [5.0.0] - 2026-11-13
 

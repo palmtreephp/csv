@@ -22,7 +22,7 @@ class DownloaderTest extends TestCase
         $headers = $downloader->getResponseHeaders();
 
         $this->assertArrayHasKey('Content-Type', $headers);
-        $this->assertSame('text/csv', $headers['Content-Type']);
+        $this->assertSame('text/csv; charset=utf-8', $headers['Content-Type']);
         $this->assertArrayHasKey('Content-Description', $headers);
         $this->assertSame('File Transfer', $headers['Content-Description']);
         $this->assertArrayHasKey('Content-Disposition', $headers);

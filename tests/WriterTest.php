@@ -457,4 +457,65 @@ class WriterTest extends TestCase
             $writer->getContents(),
         );
     }
+
+    public function testWriteToStream(): void
+    {
+        $writer = new Writer('php://memory');
+        $writer->setData([['name' => 'Alice'], ['name' => 'Bob']]);
+
+        $stream = fopen('php://memory', 'w+');
+        \assert($stream !== false);
+
+        $bytes = $writer->writeTo($stream);
+        rewind($stream);
+
+        $expected = "\"name\"\r\n\"Alice\"\r\n\"Bob\"";
+        $this->assertSame($expected, stream_get_contents($stream));
+        $this->assertSame(\strlen($expected), $bytes);
+    }
+
+    public function testWriteToStreamInChunks(): void
+    {
+        $writer = new Writer('php://temp', false);
+        $value = str_repeat('x', 10_000);
+        $writer->addRows([[$value], [$value]]);
+
+        $stream = fopen('php://memory', 'w+');
+        \assert($stream !== false);
+
+        $writer->writeTo($stream);
+        rewind($stream);
+
+        $this->assertSame($writer->getContents(), stream_get_contents($stream));
+    }
+
+    public function testRowsCanBeAddedAfterWriteTo(): void
+    {
+        $writer = new Writer('php://memory', false);
+        $writer->addRow(['a']);
+
+        $stream = fopen('php://memory', 'w+');
+        \assert($stream !== false);
+        $writer->writeTo($stream);
+
+        $writer->addRow(['b']);
+
+        $this->assertSame("\"a\"\r\n\"b\"", $writer->getContents());
+    }
+
+    public function testWriteToEmptyDocument(): void
+    {
+        $stream = fopen('php://memory', 'w+');
+        \assert($stream !== false);
+
+        $this->assertSame(0, (new Writer('php://memory'))->writeTo($stream));
+    }
+
+    public function testWriteToRejectsNonStreams(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        // @phpstan-ignore argument.type
+        (new Writer('php://memory'))->writeTo('php://output');
+    }
 }
