@@ -5,18 +5,29 @@ declare(strict_types=1);
 namespace Palmtree\Csv;
 
 /**
- * Reader for CSV data from an external URL.
+ * Reader for CSV data from an external http or https URL.
  * Streams data to a temporary file to avoid loading large files into memory.
+ *
+ * Other schemes are rejected so a URL taken from user input can't read local files
+ * (file://, php://, phar:// etc.). Use Reader for local files.
  *
  * @example
  * $reader = new ExternalReader('https://example.com/data.csv');
  */
 class ExternalReader extends Reader
 {
+    private const array ALLOWED_SCHEMES = ['http', 'https'];
+
     private ?string $tempFile = null;
 
     public function __construct(string $url, bool $hasHeaders = true)
     {
+        $scheme = parse_url($url, \PHP_URL_SCHEME);
+
+        if (!\is_string($scheme) || !\in_array(strtolower($scheme), self::ALLOWED_SCHEMES, true)) {
+            throw new \InvalidArgumentException(\sprintf('ExternalReader only supports http and https URLs, got "%s".', $url));
+        }
+
         // Create a temporary file to store the streamed data
         $tempFile = tempnam(sys_get_temp_dir(), 'palmtree_csv_');
         if ($tempFile === false) {

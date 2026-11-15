@@ -14,6 +14,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   no longer accepts nested arrays.
 - Reading a file with duplicate headers throws `UnexpectedValueException`
   instead of silently overwriting the earlier column's values.
+- `ExternalReader` only accepts `http` and `https` URLs, so a user-supplied URL
+  can't be used to read local files through `file://`, `php://`, `phar://` or a
+  plain path. Use `Reader` for local files.
 
 ## [5.0.0] - 2026-11-13
 
