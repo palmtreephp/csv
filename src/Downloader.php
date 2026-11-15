@@ -33,9 +33,9 @@ class Downloader extends Writer
     }
 
     /**
-     * @param array<array<array-key, mixed>> $data
+     * @param iterable<array<array-key, mixed>> $data
      */
-    public static function download(string $filename, array $data): void
+    public static function download(string $filename, iterable $data): void
     {
         $downloader = new self($filename);
         $downloader->setData($data);

@@ -222,4 +222,16 @@ class DownloaderTest extends TestCase
             $headers['Content-Disposition'],
         );
     }
+
+    public function testStaticDownloadWithGenerator(): void
+    {
+        ob_start();
+        Downloader::download('people.csv', (static function (): \Generator {
+            yield ['name' => 'Alice'];
+            yield ['name' => 'Bob'];
+        })());
+        $output = ob_get_clean();
+
+        $this->assertSame("\"name\"\r\n\"Alice\"\r\n\"Bob\"", $output);
+    }
 }

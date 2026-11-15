@@ -146,6 +146,24 @@ $people[] = [
 Writer::write('/path/to/output.csv', $people);
 ```
 
+#### Writing Large Data Sets
+
+`Writer::write()`, `Downloader::download()`, `setData()` and `addRows()` accept any iterable. Rows are written
+as they are iterated, so a generator can export a large data set without loading it all into memory:
+
+```php
+function people(PDO $pdo): Generator
+{
+    $statement = $pdo->query('SELECT name, age FROM people');
+
+    while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+        yield $row;
+    }
+}
+
+Writer::write('/path/to/output.csv', people($pdo));
+```
+
 See the [examples](examples) directory for more usage examples.
 
 ## Advanced Usage

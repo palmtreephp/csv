@@ -22,6 +22,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `ExternalReader` accepts a stream context as its third argument, e.g. to set
   a timeout or request headers.
+- `Writer::write()`, `Writer::setData()`, `Writer::addRows()` and
+  `Downloader::download()` accept any iterable, so generators can write large
+  data sets without loading them into memory.
 
 ## [5.0.0] - 2026-11-13
 

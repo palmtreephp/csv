@@ -327,6 +327,65 @@ class WriterTest extends TestCase
         $this->assertSame('', $writer->getContents());
     }
 
+    public function testSetDataWithGenerator(): void
+    {
+        $rows = (static function (): \Generator {
+            yield ['name' => 'Alice', 'age' => 24];
+            yield ['age' => 28, 'name' => 'Bob'];
+        })();
+
+        $writer = new Writer('php://memory');
+        $writer->setData($rows);
+
+        $this->assertSame("\"name\",\"age\"\r\n\"Alice\",\"24\"\r\n\"Bob\",\"28\"", $writer->getContents());
+    }
+
+    public function testSetDataWithEmptyGenerator(): void
+    {
+        $writer = new Writer('php://memory');
+        $writer->setData((static function (): \Generator {
+            yield from [];
+        })());
+
+        $this->assertSame('', $writer->getContents());
+    }
+
+    public function testSetDataWritesRowsAsTheyAreIterated(): void
+    {
+        $writer = new Writer('php://memory', false);
+        $rows = (static function () use ($writer): \Generator {
+            yield ['a'];
+            // The first row is already in the file before the next one is generated.
+            yield [(string)$writer->getDocument()->getBytesWritten()];
+        })();
+
+        $writer->setData($rows);
+
+        $this->assertSame("\"a\"\r\n\"3\"", $writer->getContents());
+    }
+
+    public function testAddRowsWithIterator(): void
+    {
+        $writer = new Writer('php://memory', false);
+        $writer->addRows(new \ArrayIterator([['a', 'b'], ['c', 'd']]));
+
+        $this->assertSame("\"a\",\"b\"\r\n\"c\",\"d\"", $writer->getContents());
+    }
+
+    public function testStaticWriteWithGenerator(): void
+    {
+        $tempFile = tempnam(sys_get_temp_dir(), 'phpunit_writer_');
+        \assert($tempFile !== false);
+
+        Writer::write($tempFile, (static function (): \Generator {
+            yield ['name' => 'John'];
+        })());
+
+        $this->assertSame("\"name\"\r\n\"John\"", file_get_contents($tempFile));
+
+        unlink($tempFile);
+    }
+
     public function testAddEmptyRow(): void
     {
         $writer = new Writer('php://memory');
