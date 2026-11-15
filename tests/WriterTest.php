@@ -433,4 +433,28 @@ class WriterTest extends TestCase
 
         $this->assertFalse($writer->hasDocument());
     }
+
+    public function testFormulasAreNotEscapedByDefault(): void
+    {
+        $writer = new Writer('php://memory', false);
+        $writer->addRow(['=1+1']);
+
+        $this->assertFalse($writer->getEscapeFormulas());
+        $this->assertSame('"=1+1"', $writer->getContents());
+    }
+
+    public function testEscapeFormulasInRowsAndHeaders(): void
+    {
+        $writer = new Writer('php://memory');
+        $writer->setEscapeFormulas(true);
+        $writer->setData([
+            ['=name' => '=HYPERLINK("http://example.com")', 'total' => -5],
+            ['=name' => '@SUM(A1)', 'total' => '-5'],
+        ]);
+
+        $this->assertSame(
+            "\"'=name\",\"total\"\r\n\"'=HYPERLINK(\"\"http://example.com\"\")\",\"-5\"\r\n\"'@SUM(A1)\",\"'-5\"",
+            $writer->getContents(),
+        );
+    }
 }
