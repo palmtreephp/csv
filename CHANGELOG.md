@@ -18,6 +18,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   can't be used to read local files through `file://`, `php://`, `phar://` or a
   plain path. Use `Reader` for local files.
 
+### Added
+
+- `ExternalReader` accepts a stream context as its third argument, e.g. to set
+  a timeout or request headers.
+
 ## [5.0.0] - 2026-11-13
 
 ### Breaking changes

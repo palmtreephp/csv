@@ -60,6 +60,14 @@ class ExternalReaderTest extends TestCase
         $this->assertSame('Printer', $reader->toArray()[0]['name']);
     }
 
+    public function testAcceptsStreamContext(): void
+    {
+        $context = stream_context_create(['http' => ['timeout' => 5]]);
+        $reader = new ExternalReader(self::$baseUrl . '/products.csv', true, $context);
+
+        $this->assertNotEmpty($reader->toArray());
+    }
+
     public function testTempFileIsRemoved(): void
     {
         $reader = new ExternalReader(self::$baseUrl . '/products.csv');

@@ -20,7 +20,10 @@ class ExternalReader extends Reader
 
     private ?string $tempFile = null;
 
-    public function __construct(string $url, bool $hasHeaders = true)
+    /**
+     * @param resource|null $context Stream context passed to fopen(), e.g. to set a timeout or headers.
+     */
+    public function __construct(string $url, bool $hasHeaders = true, $context = null)
     {
         $scheme = parse_url($url, \PHP_URL_SCHEME);
 
@@ -37,7 +40,7 @@ class ExternalReader extends Reader
         $this->tempFile = $tempFile;
 
         // Open stream to the URL
-        $remoteStream = fopen($url, 'r');
+        $remoteStream = $context === null ? fopen($url, 'r') : fopen($url, 'r', false, $context);
         if ($remoteStream === false) {
             $this->removeTempFile();
             throw new \RuntimeException("Failed to open URL: $url");
