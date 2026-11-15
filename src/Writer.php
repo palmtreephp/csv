@@ -17,9 +17,9 @@ class Writer extends AbstractCsvDocument
     private bool $headersWritten = false;
 
     /**
-     * @param array<array<array-key, mixed>> $data
+     * @param iterable<array<array-key, mixed>> $data
      */
-    public static function write(string $filePath, array $data): void
+    public static function write(string $filePath, iterable $data): void
     {
         $writer = new self($filePath);
         $writer->setData($data);
@@ -29,23 +29,22 @@ class Writer extends AbstractCsvDocument
     /**
      * Sets headers and adds all rows to the CSV file.
      *
-     * Uses the first row's keys as headers.
+     * Uses the first row's keys as headers. Rows are written as they are iterated, so a generator
+     * can write a large data set without holding it all in memory.
      *
-     * @param array<array<array-key, mixed>> $data
+     * @param iterable<array<array-key, mixed>> $data
      */
-    public function setData(array $data): self
+    public function setData(iterable $data): self
     {
-        if ($data === []) {
-            return $this;
+        $isFirstRow = true;
+        foreach ($data as $row) {
+            if ($isFirstRow && $this->hasHeaders) {
+                $this->setHeaders(array_keys($row));
+            }
+
+            $isFirstRow = false;
+            $this->addRow($row);
         }
-
-        $firstRow = reset($data);
-
-        if ($this->hasHeaders) {
-            $this->setHeaders(array_keys($firstRow));
-        }
-
-        $this->addRows($data);
 
         return $this;
     }
@@ -78,9 +77,9 @@ class Writer extends AbstractCsvDocument
     /**
      * Adds multiple rows of data to the CSV file.
      *
-     * @param array<array<array-key, mixed>> $rows
+     * @param iterable<array<array-key, mixed>> $rows
      */
-    public function addRows(array $rows): void
+    public function addRows(iterable $rows): void
     {
         foreach ($rows as $row) {
             $this->addRow($row);
