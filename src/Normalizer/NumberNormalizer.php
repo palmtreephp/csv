@@ -10,6 +10,7 @@ namespace Palmtree\Csv\Normalizer;
 class NumberNormalizer extends AbstractNormalizer
 {
     private ?int $scale = null;
+    private bool $nullable = false;
 
     /**
      * Sets the amount of decimal places to round to. Defaults to null which performs no rounding.
@@ -21,10 +22,21 @@ class NumberNormalizer extends AbstractNormalizer
         return $this;
     }
 
-    protected function getNormalizedValue(string $value): float|int
+    /**
+     * Sets whether non-numeric values, including empty cells, return null. Defaults to false,
+     * meaning they return 0 and can't be told apart from a real zero.
+     */
+    public function nullable(bool $nullable): self
+    {
+        $this->nullable = $nullable;
+
+        return $this;
+    }
+
+    protected function getNormalizedValue(string $value): float|int|null
     {
         if (!is_numeric($value)) {
-            return 0;
+            return $this->nullable ? null : 0;
         }
 
         $numberValue = +$value;

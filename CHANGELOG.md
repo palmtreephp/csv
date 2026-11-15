@@ -29,6 +29,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   with `=`, `+`, `-`, `@`, tab or carriage return with a single quote, to
   protect spreadsheet users from CSV injection. Off by default.
 - `StringUtil::escapeFormulas()`.
+- `NumberNormalizer::nullable()` returns `null` for non-numeric values,
+  including empty cells, instead of `0`.
 
 ## [5.0.0] - 2026-11-13
 
