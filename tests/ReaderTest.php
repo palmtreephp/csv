@@ -395,6 +395,23 @@ class ReaderTest extends TestCase
         }
     }
 
+    public function testDuplicateHeadersThrow(): void
+    {
+        $reader = new InlineReader("a,b,a,c,c\n1,2,3,4,5\n");
+
+        $this->expectException(\UnexpectedValueException::class);
+        $this->expectExceptionMessage('CSV contains duplicate headers: "a", "c".');
+
+        $reader->toArray();
+    }
+
+    public function testDuplicateHeadersAreAllowedWithoutHeaders(): void
+    {
+        $reader = new InlineReader("a,a\n1,2\n", false);
+
+        $this->assertSame([['a', 'a'], ['1', '2']], $reader->toArray());
+    }
+
     public function testRowsWithHeadersCanBeDestructuredByKey(): void
     {
         $reader = new Reader(__DIR__ . '/fixtures/products.csv');

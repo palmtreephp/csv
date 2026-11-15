@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Writing a nested array as a cell value throws `InvalidArgumentException`
   instead of writing `Array` and raising a warning. `StringUtil::escapeEnclosure()`
   no longer accepts nested arrays.
+- Reading a file with duplicate headers throws `UnexpectedValueException`
+  instead of silently overwriting the earlier column's values.
 
 ## [5.0.0] - 2026-11-13
 
