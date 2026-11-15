@@ -39,6 +39,8 @@ Writer::write('people.csv', [
 
 ## Documentation
 
+See the [documentation index](docs/index.md) for every topic, or jump to a page:
+
 * [Reading](docs/reading.md)
 * [Normalizers](docs/normalizers.md)
 * [Writing](docs/writing.md)
