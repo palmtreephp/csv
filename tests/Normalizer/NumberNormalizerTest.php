@@ -361,4 +361,34 @@ class NumberNormalizerTest extends TestCase
             ['1e3', 1000.0],
         ];
     }
+
+    #[DataProvider('nonNumericProvider')]
+    public function testNonNumericValuesReturnZeroByDefault(string $value): void
+    {
+        $this->assertSame(0, (new NumberNormalizer())->normalize($value));
+    }
+
+    #[DataProvider('nonNumericProvider')]
+    public function testNullableReturnsNullForNonNumericValues(string $value): void
+    {
+        $this->assertNull((new NumberNormalizer())->nullable(true)->normalize($value));
+    }
+
+    /**
+     * @return iterable<string, array{string}>
+     */
+    public static function nonNumericProvider(): iterable
+    {
+        yield 'empty' => [''];
+        yield 'text' => ['abc'];
+        yield 'whitespace' => [' '];
+    }
+
+    public function testNullableStillNormalizesNumbers(): void
+    {
+        $normalizer = (new NumberNormalizer())->nullable(true);
+
+        $this->assertSame(0, $normalizer->normalize('0'));
+        $this->assertSame(1.3, $normalizer->scale(1)->normalize('1.25'));
+    }
 }
