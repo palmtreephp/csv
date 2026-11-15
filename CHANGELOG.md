@@ -25,6 +25,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `Writer::write()`, `Writer::setData()`, `Writer::addRows()` and
   `Downloader::download()` accept any iterable, so generators can write large
   data sets without loading them into memory.
+- `Writer::setEscapeFormulas()` prefixes headers and string values that start
+  with `=`, `+`, `-`, `@`, tab or carriage return with a single quote, to
+  protect spreadsheet users from CSV injection. Off by default.
+- `StringUtil::escapeFormulas()`.
 
 ## [5.0.0] - 2026-11-13
 
