@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Palmtree\Csv;
 
+use Palmtree\Csv\Util\StringUtil;
+
 /**
  * Writes an array to a CSV file.
  *
@@ -15,6 +17,7 @@ class Writer extends AbstractCsvDocument
     /** @var list<array-key> */
     private array $headers = [];
     private bool $headersWritten = false;
+    private bool $escapeFormulas = false;
 
     /**
      * @param iterable<array<array-key, mixed>> $data
@@ -75,6 +78,26 @@ class Writer extends AbstractCsvDocument
     }
 
     /**
+     * Sets whether headers and string values that start with =, +, -, @, tab or carriage return are
+     * prefixed with a single quote, so spreadsheet applications show them as text instead of evaluating
+     * them as formulas. Enable this when writing data from untrusted sources that will be opened in a
+     * spreadsheet. Defaults to false, since the prefix becomes part of the value for other consumers.
+     *
+     * @see https://owasp.org/www-community/attacks/CSV_Injection
+     */
+    public function setEscapeFormulas(bool $escapeFormulas): self
+    {
+        $this->escapeFormulas = $escapeFormulas;
+
+        return $this;
+    }
+
+    public function getEscapeFormulas(): bool
+    {
+        return $this->escapeFormulas;
+    }
+
+    /**
      * Adds multiple rows of data to the CSV file.
      *
      * @param iterable<array<array-key, mixed>> $rows
@@ -104,7 +127,7 @@ class Writer extends AbstractCsvDocument
 
         $this->writeHeaders();
 
-        return $this->getDocument()->fwriteCsv($this->orderByHeaders($row)) > 0;
+        return $this->writeRow($this->orderByHeaders($row)) > 0;
     }
 
     public function getContents(): string
@@ -155,7 +178,19 @@ class Writer extends AbstractCsvDocument
 
         $this->headersWritten = true;
 
-        $this->getDocument()->fwriteCsv($this->headers);
+        $this->writeRow($this->headers);
+    }
+
+    /**
+     * @param array<array-key, mixed> $row
+     */
+    private function writeRow(array $row): int
+    {
+        if ($this->escapeFormulas) {
+            $row = StringUtil::escapeFormulas($row);
+        }
+
+        return $this->getDocument()->fwriteCsv($row);
     }
 
     /**
