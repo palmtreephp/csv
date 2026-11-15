@@ -13,6 +13,13 @@ class StringUtil
     public const string BOM_UTF32_LE = "\xFF\xFE\x00\x00";
 
     /**
+     * Characters that make spreadsheet applications treat a cell as a formula.
+     *
+     * @see https://owasp.org/www-community/attacks/CSV_Injection
+     */
+    public const array FORMULA_CHARACTERS = ['=', '+', '-', '@', "\t", "\r"];
+
+    /**
      * Returns whether the given string starts with the given Byte Order Mark.
      */
     public static function hasBom(string $input, string $bom): bool
@@ -30,6 +37,37 @@ class StringUtil
         }
 
         return $input;
+    }
+
+    /**
+     * Prefixes string values that start with a formula character with a single quote, so
+     * spreadsheet applications display them as text instead of evaluating them.
+     *
+     * Integers and floats are left alone, so negative numbers are still written as numbers.
+     *
+     * @see https://owasp.org/www-community/attacks/CSV_Injection
+     *
+     * @template TKey of array-key
+     *
+     * @param array<TKey, mixed> $data
+     *
+     * @return array<TKey, mixed>
+     */
+    public static function escapeFormulas(array $data): array
+    {
+        foreach ($data as $key => $value) {
+            if (!\is_string($value) && !$value instanceof \Stringable) {
+                continue;
+            }
+
+            $value = (string)$value;
+
+            if ($value !== '' && \in_array($value[0], self::FORMULA_CHARACTERS, true)) {
+                $data[$key] = "'" . $value;
+            }
+        }
+
+        return $data;
     }
 
     /**

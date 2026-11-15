@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Palmtree\Csv\Test\Util;
 
 use Palmtree\Csv\Util\StringUtil;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class StringUtilTest extends TestCase
@@ -106,5 +107,40 @@ class StringUtilTest extends TestCase
         $result = StringUtil::escapeEnclosure($data, '"');
 
         $this->assertSame(['hello-world', 'foo@bar'], $result);
+    }
+
+    #[DataProvider('formulaProvider')]
+    public function testEscapeFormulas(mixed $value, mixed $expected): void
+    {
+        $this->assertSame([$expected], StringUtil::escapeFormulas([$value]));
+    }
+
+    /**
+     * @return iterable<string, array{mixed, mixed}>
+     */
+    public static function formulaProvider(): iterable
+    {
+        yield 'equals' => ['=SUM(A1:A2)', "'=SUM(A1:A2)"];
+        yield 'plus' => ['+1+1', "'+1+1"];
+        yield 'minus' => ['-1+1', "'-1+1"];
+        yield 'at' => ['@SUM(A1)', "'@SUM(A1)"];
+        yield 'tab' => ["\t=1", "'\t=1"];
+        yield 'carriage return' => ["\r=1", "'\r=1"];
+        yield 'formula character later in the value' => ['a=b', 'a=b'];
+        yield 'empty string' => ['', ''];
+        yield 'negative int' => [-5, -5];
+        yield 'negative float' => [-1.5, -1.5];
+        yield 'null' => [null, null];
+        yield 'stringable' => [new class implements \Stringable {
+            public function __toString(): string
+            {
+                return '=1';
+            }
+        }, "'=1"];
+    }
+
+    public function testEscapeFormulasPreservesKeys(): void
+    {
+        $this->assertSame(['a' => "'=1", 'b' => 'x'], StringUtil::escapeFormulas(['a' => '=1', 'b' => 'x']));
     }
 }
